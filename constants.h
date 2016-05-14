@@ -11,7 +11,7 @@ int is_a_##name(char ch){ \
 
 int string_contains(char ch, struct String* string){
     if(!string->length){ return 0; }
-    for(int i = 0; i < string->length-1; i++){
+    for(int i = 0; i < string->length; i++){
         if(ch == string->body[i]){
             return 1;
         }
