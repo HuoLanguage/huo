@@ -21,7 +21,6 @@ long reduce(struct Tree * children[], int length, char func){
             else if(func == '-'){
                 result = sub(result, newResult);
             }
-
         } else {
             if(func == '*'){
                 result = mul(result, atol(children[i]->content.body));

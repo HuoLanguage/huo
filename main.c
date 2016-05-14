@@ -49,9 +49,10 @@ int main(int argc, char const *argv[]) {
     root.content = content;
 
     struct Tree * ast = parse(&root, tokens);
-    // printTree(ast); this two lines print the AST for reference
+    //this two lines print the AST for reference
+    // printTree(ast);
     // printf("\n");
     long result = execute(ast->children[0]);
-    printf("%ld", result);
+    printf("%ld\n", result);
     return 0;
 }
