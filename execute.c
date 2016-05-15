@@ -55,7 +55,12 @@ struct Value execute (struct Tree * ast){
         struct Value a = execute(ast->children[0]);
         struct Value b = execute(ast->children[1]);
 
-        if(ast->type == '*'){
+        if(ast->type == 'k'){
+            if(string_matches(ast->content.data.str, concat_const)){
+                result = concat(a, b);
+            }
+        }
+        else if(ast->type == '*'){
             result = mul(a, b);
         }
         else if(ast->type == '+'){

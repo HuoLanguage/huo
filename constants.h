@@ -53,6 +53,11 @@ struct String print_const = {
     .length = 5
 };
 
+struct String concat_const = {
+    .body = "cat",
+    .length = 3
+};
+
 const char open_parens_const = '(';
 const char close_parens_const = ')';
 const char root_type_const = 'r';

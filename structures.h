@@ -2,7 +2,7 @@
 #define _STRUCTURES_H
 
 struct String {
-    char body[80];
+    char body[256];
     int length;
 };
 
@@ -19,6 +19,7 @@ struct Tokens {
 
 union Data {
     long ln;
+    float fl;
     struct String str;
 };
 
