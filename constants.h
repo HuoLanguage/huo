@@ -34,8 +34,8 @@ int string_matches(struct String base, struct String compare){
 }
 
 struct String functions = {
-    .body = "*+-_/\0",
-    .length = 5
+    .body = "*+-_/p\0",
+    .length = 6
 };
 
 struct String numbers = {
@@ -43,12 +43,20 @@ struct String numbers = {
     .length = 10
 };
 
+struct String letters = {
+    .body = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    .length = 52
+};
+
 const char open_parens_const = '(';
 const char close_parens_const = ')';
 const char root_type_const = 'r';
+const char quote_const = '"';
 
 CHAR_ISA(open_parens, open_parens_const);
 CHAR_ISA(close_parens, close_parens_const);
-CHAR_ISA(is_root_type, root_type_const);
+CHAR_ISA(root_type, root_type_const);
+CHAR_ISA(quote, quote_const);
+CHAR_ISA_TYPE(letter, letters);
 CHAR_ISA_TYPE(number, numbers);
 CHAR_ISA_TYPE(function, functions);

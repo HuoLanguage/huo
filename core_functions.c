@@ -1,18 +1,31 @@
 #include <stdlib.h>
+#include "structures.h"
 
-long add(long a, long b){
-    return a + b;
+struct Value add(struct Value a, struct Value b){
+    a.data.ln = a.data.ln + b.data.ln;
+    return a;
 }
 
-long mul(long a, long b){
-    return a * b;
+struct Value mul(struct Value a, struct Value b){
+    a.data.ln = a.data.ln * b.data.ln;
+    return a;
 }
 
-long sub(long a, long b){
-    return a - b;
+struct Value sub(struct Value a, struct Value b){
+    a.data.ln = a.data.ln - b.data.ln;
+    return a;
 }
 
-long divide(long a, long b){
-    long result = (long)(a/b);
-    return result;
+struct Value divide(struct Value a, struct Value b){
+    a.data.ln = (long)(a.data.ln/b.data.ln);
+    return a;
+}
+
+void print(struct Value a){
+    if(a.type == 's'){
+        printf("%s\n", a.data.str.body);
+    } else {
+        printf("%ld\n", a.data.ln);
+    }
+
 }

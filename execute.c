@@ -1,16 +1,16 @@
 #include "structures.h"
 #include "core_functions.c"
 
-long execute (struct Tree *);
+struct Value execute (struct Tree *);
 
-long reduce(struct Tree * children[], int length, char func){
+struct Value reduce(struct Tree * children[], int length, char func){
 
-    long result = execute(children[0]);
+    struct Value result = execute(children[0]);
 
     for(int i = 1; i < length; i++){
         if(children[i]->type == 'f'){
 
-            long newResult = execute(children[i]);
+            struct Value newResult = execute(children[i]);
 
             if(func == '*'){
                 result = mul(result, newResult);
@@ -23,51 +23,46 @@ long reduce(struct Tree * children[], int length, char func){
             }
         } else {
             if(func == '*'){
-                result = mul(result, atol(children[i]->content.body));
+                result = mul(result, children[i]->content);
             }
             else if(func == '+'){
-                result = add(result, atol(children[i]->content.body));
+                result = add(result, children[i]->content);
             }
             else if(func == '-'){
-                result = sub(result, atol(children[i]->content.body));
+                result = sub(result, children[i]->content);
             }
         }
     }
     return result;
 }
 
-long execute (struct Tree * ast){
-    long result = 0;
+struct Value execute (struct Tree * ast){
+    struct Value result;
     if(!ast->size){
-        return atol(ast->content.body);
+        return ast->content;
     }
     else if(ast->size > 2){
-        result = reduce(ast->children, ast->size, ast->content.body[0]);
+        result = reduce(ast->children, ast->size, ast->type);
+    }
+    else if(ast->size == 1){
+        struct Value a = execute(ast->children[0]);
+        if(ast->type == 'p'){
+            print(a);
+        }
     } else {
-        long a = 0;
-        long b = 0;
-        if(ast->children[0]->type == 'f'){
-            a = execute(ast->children[0]);
-        } else {
-            a = atol(ast->children[0]->content.body);
-        }
+        struct Value a = execute(ast->children[0]);
+        struct Value b = execute(ast->children[1]);
 
-        if(ast->children[1]->type == 'f'){
-            b = execute(ast->children[1]);
-        } else {
-            b = atol(ast->children[1]->content.body);
-        }
-
-        if(ast->content.body[0] == '*'){
+        if(ast->type == '*'){
             result = mul(a, b);
         }
-        else if(ast->content.body[0] == '+'){
+        else if(ast->type == '+'){
             result = add(a, b);
         }
-        else if(ast->content.body[0] == '-'){
+        else if(ast->type == '-'){
             result = sub(a, b);
         }
-        else if(ast->content.body[0] == '/'){
+        else if(ast->type == '/'){
             result = divide(a, b);
         }
     }

@@ -18,21 +18,39 @@ struct Tree * parse(struct Tree * root, struct Tokens *tokens){
             root->size++;
         }
         else if(is_a_function(token.type)){
-            struct String content = {
-                .length = 1
-            };
-            root->content = content;
-            root->content.body[0] = token.type;
+            root->type = token.type;
         }
-        else if(token.type == 'n'){
+        else if(token.type == 's'){
             struct Tree * value = malloc(sizeof(struct Tree));
-            value->type = 'n';
+            value->type = token.type;
             value->size = 0;
             struct String content = {
                 .length = token.data.length
             };
-            value->content = content;
-            strcpy(value->content.body, token.data.body);
+            strcpy(content.body, token.data.body);
+            struct Value val = {
+                .type='s',
+                .data={
+                    .str=content
+                }
+            };
+            value->content = val;
+
+            root->children[root->size] = value;
+            root->size++;
+        }
+        else if(token.type == 'n'){
+            struct Tree * value = malloc(sizeof(struct Tree));
+            value->type = token.type;
+            value->size = 0;
+            long content = atol(token.data.body);
+            struct Value val = {
+                .type='l',
+                .data={
+                    .ln=content
+                }
+            };
+            value->content = val;
 
             root->children[root->size] = value;
             root->size++;

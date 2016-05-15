@@ -42,17 +42,11 @@ int main(int argc, char const *argv[]) {
     struct Tree root;
     root.type = 'r';
     root.size = 0;
-    struct String content = {
-        .body = "root",
-        .length = 4
-    };
-    root.content = content;
 
     struct Tree * ast = parse(&root, tokens);
     //this two lines print the AST for reference
     // printTree(ast);
     // printf("\n");
-    long result = execute(ast->children[0]);
-    printf("%ld\n", result);
+    execute(ast->children[0]);
     return 0;
 }

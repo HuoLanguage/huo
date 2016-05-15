@@ -2,7 +2,7 @@
 #define _STRUCTURES_H
 
 struct String {
-    char body[50];
+    char body[80];
     int length;
 };
 
@@ -17,17 +17,32 @@ struct Tokens {
     int counter;
 };
 
+union Data {
+    long ln;
+    struct String str;
+};
+
+struct Value {
+    char type;
+    union Data data;
+};
+
+struct Keyval {
+    struct Value key;
+    struct Value val;
+};
+
+struct Map {
+    int size;
+    struct Keyval * members[];
+};
+
 struct Tree {
     char type;
     int size;
-    struct String content;
+    struct Value content;
     struct Tree * children[10];
     struct Tree * parent;
-};
-
-struct Array {
-    int length;
-    struct Tree trees[1000];
 };
 
 #endif /* _STRUCTURES_H */
