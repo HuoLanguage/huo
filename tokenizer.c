@@ -40,8 +40,6 @@ struct Tokens * tokenize(struct String file, struct Tokens *content){
                 }
             }
             else if(is_a_function(c)){
-                // so long as a letter can be a function, this needs
-                // to come before the is_a_letter test case
                 t.type = c;
             }
             else if(is_a_letter(c)){

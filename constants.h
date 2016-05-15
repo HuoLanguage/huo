@@ -34,8 +34,8 @@ int string_matches(struct String base, struct String compare){
 }
 
 struct String functions = {
-    .body = "*+-_/p\0",
-    .length = 6
+    .body = "*+-_/\0",
+    .length = 5
 };
 
 struct String numbers = {
@@ -46,6 +46,11 @@ struct String numbers = {
 struct String letters = {
     .body = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
     .length = 52
+};
+
+struct String print_const = {
+    .body = "print",
+    .length = 5
 };
 
 const char open_parens_const = '(';

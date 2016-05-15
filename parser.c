@@ -20,6 +20,20 @@ struct Tree * parse(struct Tree * root, struct Tokens *tokens){
         else if(is_a_function(token.type)){
             root->type = token.type;
         }
+        else if(token.type == 'k'){
+            root->type = token.type;
+            struct String content = {
+                .length = token.data.length
+            };
+            strcpy(content.body, token.data.body);
+            struct Value val = {
+                .type='s',
+                .data={
+                    .str=content
+                }
+            };
+            root->content = val;
+        }
         else if(token.type == 's'){
             struct Tree * value = malloc(sizeof(struct Tree));
             value->type = token.type;

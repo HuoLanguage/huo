@@ -46,8 +46,10 @@ struct Value execute (struct Tree * ast){
     }
     else if(ast->size == 1){
         struct Value a = execute(ast->children[0]);
-        if(ast->type == 'p'){
-            print(a);
+        if(ast->type == 'k'){
+            if(string_matches(ast->content.data.str, print_const)){
+                print(a);
+            }
         }
     } else {
         struct Value a = execute(ast->children[0]);
