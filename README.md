@@ -8,30 +8,34 @@ It has lispy syntax because it's easy to parse into a tree.
 ```
 Numbers are all doubles unless you divide them. Then they are all floats.
 ```code
-(+ 3 3)
-returns 6
+(+ 3 3) // 6
 
-(+ 3 (/ 10 4))
-returns 5.500000
+(+ 3 (/ 10 4)) // 5.500000
 
-(* 3 (/ 10 4))
-returns 7.500000
+(* 3 (/ 10 4)) // 7.500000
 ```
 Huo currently supports the following functions:
 ```code
-basic operators
+basic math
 + - * /
 ```
+print: print a value to the console
 ```code
-print for printing values
-(print (* 3 6))
-outputs 18 to the console
-
-cat for concatenating strings
-(cat "hello " "world!)
-returns "hello world!"
+(print (* 3 6)) // prints 18 to the console
 ```
+cat: concatenate strings
+```code
+(cat "hello " "world!) // returns "hello world!"
+```
+booleans
+```code
+(= 3 2) // returns false
+(= 1 1) // returns true
+(= "Hey" "hey") // returns true
 
+(! 1 3) // returns true
+(! "Hey" (cat "He" "y")) // returns false
+```
 
 
 
