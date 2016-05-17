@@ -1,6 +1,29 @@
 #include <stdlib.h>
 #include "structures.h"
 
+void print(struct Value a){
+    if(a.type == 's'){
+        printf("%s", a.data.str.body);
+    }
+    else if(a.type == 'l') {
+        printf("%ld", a.data.ln);
+    }
+    else if(a.type == 'f') {
+        printf("%f", a.data.fl);
+    }
+    else if(a.type == 'b') {
+        if(a.data.bl == bool_true){
+            printf("True");
+        }
+        else if(a.data.bl == bool_false){
+            printf("False");
+        }
+        else if(a.data.bl == bool_undefined){
+            printf("Unknown");
+        }
+    }
+}
+
 struct Value add(struct Value a, struct Value b){
     if(a.type == 'l' && b.type == 'l'){
         a.data.ln = a.data.ln + b.data.ln;
@@ -80,14 +103,70 @@ struct Value concat(struct Value a, struct Value b){
     return a;
 }
 
-void print(struct Value a){
-    if(a.type == 's'){
-        printf("%s\n", a.data.str.body);
+struct Value not(struct Value a, struct Value b){
+    if(a.type == 'f' && b.type == 'f'){
+        a.type = 'b';
+        if(a.data.fl == b.data.fl){
+            a.data.bl = bool_false;
+        } else {
+            a.data.bl = bool_true;
+        }
     }
-    else if(a.type == 'l') {
-        printf("%ld\n", a.data.ln);
+    else if(a.type == 'l' && b.type == 'l'){
+        a.type = 'b';
+        if(a.data.ln == b.data.ln){
+            a.data.bl = bool_false;
+        } else {
+            a.data.bl = bool_true;
+        }
     }
-    else if(a.type == 'f') {
-        printf("%f\n", a.data.fl);
+    else if(a.type == 's' && b.type == 's'){
+        a.type = 'b';
+        if(string_matches(a.data.str, b.data.str)){
+            a.data.bl = bool_false;
+        } else {
+            a.data.bl = bool_true;
+        }
+    } else {
+        printf("Error: mismatched types for values: ");
+        print(a);
+        printf(" and ");
+        print(b);
+        printf("in not function.\n");
     }
+    return a;
+}
+
+struct Value equals(struct Value a, struct Value b){
+    if(a.type == 'f' && b.type == 'f'){
+        a.type = 'b';
+        if(a.data.fl == b.data.fl){
+            a.data.bl = bool_true;
+        } else {
+            a.data.bl = bool_false;
+        }
+    }
+    else if(a.type == 'l' && b.type == 'l'){
+        a.type = 'b';
+        if(a.data.ln == b.data.ln){
+            a.data.bl = bool_true;
+        } else {
+            a.data.bl = bool_false;
+        }
+    }
+    else if(a.type == 's' && b.type == 's'){
+        a.type = 'b';
+        if(string_matches(a.data.str, b.data.str)){
+            a.data.bl = bool_true;
+        } else {
+            a.data.bl = bool_false;
+        }
+    } else {
+        printf("Error: mismatched types for values: ");
+        print(a);
+        printf(" and ");
+        print(b);
+        printf(" in equals function.\n");
+    }
+    return a;
 }

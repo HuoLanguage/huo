@@ -34,8 +34,8 @@ int string_matches(struct String base, struct String compare){
 }
 
 struct String functions = {
-    .body = "*+-_/\0",
-    .length = 5
+    .body = "*+-_/!=\0",
+    .length = 7
 };
 
 struct String numbers = {
@@ -57,6 +57,10 @@ struct String concat_const = {
     .body = "cat",
     .length = 3
 };
+
+const char bool_true = 't';
+const char bool_false = 'f';
+const char bool_undefined = 'u';
 
 const char open_parens_const = '(';
 const char close_parens_const = ')';

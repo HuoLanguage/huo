@@ -18,6 +18,7 @@ struct Tokens {
 };
 
 union Data {
+    char bl;
     long ln;
     float fl;
     struct String str;

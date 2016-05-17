@@ -49,6 +49,7 @@ struct Value execute (struct Tree * ast){
         if(ast->type == 'k'){
             if(string_matches(ast->content.data.str, print_const)){
                 print(a);
+                printf("\n");
             }
         }
     } else {
@@ -71,6 +72,12 @@ struct Value execute (struct Tree * ast){
         }
         else if(ast->type == '/'){
             result = divide(a, b);
+        }
+        else if(ast->type == '!'){
+            result = not(a, b);
+        }
+        else if(ast->type == '='){
+            result = equals(a, b);
         }
     }
     return result;
