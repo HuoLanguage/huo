@@ -58,6 +58,11 @@ struct String concat_const = {
     .length = 3
 };
 
+struct String if_const = {
+    .body = "if",
+    .length = 2
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';
