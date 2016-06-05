@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "structures.h"
 
-struct Tree * parse(struct Tree * root, struct Tokens *tokens){
+void parse(struct Tree * root, struct Tokens *tokens){
 
     while(tokens->counter < tokens->length){
         struct Token token = tokens->tokens[tokens->counter];
@@ -13,26 +13,47 @@ struct Tree * parse(struct Tree * root, struct Tokens *tokens){
             tree->size = 0;
 
             tokens->counter++;
-            struct Tree * child = parse(tree, tokens);
-            root->children[root->size] = child;
+            parse(tree, tokens);
+            root->children[root->size] = tree;
             root->size++;
         }
         else if(is_a_function(token.type)){
             root->type = token.type;
         }
         else if(token.type == 'k'){
-            root->type = token.type;
-            struct String content = {
-                .length = token.data.length
-            };
-            strcpy(content.body, token.data.body);
-            struct Value val = {
-                .type='s',
-                .data={
-                    .str=content
-                }
-            };
-            root->content = val;
+            // if we are inside a def call this could be name or args
+            if(root->type != 'f'){
+                struct Tree * value = malloc(sizeof(struct Tree));
+                value->type = token.type;
+                value->size = 0;
+                struct String content = {
+                    .length = token.data.length
+                };
+                strcpy(content.body, token.data.body);
+                struct Value val = {
+                    .type='s',
+                    .data={
+                        .str=content
+                    }
+                };
+                value->content = val;
+
+                root->children[root->size] = value;
+                root->size++;
+            } else {
+                root->type = token.type;
+                struct String content = {
+                    .length = token.data.length
+                };
+                strcpy(content.body, token.data.body);
+                struct Value val = {
+                    .type='s',
+                    .data={
+                        .str=content
+                    }
+                };
+                root->content = val;
+            }
         }
         else if(token.type == 's'){
             struct Tree * value = malloc(sizeof(struct Tree));
@@ -70,9 +91,9 @@ struct Tree * parse(struct Tree * root, struct Tokens *tokens){
             root->size++;
         }
         else if(token.type == 'c'){
-            return root;
+            return;
         }
         tokens->counter++;
     }
-    return root;
+    return;
 }

@@ -4,19 +4,7 @@
 #include "parser.c"
 #include "structures.h"
 #include "execute.c"
-//
-void printTree(struct Tree *tree){
-    printf("{ type: %c, size: %d ", tree->type, tree->size);
-    if(tree->size && tree->size < 100){
-        printf("children: ");
-        int counter = 0;
-        while(counter < tree->size){
-            printTree(tree->children[counter]);
-            counter++;
-        }
-    }
-    printf("}");
-};
+#include "store_defs.c"
 
 int main(int argc, char const *argv[]) {
     FILE *fp;
@@ -43,10 +31,14 @@ int main(int argc, char const *argv[]) {
     root.type = 'r';
     root.size = 0;
 
-    struct Tree * ast = parse(&root, tokens);
-    //this two lines print the AST for reference
-    // printTree(ast);
-    // printf("\n");
-    execute(ast->children[0]);
+    parse(&root, tokens);
+    struct Tree_map * defined = malloc(sizeof(struct Tree_map));
+    // this two lines print the AST for reference
+    // printTree(&root);
+    printf("\n");
+    int num_defs = store_defs(&root, defined);
+    for(int i = num_defs; i < root.size; i++){
+        execute(root.children[i], defined);
+    }
     return 0;
 }

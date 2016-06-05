@@ -30,17 +30,23 @@ struct Value {
 };
 
 struct Keyval {
-    struct Value key;
-    struct Value val;
+    struct Value * key;
+    struct Value * val;
+};
+
+struct Tree_map {
+    struct String * names [20];
+    struct Tree * trees [20];
+    int size;
 };
 
 struct Map {
     int size;
-    struct Keyval * members[];
+    struct Keyval * members[20];
 };
 
 struct Tree {
-    char type;
+    char type; // [o]pen, [f]unction [k]eyword [c]lose [s]tring [n]umber
     int size;
     struct Value content;
     struct Tree * children[10];
