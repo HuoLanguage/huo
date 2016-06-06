@@ -41,7 +41,7 @@ int main(int argc, char const *argv[]) {
     struct Tree_map * defined = malloc(sizeof(struct Tree_map));
     // this two lines print the AST for reference
     // printTree(&root);
-    printf("\n");
+    // printf("\n");
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){
         execute(root.children[i], defined);

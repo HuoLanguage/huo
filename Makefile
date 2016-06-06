@@ -17,13 +17,13 @@ objs = \
   store_defs.o \
   parser.o \
   execute.o \
-  main.o
+  huo.o
 
-all: main
+all: huo
 
-main: $(objs)
+huo: $(objs)
 
-clean: ; rm -f -- .*.mk *.o huo
+clean: ; rm -f -- .*.mk *.o
 
 .PHONY: all clean
 .DELETE_ON_ERROR:
