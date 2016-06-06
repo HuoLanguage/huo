@@ -1,12 +1,18 @@
 #include <stdint.h>
 #include <stdio.h>
-#include "tokenizer.c"
-#include "parser.c"
+#include <stdlib.h>
+#include "tokenizer.h"
+#include "parser.h"
 #include "structures.h"
-#include "execute.c"
-#include "store_defs.c"
+#include "execute.h"
+#include "store_defs.h"
 
 int main(int argc, char const *argv[]) {
+    if(argc < 2){
+        printf("Error: you have run Huo without pointing it to a file.\n");
+        return 0;
+    }
+
     FILE *fp;
     fp = fopen(argv[1], "r");
 

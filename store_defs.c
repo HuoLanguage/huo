@@ -1,4 +1,5 @@
 #include "structures.h"
+#include "constants.h"
 
 int store_defs(struct Tree * ast, struct Tree_map * defined){
     int num_defs = 0;
@@ -11,13 +12,4 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
         }
     }
     return num_defs;
-}
-
-int is_defined_func(struct Tree_map * defined, struct String key){
-    for(int i = 0; i < defined->size; i++){
-        if(string_matches(*defined->names[i], key)){
-            return i;
-        }
-    }
-    return -1;
 }

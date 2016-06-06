@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "structures.h"
+#include "constants.h"
 
 void parse(struct Tree * root, struct Tokens *tokens){
 

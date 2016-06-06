@@ -1,5 +1,8 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "structures.h"
+#include "constants.h"
+#include "base_util.h"
 
 void print(struct Value a){
     if(a.type == 's'){
