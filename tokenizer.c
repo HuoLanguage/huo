@@ -18,6 +18,12 @@ struct Tokens * tokenize(struct String file, struct Tokens *content){
             else if(is_a_close_parens(c)){
                 t.type = 'c';
             }
+            else if(is_a_bracket(c)){
+                t.type = 'b';
+            }
+            else if(is_a_end_bracket(c)){
+                t.type = 'e';
+            }
             else if(is_a_number(c)){
                 t.type = 'n';
                 while(is_a_number(c)){

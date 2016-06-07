@@ -23,6 +23,8 @@ void copy_value(struct Value * a, struct Value * b){
         a->data.ln = b->data.ln;
     } else if (a->type == 'b'){
         a->data.bl = b->data.bl;
+    } else if (a->type == 'a'){
+        a->data.array = b->data.array;
     }
 }
 

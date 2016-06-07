@@ -48,11 +48,15 @@ const char open_parens_const = '(';
 const char close_parens_const = ')';
 const char root_type_const = 'r';
 const char quote_const = '"';
+const char bracket_const = '[';
+const char end_bracket_const = ']';
 
 int is_a_open_parens(char ch){ return ch == open_parens_const; }
 int is_a_close_parens(char ch){ return ch == close_parens_const; }
 int is_a_root_type(char ch){ return ch == root_type_const; }
 int is_a_quote(char ch){ return ch == quote_const; }
+int is_a_bracket(char ch){ return ch == bracket_const; }
+int is_a_end_bracket(char ch){ return ch == end_bracket_const; }
 
 int is_a_letter(char ch){
     return string_contains(ch, &letters);

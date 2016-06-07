@@ -22,11 +22,17 @@ union Data {
     long ln;
     float fl;
     struct String str;
+    struct Value_array * array;
 };
 
 struct Value {
     char type;
     union Data data;
+};
+
+struct Value_array {
+    int size;
+    struct Value * values[100];
 };
 
 struct Keyval {
@@ -46,7 +52,7 @@ struct Map {
 };
 
 struct Tree {
-    char type; // [o]pen, [f]unction [k]eyword [c]lose [s]tring [n]umber
+    char type; // [o]pen, [f]unction [k]eyword [c]lose [s]tring [n]umber [b]racket [e]nd bracket
     int size;
     struct Value content;
     struct Tree * children[10];

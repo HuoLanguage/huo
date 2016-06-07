@@ -6,7 +6,7 @@
 
 void print(struct Value a){
     if(a.type == 's'){
-        printf("%s", a.data.str.body);
+        printf("\"%s\"", a.data.str.body);
     }
     else if(a.type == 'l') {
         printf("%ld", a.data.ln);
@@ -24,6 +24,16 @@ void print(struct Value a){
         else if(a.data.bl == bool_undefined){
             printf("Unknown");
         }
+    }
+    else if(a.type == 'a') {
+        printf("[ ");
+        for(int i = 0; i < a.data.array->size; i++){
+            print(*a.data.array->values[i]);
+            if(i < a.data.array->size-1){
+              printf(", ");
+            }
+        }
+        printf(" ]");
     }
 }
 
