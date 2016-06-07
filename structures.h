@@ -42,7 +42,7 @@ struct Tree_map {
 
 struct Map {
     int size;
-    struct Keyval * members[20];
+    struct Keyval * members[200];
 };
 
 struct Tree {

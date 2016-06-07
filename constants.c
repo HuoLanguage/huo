@@ -35,6 +35,11 @@ struct String def_const = {
     .length = 3
 };
 
+struct String let_const = {
+    .body = "let",
+    .length = 3
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

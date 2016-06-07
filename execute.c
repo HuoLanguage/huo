@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "structures.h"
 #include "core_functions.h"
 #include "base_util.h"
@@ -6,12 +7,12 @@
 #include "constants.h"
 #include "execute.h"
 
-struct Value reduce(struct Tree * ast, struct Tree_map * defined){
-    struct Value result = execute(ast->children[0], defined);
+struct Value reduce(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
+    struct Value result = execute(ast->children[0], defined, let_map);
 
     for(int i = 1; i < ast->size; i++){
         if(ast->children[i]->type == 'f'){
-            struct Value newResult = execute(ast->children[i], defined);
+            struct Value newResult = execute(ast->children[i], defined, let_map);
             result = apply_core_function(ast, result, newResult);
         } else {
             result = apply_core_function(ast, result, ast->children[i]->content);
@@ -20,33 +21,51 @@ struct Value reduce(struct Tree * ast, struct Tree_map * defined){
     return result;
 }
 
-struct Value execute (struct Tree * ast, struct Tree_map * defined){
+struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
     struct Value result;
     // first check for special kinds of execution
     if(string_matches(ast->content.data.str, if_const)){
-        result = execute(ast->children[0], defined);
-        if(result.type != 'b'){
-            // throw error
+        result = execute(ast->children[0], defined, let_map);
+        if(result.type != 'b'){ // throw error
         }
         else if(result.data.bl == 't'){ // result is boolean true
-            result = execute(ast->children[1], defined);
+            result = execute(ast->children[1], defined, let_map);
         }
         else if(result.data.bl == 'f'){ // result is boolean false
-            result = execute(ast->children[2], defined);
+            result = execute(ast->children[2], defined, let_map);
         }
         return result;
     }
+    if(string_matches(let_const, ast->content.data.str)){
+      struct Keyval * let_binding = malloc(sizeof(struct Keyval));
+      let_binding->key = malloc(sizeof(struct Value));
+      copy_value(let_binding->key, &ast->children[0]->content);
+      struct Value val = execute(ast->children[1], defined, let_map);
+      struct Value * val_ptr = malloc(sizeof(struct Value));
+      copy_value(val_ptr, &val);
+      let_binding->val = val_ptr;
+      let_map->members[let_map->size] = let_binding;
+      let_map->size++;
+      return val;
+    }
 
-    // then check for function invocations
     int idx;
     if(!ast->size){
-        return ast->content;
+        if(ast->type == 'k'){
+            for(int i = 0; i < let_map->size; i++){
+              if(string_matches(let_map->members[i]->key->data.str, ast->content.data.str)){
+                  return *let_map->members[i]->val;
+              }
+            }
+        } else {
+            return ast->content;
+        }
     }
     else if(ast->type == 'k' && (idx = is_defined_func(defined, ast->content.data.str)) > -1){
-        return execute_defined_func(ast, defined, idx);
+        return execute_defined_func(ast, defined, let_map, idx);
     }
     else if(ast->size == 1){
-        struct Value a = execute(ast->children[0], defined);
+        struct Value a = execute(ast->children[0], defined, let_map);
         if(ast->type == 'k'){
             if(string_matches(ast->content.data.str, print_const)){
                 print(a);
@@ -55,11 +74,11 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined){
         }
     }
     else if(ast->size == 2) {
-        struct Value a = execute(ast->children[0], defined);
-        struct Value b = execute(ast->children[1], defined);
+        struct Value a = execute(ast->children[0], defined, let_map);
+        struct Value b = execute(ast->children[1], defined, let_map);
         result = apply_core_function(ast, a, b);
     } else {
-        result = reduce(ast, defined);
+        result = reduce(ast, defined, let_map);
     }
     return result;
 }
@@ -93,8 +112,8 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
     return result;
 }
 
-struct Value execute_defined_func(struct Tree * ast, struct Tree_map * defined, int idx){
+struct Value execute_defined_func(struct Tree * ast, struct Tree_map * defined, struct Map * let_map, int idx){
     struct Map * arguments = make_args_map(ast, defined, idx);
     struct Tree * populated_ast = populate_args(arguments, get_defined_body(defined->trees[idx]));
-    return execute(populated_ast, defined);
+    return execute(populated_ast, defined, let_map);
 }

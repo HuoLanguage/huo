@@ -6,6 +6,7 @@
 #include "structures.h"
 #include "execute.h"
 #include "store_defs.h"
+#include "base_util.h"
 
 int main(int argc, char const *argv[]) {
     if(argc < 2){
@@ -39,12 +40,13 @@ int main(int argc, char const *argv[]) {
 
     parse(&root, tokens);
     struct Tree_map * defined = malloc(sizeof(struct Tree_map));
+    struct Map * let_map = malloc(sizeof(struct Map));
     // this two lines print the AST for reference
     // printTree(&root);
     // printf("\n");
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){
-        execute(root.children[i], defined);
+        execute(root.children[i], defined, let_map);
     }
     return 0;
 }
