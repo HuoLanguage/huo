@@ -13,6 +13,8 @@ extern struct String concat_const;
 extern struct String if_const;
 extern struct String def_const;
 extern struct String let_const;
+extern struct String length_const;
+extern struct String index_const;
 
 extern const char bool_true;
 extern const char bool_false;

@@ -183,3 +183,25 @@ struct Value equals(struct Value a, struct Value b){
     }
     return a;
 }
+
+struct Value length(struct Value a){
+    if(a.type != 'a'){
+      printf("Error: tried to get length of non-array value.\n");
+    } else {
+      struct Value length = {
+          .type = 'l',
+          .data = {
+            .ln=(long)a.data.array->size
+          }
+      };
+      return length;
+    }
+    return a;
+}
+
+struct Value array_index(struct Value a, struct Value arr){
+    if(a.type != 'l' || arr.type != 'a'){
+        printf("Error: index takes a number and an array.");
+    }
+    return *arr.data.array->values[a.data.ln];
+}

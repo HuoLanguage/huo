@@ -11,5 +11,7 @@ struct Value divide(struct Value a, struct Value b);
 struct Value concat(struct Value a, struct Value b);
 struct Value not(struct Value a, struct Value b);
 struct Value equals(struct Value a, struct Value b);
+struct Value length(struct Value a);
+struct Value array_index(struct Value a, struct Value arr);
 
 #endif

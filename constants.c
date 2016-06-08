@@ -40,6 +40,16 @@ struct String let_const = {
     .length = 3
 };
 
+struct String length_const = {
+    .body = "length",
+    .length = 6
+};
+
+struct String index_const = {
+    .body = "index",
+    .length = 5
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

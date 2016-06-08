@@ -71,6 +71,9 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
                 print(a);
                 printf("\n");
             }
+            if(string_matches(ast->content.data.str, length_const)){
+                return length(a);
+            }
         }
     }
     else if(ast->size == 2) {
@@ -89,6 +92,9 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
     if(ast->type == 'k'){
         if(string_matches(ast->content.data.str, concat_const)){
             result = concat(a, b);
+        }
+        if(string_matches(ast->content.data.str, index_const)){
+            result = array_index(a, b);
         }
     }
     else if(ast->type == '*'){
