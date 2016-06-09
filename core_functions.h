@@ -14,5 +14,6 @@ struct Value equals(struct Value a, struct Value b);
 struct Value length(struct Value a);
 struct Value array_index(struct Value a, struct Value arr);
 struct Value array_push(struct Value a, struct Value arr);
+struct Value array_add(struct Value a, struct Value b);
 
 #endif

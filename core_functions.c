@@ -3,6 +3,7 @@
 #include "structures.h"
 #include "constants.h"
 #include "base_util.h"
+#include "core_functions.h"
 
 void print(struct Value a){
     if(a.type == 's'){
@@ -50,6 +51,21 @@ struct Value add(struct Value a, struct Value b){
     else if(a.type == 'l' && b.type == 'f'){
         a.data.fl = (float)a.data.ln + b.data.fl;
         a.type = 'f';
+    }
+    else if(a.type == 'a' && b.type == 'a'){
+        return array_add(a, b);
+    }
+    return a;
+}
+
+struct Value array_add(struct Value a, struct Value b){
+    if(a.data.array->size != b.data.array->size){
+        printf("Error: tried to add arrays of different sizes");
+    } else {
+        for(int i = 0; i < a.data.array->size; i++){
+            struct Value result = add(*a.data.array->values[i], *b.data.array->values[i]);
+            copy_value(a.data.array->values[i], &result);
+        }
     }
     return a;
 }
