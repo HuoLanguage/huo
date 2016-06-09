@@ -205,3 +205,11 @@ struct Value array_index(struct Value a, struct Value arr){
     }
     return *arr.data.array->values[a.data.ln];
 }
+
+struct Value array_push(struct Value a, struct Value arr){
+    struct Value * val = malloc(sizeof(struct Value));
+    copy_value(val, &a);
+    arr.data.array->values[arr.data.array->size] = val;
+    arr.data.array->size++;
+    return arr;
+}

@@ -2,3 +2,8 @@
 (print x)
 (print (length x))
 (print (index 3 x))
+(print (push 5 x))
+(print (length x))
+(let y [[1, 2], [3, [5, 6]]])
+(print y)
+(print (index 0 y)

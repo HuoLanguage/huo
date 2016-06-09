@@ -33,13 +33,16 @@ int main(int argc, char const *argv[]) {
     fclose(fp);
 
     struct Tokens *tokens = tokenize(file, &t);
+    // for(int i = 0; i < tokens->length; i++){
+    //     printf("%c", tokens->tokens[i].type);
+    // }
 
     struct Tree root;
     root.type = 'r';
     root.size = 0;
 
     parse(&root, tokens);
-    // this two lines print the AST for reference
+    // this prints the AST for reference
     // printTree(&root);
     // printf("\n");
     struct Tree_map * defined = malloc(sizeof(struct Tree_map));

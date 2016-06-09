@@ -93,8 +93,11 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
         if(string_matches(ast->content.data.str, concat_const)){
             result = concat(a, b);
         }
-        if(string_matches(ast->content.data.str, index_const)){
+        else if(string_matches(ast->content.data.str, index_const)){
             result = array_index(a, b);
+        }
+        else if(string_matches(ast->content.data.str,push_const)){
+            result = array_push(a, b);
         }
     }
     else if(ast->type == '*'){

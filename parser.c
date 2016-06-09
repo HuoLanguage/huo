@@ -4,6 +4,7 @@
 #include "structures.h"
 #include "constants.h"
 #include "core_functions.h"
+#include "build_array.h"
 
 void parse(struct Tree * root, struct Tokens *tokens){
 
@@ -31,24 +32,8 @@ void parse(struct Tree * root, struct Tokens *tokens){
             };
             content.data.array = malloc(sizeof(struct Value_array));
             content.data.array->size = 0;
-            while(tokens->tokens[tokens->counter].type != 'e'){
-                tokens->counter++;
-                if(tokens->tokens[tokens->counter].type == 's'){
-                    struct Value * val = malloc(sizeof(struct Value));
-                    val->type = 's';
-                    val->data.str.length = tokens->tokens[tokens->counter].data.length;
-                    strcpy(val->data.str.body, tokens->tokens[tokens->counter].data.body);
-                    content.data.array->values[content.data.array->size] = val;
-                    content.data.array->size++;
-                }
-                else if(tokens->tokens[tokens->counter].type == 'n'){
-                    struct Value * val = malloc(sizeof(struct Value));
-                    val->data.ln = atol(tokens->tokens[tokens->counter].data.body);
-                    val->type = 'l';
-                    content.data.array->values[content.data.array->size] = val;
-                    content.data.array->size++;
-                }
-            }
+            build_array(content.data.array, tokens);
+
             value->content = content;
             root->children[root->size] = value;
             root->size++;

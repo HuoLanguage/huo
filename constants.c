@@ -50,6 +50,11 @@ struct String index_const = {
     .length = 5
 };
 
+struct String push_const = {
+    .body = "push",
+    .length = 4
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

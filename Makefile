@@ -12,6 +12,7 @@ objs = \
   constants.o \
   base_util.o \
   core_functions.o \
+  build_array.o \
   tokenizer.o \
   process_defs.o \
   store_defs.o \
