@@ -1,0 +1,4 @@
+(let x 0)
+(let y [1, 5, 3, 4, 7, 9, 6, 8])
+(each y item i (let x (+ x item)))
+(print (/ x (length y))

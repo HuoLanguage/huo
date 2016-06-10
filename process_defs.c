@@ -4,11 +4,11 @@
 struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx){
     struct Map * arguments = malloc(sizeof(struct Map));
     for(int i = 0; i < ast->size; i++){
+        struct Keyval * store = malloc(sizeof(struct Keyval));
         struct Value * key = malloc(sizeof(struct Value));
         struct Value * val = malloc(sizeof(struct Value));
         copy_value(key, &defined->trees[idx]->children[i+1]->content);
         copy_value(val, &ast->children[i]->content);
-        struct Keyval * store = malloc(sizeof(struct Keyval));
         arguments->members[i] = store;
         arguments->members[i]->key = key;
         arguments->members[i]->val = val;

@@ -55,6 +55,11 @@ struct String push_const = {
     .length = 4
 };
 
+struct String each_const = {
+    .body = "each",
+    .length = 4
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

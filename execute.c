@@ -6,6 +6,7 @@
 #include "process_defs.h"
 #include "constants.h"
 #include "execute.h"
+#include "populate_each_function.h"
 
 struct Value reduce(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
     struct Value result = execute(ast->children[0], defined, let_map);
@@ -44,9 +45,35 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
       struct Value * val_ptr = malloc(sizeof(struct Value));
       copy_value(val_ptr, &val);
       let_binding->val = val_ptr;
-      let_map->members[let_map->size] = let_binding;
-      let_map->size++;
+      int index = -1;
+      for(int i = 0; i < let_map->size; i++){
+          if(string_matches(let_binding->key->data.str, let_map->members[i]->key->data.str)){
+              index = i;
+          }
+      }
+      if(index > -1){
+          let_map->members[index] = let_binding;
+      } else {
+          let_map->members[let_map->size] = let_binding;
+          let_map->size++;
+      }
       return val;
+    }
+    if(string_matches(each_const, ast->content.data.str)){
+        struct Value array = execute(ast->children[0], defined, let_map);
+        for(int i = 0; i < array.data.array->size; i++){
+            struct Value * item = array.data.array->values[i];
+            struct Value index = {
+                .type = 'l',
+                .data = {
+                    .ln=(long)i
+                }
+            };
+            struct Tree * function = duplicate_tree(ast->children[3]);
+            populate_each_function(&ast->children[1]->content, &ast->children[2]->content, function, item, &index);
+            execute(function, defined, let_map);
+        }
+        return array;
     }
 
     int idx;

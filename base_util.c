@@ -1,6 +1,7 @@
 #include "structures.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int string_contains(char ch, struct String* string){
     if(!string->length){ return 0; }
@@ -28,6 +29,17 @@ void copy_value(struct Value * a, struct Value * b){
     }
 }
 
+struct Tree * duplicate_tree(struct Tree * a){
+    struct Tree * root = malloc(sizeof(struct Tree));
+    root->type = a->type;
+    copy_value(&root->content, &a->content);
+    for(int i = 0; i < a->size; i++){
+        root->children[i] = duplicate_tree(a->children[i]);
+        root->size++;
+    }
+    return root;
+}
+
 int string_matches(struct String base, struct String compare){
     if(base.length != compare.length){
         return 0;
@@ -44,9 +56,24 @@ int string_matches(struct String base, struct String compare){
 
 void printTree(struct Tree *tree){
     if(!tree->size){
-      printf("{ type: \'%c\', size: %d }", tree->type, tree->size);
+      if(tree->type == 'k'){
+          printf("{ type: \'%c\', size: %d, keyword: %s }", tree->type, tree->size, tree->content.data.str.body);
+      }
+      else if(tree->type == 'n'){
+          printf("{ type: \'%c\', size: %d, value: %ld }", tree->type, tree->size, tree->content.data.ln);
+      }
+      else {
+          printf("{ type: \'%c\', size: %d }", tree->type, tree->size);
+      }
     } else {
-      printf("{ type: \'%c\', size: %d, ", tree->type, tree->size);
+      if(tree->type == 'k'){
+          printf("{ type: \'%c\', size: %d, keyword: %s ", tree->type, tree->size, tree->content.data.str.body);
+      }
+      else if(tree->type == 'n'){
+          printf("{ type: \'%c\', size: %d, value: %ld ", tree->type, tree->size, tree->content.data.ln);
+      } else {
+          printf("{ type: \'%c\', size: %d, ", tree->type, tree->size);
+      }
       if(tree->size && tree->size < 100){
         printf("children: [");
         int counter = 0;
