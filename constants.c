@@ -60,6 +60,11 @@ struct String each_const = {
     .length = 4
 };
 
+struct String map_const = {
+    .body = "map",
+    .length = 3
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

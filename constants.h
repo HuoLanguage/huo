@@ -17,6 +17,7 @@ extern struct String length_const;
 extern struct String index_const;
 extern struct String push_const;
 extern struct String each_const;
+extern struct String map_const;
 
 extern const char bool_true;
 extern const char bool_false;
