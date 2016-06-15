@@ -65,6 +65,11 @@ struct String map_const = {
     .length = 3
 };
 
+struct String reduce_const = {
+    .body = "reduce",
+    .length = 6
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

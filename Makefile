@@ -14,6 +14,7 @@ objs = \
   core_functions.o \
   build_array.o \
   populate_each_function.o \
+  populate_reduce_function.o \
   tokenizer.o \
   process_defs.o \
   store_defs.o \

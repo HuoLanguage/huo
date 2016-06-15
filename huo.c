@@ -32,7 +32,7 @@ int main(int argc, char const *argv[]) {
     }
     fclose(fp);
 
-    struct Tokens *tokens = tokenize(file, &t);
+    struct Tokens * tokens = tokenize(file, &t);
     // for(int i = 0; i < tokens->length; i++){
     //     printf("%c", tokens->tokens[i].type);
     // }

@@ -7,6 +7,7 @@
 #include "constants.h"
 #include "execute.h"
 #include "populate_each_function.h"
+#include "populate_reduce_function.h"
 
 struct Value reduce(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
     struct Value result = execute(ast->children[0], defined, let_map);
@@ -91,6 +92,25 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
             copy_value(item, &result);
         }
         return array;
+    }
+    if(string_matches(reduce_const, ast->content.data.str)){
+        int start = 0;
+        struct Value array = execute(ast->children[0], defined, let_map);
+        struct Value result;
+        if(ast->size == 5){
+            result = execute(ast->children[4], defined, let_map);
+        } else {
+            result = * array.data.array->values[0];
+            start = 1;
+        }
+        for(int i = start; i < array.data.array->size; i++){
+            struct Value * item = array.data.array->values[i];
+            struct Tree * function = duplicate_tree(ast->children[3]);
+
+            populate_reduce_function(&ast->children[1]->content, &ast->children[2]->content, function, item, &result);
+            result = execute(function, defined, let_map);
+        }
+        return result;
     }
 
     int idx;

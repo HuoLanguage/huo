@@ -1,0 +1,9 @@
+(def avg x
+    (/
+        (reduce x acc cur (+ acc cur))
+        (length x)
+    )
+)
+(let x [1,2,3,4,13])
+(print (reduce (push 4 [1,2,3]) acc cur (+ acc cur) 0))
+(print (avg x))
