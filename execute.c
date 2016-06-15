@@ -112,6 +112,35 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         }
         return result;
     }
+    if(string_matches(set_const, ast->content.data.str)){
+        struct Value index = execute(ast->children[0], defined, let_map);
+        struct Value item = execute(ast->children[1], defined, let_map);
+        struct Value array = execute(ast->children[2], defined, let_map);
+        result = array_set(index, item, array);
+        return result;
+    }
+    if(string_matches(for_const, ast->content.data.str)){
+        result.type = 'u'; //return undefined
+        struct Value start = execute(ast->children[0], defined, let_map);
+        struct Value end = execute(ast->children[1], defined, let_map);
+        if(start.data.ln > end.data.ln){
+            for(long i = start.data.ln; i > end.data.ln; i--){
+                execute(ast->children[2], defined, let_map);
+            }
+        } else {
+            for(long i = start.data.ln; i < end.data.ln; i++){
+                execute(ast->children[2], defined, let_map);
+            }
+        }
+        return result;
+    }
+    if(string_matches(do_const, ast->content.data.str)){
+        for(int i = 0; i < ast->size; i++){
+            execute(ast->children[i], defined, let_map);
+        }
+        result.type = 'u';
+        return result;
+    }
 
     int idx;
     if(!ast->size){
@@ -160,7 +189,7 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
         else if(string_matches(ast->content.data.str, index_const)){
             result = array_index(a, b);
         }
-        else if(string_matches(ast->content.data.str,push_const)){
+        else if(string_matches(ast->content.data.str, push_const)){
             result = array_push(a, b);
         }
     }

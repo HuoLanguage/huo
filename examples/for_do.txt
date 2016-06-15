@@ -1,0 +1,12 @@
+(let x 1)
+(for 0 50 (let x (+ x x)))
+(print x)
+(let y [ ])
+(for 0 25
+    (do
+        (print (length y))
+        (set (length y) (length y) y)
+    )
+)
+(print y)
+(print (reduce y acc cur (+ acc cur)))

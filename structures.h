@@ -26,7 +26,7 @@ union Data {
 };
 
 struct Value {
-    char type;
+    char type; // [f]loat [b]ool [l]ong [s]tring [a]rray [u]ndefined
     union Data data;
 };
 

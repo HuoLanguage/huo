@@ -36,6 +36,9 @@ void print(struct Value a){
         }
         printf(" ]");
     }
+    else if(a.type == 'u') {
+        printf("undefined");
+    }
 }
 
 struct Value add(struct Value a, struct Value b){
@@ -220,6 +223,17 @@ struct Value array_index(struct Value a, struct Value arr){
         printf("Error: index takes a number and an array.");
     }
     return *arr.data.array->values[a.data.ln];
+}
+
+struct Value array_set(struct Value index, struct Value item, struct Value array){
+    int idx = (int) index.data.ln;
+    if(idx > array.data.array->size-1){
+        struct Value * val = malloc(sizeof(struct Value));
+        array.data.array->values[idx] = val;
+        array.data.array->size = idx+1;
+    }
+    copy_value(array.data.array->values[idx], &item);
+    return array;
 }
 
 struct Value array_push(struct Value a, struct Value arr){

@@ -70,6 +70,21 @@ struct String reduce_const = {
     .length = 6
 };
 
+struct String set_const = {
+    .body = "set",
+    .length = 3
+};
+
+struct String for_const = {
+    .body = "for",
+    .length = 3
+};
+
+struct String do_const = {
+    .body = "do",
+    .length = 2
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

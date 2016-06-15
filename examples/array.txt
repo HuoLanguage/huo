@@ -8,5 +8,7 @@
 (print (index 2 z))
 (let a [[1, 2], [3, 4]])
 (let b [[5, 4], [2, 2]])
-(print (+ b a)
+(print (+ b a))
 (print (* b a))
+(set 0 1 a)
+(print a)
