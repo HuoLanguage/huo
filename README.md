@@ -2,13 +2,13 @@
 Writing an interpreted language in C for fun.
 
 ##features
-It has lispy syntax because it's easy to parse into a tree.
+It has lisp-like syntax for now because it's easy to parse into a tree.
 ```lisp
 (+ 3 (* 4 3))
 ```
-Numbers are all doubles unless you divide them. Then they are all floats.
+Numbers are longs, numbers with decimals are floats.
 ```lisp
-(+ 3 3) ; 6
+(+ 3 3.5) ; 6.500000
 
 (+ 3 (/ 10 4)) ; 5.500000
 
