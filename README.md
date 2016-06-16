@@ -56,6 +56,10 @@ arrays
 (push 5 [1, 2, 3, 4]) ; -> [1, 2, 3, 4, 5]
 (length [1, 2, 3]) ; -> 3
 
+; use set to change a value at a specific index
+; it takes index, item, and array as args
+(set 0 10 [1,2,3,4]) ; -> [ 10, 2, 3, 4 ]
+
 ; map and each both take four arguments:
 ; first the array you want to iterate over
 ; the names for the current item and the index
@@ -79,6 +83,30 @@ arrays
 (let x [1,2,3,4,13])
 (print (reduce (push 4 [1,2,3]) acc cur (+ acc cur) 0)) ; -> 10
 (print (avg x)) ; -> 4.600000
+```
+for loop
+```lisp
+; the for loop takes three arguments
+; start number, end number, function to call each iteration
+; start and end can be functions that return numbers
+(let x [])
+(for 0 10 
+    (set (length x) 0 x)
+)
+(print x) ; -> [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+```
+do block
+```lisp
+; because each, reduce, and for loop only take one function
+; the do block is a function that takes n functions and executes them
+; in order, returning the value from the last function inside it
+(let x [1,2,3,4,5])
+(each x item idx 
+    (do 
+        (let n (* item idx))
+        (set idx n x)
+    )
+)
 ```
 
 ##compile
