@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "structures.h"
+#include "constants.h"
 
 void build_array(struct Value_array * array, struct Tokens * tokens){
     while(tokens->tokens[tokens->counter].type != 'e'){
@@ -15,8 +16,15 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
         }
         else if(tokens->tokens[tokens->counter].type == 'n'){
             struct Value * val = malloc(sizeof(struct Value));
-            val->data.ln = atol(tokens->tokens[tokens->counter].data.body);
-            val->type = 'l';
+            if(string_contains(dot_const, &tokens->tokens[tokens->counter].data)){
+                float content = atof(tokens->tokens[tokens->counter].data.body);
+                val->type='f';
+                val->data.fl=content;
+            } else {
+                long content = atol(tokens->tokens[tokens->counter].data.body);
+                val->type='l';
+                val->data.ln=content;
+            }
             array->values[array->size] = val;
             array->size++;
         }

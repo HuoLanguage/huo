@@ -136,9 +136,12 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
     }
     if(string_matches(do_const, ast->content.data.str)){
         for(int i = 0; i < ast->size; i++){
-            execute(ast->children[i], defined, let_map);
+            if(i == ast->size-1){
+                result = execute(ast->children[i], defined, let_map);
+            } else {
+                execute(ast->children[i], defined, let_map);
+            }
         }
-        result.type = 'u';
         return result;
     }
 

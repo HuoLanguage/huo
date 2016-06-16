@@ -97,13 +97,16 @@ void parse(struct Tree * root, struct Tokens *tokens){
             struct Tree * value = malloc(sizeof(struct Tree));
             value->type = token.type;
             value->size = 0;
-            long content = atol(token.data.body);
-            struct Value val = {
-                .type='l',
-                .data={
-                    .ln=content
-                }
-            };
+            struct Value val;
+            if(string_contains(dot_const, &token.data)){
+                float content = atof(token.data.body);
+                val.type='f';
+                val.data.fl=content;
+            } else {
+                long content = atol(token.data.body);
+                val.type='l';
+                val.data.ln=content;
+            }
             value->content = val;
 
             root->children[root->size] = value;

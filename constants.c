@@ -95,6 +95,7 @@ const char root_type_const = 'r';
 const char quote_const = '"';
 const char bracket_const = '[';
 const char end_bracket_const = ']';
+const char dot_const = '.';
 
 int is_a_open_parens(char ch){ return ch == open_parens_const; }
 int is_a_close_parens(char ch){ return ch == close_parens_const; }

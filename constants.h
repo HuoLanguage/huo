@@ -32,6 +32,7 @@ extern const char root_type_const;
 extern const char quote_const;
 extern const char bracket_const;
 extern const char end_bracket_const;
+extern const char dot_const;
 
 int is_a_open_parens(char ch);
 int is_a_close_parens(char ch);

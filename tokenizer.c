@@ -26,7 +26,7 @@ struct Tokens * tokenize(struct String file, struct Tokens *content){
             }
             else if(is_a_number(c)){
                 t.type = 'n';
-                while(is_a_number(c)){
+                while(is_a_number(c) || c == dot_const){
                     t.data.body[t.data.length] = file.body[counter];
                     t.data.length++;
                     counter++;

@@ -1,5 +1,7 @@
 (let x 1)
-(for 0 50 (let x (+ x x)))
+(for 0 50
+    (let x (+ x x))
+)
 (print x)
 (let y [ ])
 (for 0 25
@@ -9,4 +11,7 @@
     )
 )
 (print y)
-(print (reduce y acc cur (+ acc cur)))
+(print (reduce y acc cur (do
+        (let x (* acc 98))
+        (/ x curr)
+    ) 1 ))
