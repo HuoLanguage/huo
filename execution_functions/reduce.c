@@ -2,6 +2,7 @@
 #include "../execute.h"
 #include "../base_util.h"
 #include "populate_reduce_function.h"
+#include "../core_functions.h"
 
 struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
     int start = 0;

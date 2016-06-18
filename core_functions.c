@@ -205,7 +205,9 @@ struct Value equals(struct Value a, struct Value b){
 
 struct Value length(struct Value a){
     if(a.type != 'a'){
-      printf("Error: tried to get length of non-array value.\n");
+      printf("Error: tried to get length of non-array value: ");
+      print(a);
+      printf("\n");
     } else {
       struct Value length = {
           .type = 'l',

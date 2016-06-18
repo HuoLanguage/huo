@@ -90,6 +90,11 @@ struct String read_const = {
     .length = 4
 };
 
+struct String import_const = {
+    .body = "import",
+    .length = 6
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

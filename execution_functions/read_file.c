@@ -3,12 +3,12 @@
 #include "../structures.h"
 #include "../execute.h"
 
-struct Value read_file(struct Tree * ast){
+struct Value read_file(struct String file_name){
     struct Value result;
     FILE *fp;
-    fp = fopen(ast->children[0]->content.data.str.body, "r");
+    fp = fopen(file_name.body, "r");
     if(fp == NULL){
-        printf("Error: cannot find file: \"%s\"\n", ast->children[0]->content.data.str.body);
+        printf("Error: cannot find file: \"%s\"\n", file_name.body);
         result.type = 'u';
         return result;
     }

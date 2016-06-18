@@ -1,0 +1,15 @@
+(def factorial x
+    (do
+        (let z [ ])
+        (for 0 x
+            (set (length z) (+ (length z) 1) z)
+        )
+        (reduce z acc cur (* acc cur) 1)
+    )
+)
+(def avg x
+    (/
+        (reduce x acc cur (+ acc cur))
+        (length x)
+    )
+)

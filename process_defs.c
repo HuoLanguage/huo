@@ -1,5 +1,7 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "base_util.h"
+#include "core_functions.h"
 
 struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx){
     struct Map * arguments = malloc(sizeof(struct Map));
@@ -18,10 +20,18 @@ struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx
 }
 
 struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
-    if(ast->type == 'k'){
+    if(ast->type == 'k' && !ast->size){
         for(int i = 0; i < arguments->size; i++){
             if(string_matches(arguments->members[i]->key->data.str, ast->content.data.str)){
                 copy_value(&ast->content, arguments->members[i]->val);
+                if(arguments->members[i]->val->type == 's'){
+                    ast->type = 's';
+                }
+                else if(arguments->members[i]->val->type == 'a') {
+                    ast->type = 'a';
+                } else {
+                    ast->type = 'n';
+                }
             }
         }
     } else {

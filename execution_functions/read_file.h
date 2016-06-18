@@ -3,6 +3,6 @@
 
 #include "../structures.h"
 
-struct Value read_file(struct Tree * ast);
+struct Value read_file(struct String);
 
 #endif

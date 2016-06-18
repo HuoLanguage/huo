@@ -61,7 +61,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         return result;
     }
     if(string_matches(read_const, ast->content.data.str)){
-        return read_file(ast);
+        return read_file(ast->children[0]->content.data.str);
     }
 
     int idx;
