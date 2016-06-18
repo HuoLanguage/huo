@@ -1,5 +1,5 @@
-#include "structures.h"
-#include "base_util.h"
+#include "../structures.h"
+#include "../base_util.h"
 #include <stdio.h>
 
 void populate_each_function(

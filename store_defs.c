@@ -13,3 +13,11 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
     }
     return num_defs;
 }
+
+void copy_defs(struct Tree_map * imported, struct Tree_map * defined){
+    for(int i = 0; i < imported->size; i++){
+        defined->names[defined->size] = imported->names[i];
+        defined->trees[defined->size] = imported->trees[i];
+        defined->size++;
+    }
+}

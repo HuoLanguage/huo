@@ -22,6 +22,7 @@ extern struct String reduce_const;
 extern struct String set_const;
 extern struct String for_const;
 extern struct String do_const;
+extern struct String read_const;
 
 extern const char bool_true;
 extern const char bool_false;

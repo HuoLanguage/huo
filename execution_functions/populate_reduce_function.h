@@ -1,7 +1,7 @@
 #ifndef _POPULATE_REDUCE_FUNCTION_H
 #define _POPULATE_REDUCE_FUNCTION_H
 
-#include "structures.h"
+#include "../structures.h"
 
 void populate_reduce_function(
   struct Value * item_key,

@@ -85,6 +85,11 @@ struct String do_const = {
     .length = 2
 };
 
+struct String read_const = {
+    .body = "read",
+    .length = 4
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

@@ -6,111 +6,37 @@
 #include "process_defs.h"
 #include "constants.h"
 #include "execute.h"
-#include "populate_each_function.h"
-#include "populate_reduce_function.h"
-
-struct Value reduce(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
-    struct Value result = execute(ast->children[0], defined, let_map);
-
-    for(int i = 1; i < ast->size; i++){
-        if(ast->children[i]->type == 'f'){
-            struct Value newResult = execute(ast->children[i], defined, let_map);
-            result = apply_core_function(ast, result, newResult);
-        } else {
-            result = apply_core_function(ast, result, ast->children[i]->content);
-        }
-    }
-    return result;
-}
+#include "execution_functions/for_each.h"
+#include "execution_functions/for_loop.h"
+#include "execution_functions/reduce.h"
+#include "execution_functions/read_file.h"
+#include "execution_functions/map_array.h"
+#include "execution_functions/let_binding.h"
+#include "execution_functions/reduce_ast.h"
+#include "execution_functions/if_block.h"
+#include "apply_core_function.h"
 
 struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
     struct Value result;
     // first check for special kinds of execution
     if(string_matches(ast->content.data.str, if_const)){
-        result = execute(ast->children[0], defined, let_map);
-        if(result.type != 'b'){ // throw error
-        }
-        else if(result.data.bl == 't'){ // result is boolean true
-            result = execute(ast->children[1], defined, let_map);
-        }
-        else if(result.data.bl == 'f'){ // result is boolean false
-            result = execute(ast->children[2], defined, let_map);
-        }
-        return result;
+        return if_block(ast, defined, let_map);
     }
     if(string_matches(let_const, ast->content.data.str)){
-      struct Keyval * let_binding = malloc(sizeof(struct Keyval));
-      let_binding->key = malloc(sizeof(struct Value));
-      copy_value(let_binding->key, &ast->children[0]->content);
-      struct Value val = execute(ast->children[1], defined, let_map);
-      struct Value * val_ptr = malloc(sizeof(struct Value));
-      copy_value(val_ptr, &val);
-      let_binding->val = val_ptr;
-      int index = -1;
-      for(int i = 0; i < let_map->size; i++){
-          if(string_matches(let_binding->key->data.str, let_map->members[i]->key->data.str)){
-              index = i;
-          }
-      }
-      if(index > -1){
-          let_map->members[index] = let_binding;
-      } else {
-          let_map->members[let_map->size] = let_binding;
-          let_map->size++;
-      }
-      return val;
+        store_let_binding(ast, defined, let_map);
+        result.type = 'u';
+        return result;
     }
     if(string_matches(each_const, ast->content.data.str)){
-        struct Value array = execute(ast->children[0], defined, let_map);
-        for(int i = 0; i < array.data.array->size; i++){
-            struct Value * item = array.data.array->values[i];
-            struct Value index = {
-                .type = 'l',
-                .data = {
-                    .ln=(long)i
-                }
-            };
-            struct Tree * function = duplicate_tree(ast->children[3]);
-            populate_each_function(&ast->children[1]->content, &ast->children[2]->content, function, item, &index);
-            execute(function, defined, let_map);
-        }
-        return array;
+        for_each(ast, defined, let_map);
+        result.type = 'u';
+        return result;
     }
     if(string_matches(map_const, ast->content.data.str)){
-        struct Value array = execute(ast->children[0], defined, let_map);
-        for(int i = 0; i < array.data.array->size; i++){
-            struct Value * item = array.data.array->values[i];
-            struct Value index = {
-                .type = 'l',
-                .data = {
-                    .ln=(long)i
-                }
-            };
-            struct Tree * function = duplicate_tree(ast->children[3]);
-            populate_each_function(&ast->children[1]->content, &ast->children[2]->content, function, item, &index);
-            struct Value result = execute(function, defined, let_map);
-            copy_value(item, &result);
-        }
-        return array;
+        return map_array(ast, defined, let_map);
     }
     if(string_matches(reduce_const, ast->content.data.str)){
-        int start = 0;
-        struct Value array = execute(ast->children[0], defined, let_map);
-        struct Value result;
-        if(ast->size == 5){
-            result = execute(ast->children[4], defined, let_map);
-        } else {
-            result = * array.data.array->values[0];
-            start = 1;
-        }
-        for(int i = start; i < array.data.array->size; i++){
-            struct Value * item = array.data.array->values[i];
-            struct Tree * function = duplicate_tree(ast->children[3]);
-
-            populate_reduce_function(&ast->children[1]->content, &ast->children[2]->content, function, item, &result);
-            result = execute(function, defined, let_map);
-        }
-        return result;
+        return reduce_array(ast, defined, let_map);
     }
     if(string_matches(set_const, ast->content.data.str)){
         struct Value index = execute(ast->children[0], defined, let_map);
@@ -120,18 +46,8 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         return result;
     }
     if(string_matches(for_const, ast->content.data.str)){
+        for_loop(ast, defined, let_map);
         result.type = 'u'; //return undefined
-        struct Value start = execute(ast->children[0], defined, let_map);
-        struct Value end = execute(ast->children[1], defined, let_map);
-        if(start.data.ln > end.data.ln){
-            for(long i = start.data.ln; i > end.data.ln; i--){
-                execute(ast->children[2], defined, let_map);
-            }
-        } else {
-            for(long i = start.data.ln; i < end.data.ln; i++){
-                execute(ast->children[2], defined, let_map);
-            }
-        }
         return result;
     }
     if(string_matches(do_const, ast->content.data.str)){
@@ -143,6 +59,9 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
             }
         }
         return result;
+    }
+    if(string_matches(read_const, ast->content.data.str)){
+        return read_file(ast);
     }
 
     int idx;
@@ -177,42 +96,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         struct Value b = execute(ast->children[1], defined, let_map);
         result = apply_core_function(ast, a, b);
     } else {
-        result = reduce(ast, defined, let_map);
-    }
-    return result;
-}
-
-struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value b){
-    struct Value result;
-
-    if(ast->type == 'k'){
-        if(string_matches(ast->content.data.str, concat_const)){
-            result = concat(a, b);
-        }
-        else if(string_matches(ast->content.data.str, index_const)){
-            result = array_index(a, b);
-        }
-        else if(string_matches(ast->content.data.str, push_const)){
-            result = array_push(a, b);
-        }
-    }
-    else if(ast->type == '*'){
-        result = mul(a, b);
-    }
-    else if(ast->type == '+'){
-        result = add(a, b);
-    }
-    else if(ast->type == '-'){
-        result = sub(a, b);
-    }
-    else if(ast->type == '/'){
-        result = divide(a, b);
-    }
-    else if(ast->type == '!'){
-        result = not(a, b);
-    }
-    else if(ast->type == '='){
-        result = equals(a, b);
+        result = reduce_ast(ast, defined, let_map);
     }
     return result;
 }
