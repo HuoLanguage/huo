@@ -108,19 +108,33 @@ do block
     )
 )
 ```
+read file
+```lisp
+; reading a file is simple and returns a string
+
+(let file (read "./files/example.txt"))
+(print file) ; prints contents of example.txt
+```
+imports
+```lisp
+; you can import a huo file that contains functions definitions
+; the import function will ignore everything but functions
+(import "./math.huo") ; import file containing average function
+(let x (average [1,2,3,4,5,6] )) ; use imported function
+```
 
 ##compile
 make   
 make clean   
 
 ##run
-create a huo file syntax:   
-test.txt
+create a huo file:   
+test.huo
 ```code
 (print (+ 1 3 ( * 2 3 ) ( / 6 2 )))
 ```
 
 run the file:
 ```shell
-$ ./huo test.txt
+$ ./huo test.huo
 ```
