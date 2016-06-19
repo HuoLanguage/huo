@@ -95,6 +95,16 @@ struct String import_const = {
     .length = 6
 };
 
+struct String substring_const = {
+    .body = "substring",
+    .length = 9
+};
+
+struct String split_const = {
+    .body = "split",
+    .length = 5
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

@@ -16,6 +16,9 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
         else if(string_matches(ast->content.data.str, push_const)){
             result = array_push(a, b);
         }
+        else if(string_matches(split_const, ast->content.data.str)){
+            result = split_string(a, b);
+        }
     }
     else if(ast->type == '*'){
         result = mul(a, b);

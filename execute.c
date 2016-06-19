@@ -63,6 +63,18 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
     if(string_matches(read_const, ast->content.data.str)){
         return read_file(ast->children[0]->content.data.str);
     }
+    if(string_matches(substring_const, ast->content.data.str)){
+        struct Value string = execute(ast->children[2], defined, let_map);
+        struct Value start = execute(ast->children[0], defined, let_map);
+        struct Value end = execute(ast->children[1], defined, let_map);
+        if(string.type != 's'){
+            printf("Error: non-string value passed into substring.");
+            result.type = 'u';
+            return result;
+        } else {
+            return substring(start.data.ln, end.data.ln, string);
+        }
+    }
 
     int idx;
     if(!ast->size){

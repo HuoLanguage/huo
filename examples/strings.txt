@@ -1,0 +1,6 @@
+(let x "hello world")
+(let y (substring 0 4 x))
+(print y)
+
+(let z (split " " x))
+(print z)

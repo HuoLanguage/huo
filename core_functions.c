@@ -245,3 +245,57 @@ struct Value array_push(struct Value a, struct Value arr){
     arr.data.array->size++;
     return arr;
 }
+
+struct Value substring(int start, int end, struct Value str){
+    struct Value result;
+    result.type = 's';
+    if(start > str.data.str.length || end > str.data.str.length){
+        result.type = 'u';
+        printf("Error: start/end index out of range for substring.");
+        // struct String message = {
+        //     .body="Error: start/end index out of range for substring.",
+        //     .length=50
+        // };
+        // result.data.str = message;
+        return result;
+    } else {
+        struct String new_string = {
+            .length=(end-start)
+        };
+        int counter = 0;
+        for(int i = start; i < end; i++){
+            new_string.body[counter] = str.data.str.body[i];
+            counter++;
+        }
+        result.data.str = new_string;
+        return result;
+    }
+}
+
+struct Value split_string(struct Value a, struct Value str){
+    int indexes[1000];
+    int counter = 0;
+    for(int i = 0; i < str.data.str.length; i++){
+        if(a.data.str.body[0] == str.data.str.body[i]){
+            indexes[counter] = i;
+            counter++;
+        }
+    }
+    struct Value result;
+    result.type = 'a';
+    struct Value_array * array = malloc(sizeof(struct Value_array));
+    array->size = 0;
+    for(int l = 0; l <= counter; l++){
+        int start = !l ? l : indexes[l-1] + 1;
+        int end = (l < counter) ? indexes[l] : str.data.str.length;
+
+        struct Value * next_item = malloc(sizeof(struct Value));
+        struct Value item = substring(start, end, str);
+
+        copy_value(next_item, &item);
+        array->values[array->size] = next_item;
+        array->size++;
+    }
+    result.data.array = array;
+    return result;
+}
