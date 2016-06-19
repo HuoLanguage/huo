@@ -1,0 +1,6 @@
+(def pair x y (return [x, y]))
+(def nest x y (return [x, [1, y]]))
+(let x (pair 10 1))
+(let y (nest "hey" "you"))
+(print x)
+(print y)

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "base_util.h"
 #include "core_functions.h"
+#include "process_defs.h"
 
 struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx){
     struct Map * arguments = malloc(sizeof(struct Map));
@@ -34,7 +35,11 @@ struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
                 }
             }
         }
-    } else {
+    }
+    if(ast->type == 'a'){
+        populate_array(arguments, ast->content.data.array);
+    }
+    else {
         for(int i = 0; i < ast->size; i++){
             populate_args(arguments, ast->children[i]);
         }
@@ -42,7 +47,22 @@ struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
     return ast;
 }
 
+void populate_array(struct Map * arguments, struct Value_array * array){
+    for(int i = 0; i < array->size; i++){
+        if(array->values[i]->type == 'k'){
+            for(int l = 0; l < arguments->size; l++){
+                if(string_matches(array->values[i]->data.str, arguments->members[i]->key->data.str)){
+                        copy_value(array->values[i], arguments->members[i]->val);
+                }
+            }
+        } else if(array->values[i]->type == 'a'){
+            populate_array(arguments, array->values[i]->data.array);
+        }
+    }
+}
+
 struct Tree * get_defined_body(struct Tree * function){
+    // just pulls the function body out of a (def...)
     int check = 1;
     int index = 1;
     while(check){

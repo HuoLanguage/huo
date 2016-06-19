@@ -1,7 +1,9 @@
-#include "structures.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "structures.h"
+#include "base_util.h"
+#include "core_functions.h"
 
 int string_contains(char ch, struct String* string){
     if(!string->length){ return 0; }
@@ -15,7 +17,7 @@ int string_contains(char ch, struct String* string){
 
 void copy_value(struct Value * a, struct Value * b){
     a->type = b->type;
-    if(a->type == 's'){
+    if(a->type == 's' || a->type == 'k'){
         a->data.str.length = b->data.str.length;
         strcpy(a->data.str.body, b->data.str.body);
     } else if(a->type == 'f'){
@@ -25,8 +27,19 @@ void copy_value(struct Value * a, struct Value * b){
     } else if (a->type == 'b'){
         a->data.bl = b->data.bl;
     } else if (a->type == 'a'){
-        a->data.array = b->data.array;
+        copy_array(a, b->data.array);
     }
+}
+
+void copy_array(struct Value * a, struct Value_array * b){
+    struct Value_array * array = malloc(sizeof(struct Value_array));
+    array->size = b->size;
+    for(int i = 0; i < b->size; i++){
+        struct Value * new_item = malloc(sizeof(struct Value));
+        copy_value(new_item, b->values[i]);
+        array->values[i] = new_item;
+    }
+    a->data.array = array;
 }
 
 struct Tree * duplicate_tree(struct Tree * a){

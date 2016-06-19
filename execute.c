@@ -101,6 +101,9 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
             if(string_matches(ast->content.data.str, length_const)){
                 return length(a);
             }
+            if(string_matches(ast->content.data.str, return_const)){
+                return execute(ast->children[0], defined, let_map);
+            }
         }
     }
     else if(ast->size == 2) {
@@ -115,6 +118,6 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
 
 struct Value execute_defined_func(struct Tree * ast, struct Tree_map * defined, struct Map * let_map, int idx){
     struct Map * arguments = make_args_map(ast, defined, idx);
-    struct Tree * populated_ast = populate_args(arguments, get_defined_body(defined->trees[idx]));
+    struct Tree * populated_ast = populate_args(arguments, duplicate_tree(get_defined_body(defined->trees[idx])));
     return execute(populated_ast, defined, let_map);
 }

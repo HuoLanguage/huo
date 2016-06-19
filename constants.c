@@ -105,6 +105,11 @@ struct String split_const = {
     .length = 5
 };
 
+struct String return_const = {
+    .body = "return",
+    .length = 6
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

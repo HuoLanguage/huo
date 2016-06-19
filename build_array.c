@@ -28,6 +28,14 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
             array->values[array->size] = val;
             array->size++;
         }
+        else if(tokens->tokens[tokens->counter].type == 'k'){
+            struct Value * val = malloc(sizeof(struct Value));
+            val->type = 'k';
+            val->data.str.length = tokens->tokens[tokens->counter].data.length;
+            strcpy(val->data.str.body, tokens->tokens[tokens->counter].data.body);
+            array->values[array->size] = val;
+            array->size++;
+        }
         else if(tokens->tokens[tokens->counter].type == 'b'){
             struct Value * val = malloc(sizeof(struct Value));
             val->type = 'a';

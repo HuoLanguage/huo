@@ -26,6 +26,7 @@ extern struct String read_const;
 extern struct String import_const;
 extern struct String substring_const;
 extern struct String split_const;
+struct String return_const;
 
 extern const char bool_true;
 extern const char bool_false;
