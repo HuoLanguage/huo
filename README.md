@@ -23,9 +23,14 @@ print: print a value to the console
 ```lisp
 (print (* 3 6)) ; prints 18 to the console
 ```
-cat: concatenate strings
+string functions
 ```lisp
 (cat "hello " "world!") ; returns "hello world!"
+(substring 0 4 "hello world") ; returns "hell"
+
+; the split function takes a single character to split on
+(split " " "hello world"); returns ["hello", "world"]
+
 ```
 booleans
 ```lisp
