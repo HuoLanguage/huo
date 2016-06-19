@@ -14,14 +14,17 @@ Numbers are longs, numbers with decimals are floats.
 
 (* 3 (/ 10 4)) ; 7.500000
 ```
-Huo currently supports the following functions:
-```c``lisp
 basic math
-+ - * /
+```c``lisp
+(+ 1 1) ; -> 2
+(* 2 6) ; -> 12
+(/ 9 7) ; -> 1.285714
+(- 10 1); -> 9
 ```
-print: print a value to the console
+printing values to the console
 ```lisp
 (print (* 3 6)) ; prints 18 to the console
+(print "hello world") ; prints "hello world" to the console
 ```
 string functions
 ```lisp
@@ -29,7 +32,7 @@ string functions
 (substring 0 4 "hello world") ; returns "hell"
 
 ; the split function takes a single character to split on
-(split " " "hello world"); returns ["hello", "world"]
+(split "o" "hello world"); returns [ "hell", " w", "rld" ]
 
 ```
 booleans
@@ -55,7 +58,7 @@ arrays
 (print (+ y z)) ; adding nested arrays; prints [[4,6], [8,10]]
 
 ; use index to return a single array value
-(index 2 [1, 2, 3]) ; -> 2
+(index 2 [1, 2, 3]) ; -> 3
 
 ; push and length are straight-forward
 (push 5 [1, 2, 3, 4]) ; -> [1, 2, 3, 4, 5]
@@ -68,7 +71,7 @@ arrays
 ; map and each both take four arguments:
 ; first the array you want to iterate over
 ; the names for the current item and the index
-; in the array, and then the function to call each iteration
+; and then the function to call each iteration
 (let x [1, 2, 3])
 (let y 0)
 (each x num idx (let y (+ y num)))
@@ -105,11 +108,13 @@ do block
 ; because each, reduce, and for loop only take one function
 ; the do block is a function that takes n functions and executes them
 ; in order, returning the value from the last function inside it
-(let x [1,2,3,4,5])
-(each x item idx 
-    (do 
-        (let n (* item idx))
-        (set idx n x)
+(def factorial x
+    (do
+        (let z [ ])
+        (for 0 x
+            (set (length z) (+ (length z) 1) z)
+        )
+        (reduce z acc cur (* acc cur) 1)
     )
 )
 ```
