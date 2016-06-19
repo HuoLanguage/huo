@@ -207,20 +207,21 @@ struct Value equals(struct Value a, struct Value b){
 }
 
 struct Value length(struct Value a){
-    if(a.type != 'a'){
-      printf("Error: tried to get length of non-array value: ");
+    if(a.type != 'a' && a.type != 's'){
+      printf("Type Error: value has no length property: ");
       print(a);
       printf("\n");
+      a.type = 'u';
+      return a;
     } else {
       struct Value length = {
           .type = 'l',
           .data = {
-            .ln=(long)a.data.array->size
+            .ln= a.type=='a'?(long)a.data.array->size:a.data.str.length
           }
       };
       return length;
     }
-    return a;
 }
 
 struct Value array_index(struct Value a, struct Value arr){

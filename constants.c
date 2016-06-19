@@ -1,8 +1,8 @@
 #include "constants.h"
 
 struct String functions = {
-    .body = "*+-_/!=\0",
-    .length = 7
+    .body = "*+-/!=\0",
+    .length = 6
 };
 
 struct String numbers = {
@@ -11,7 +11,7 @@ struct String numbers = {
 };
 
 struct String letters = {
-    .body = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    .body = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
     .length = 52
 };
 
