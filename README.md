@@ -28,21 +28,22 @@ printing values to the console
 ```
 string functions
 ```lisp
-(cat "hello " "world!") ; returns "hello world!"
-(substring 0 4 "hello world") ; returns "hell"
+(cat "hello " "world!") ; -> "hello world!"
+(substring 0 4 "hello world") ; -> "hell"
+(length "hello world") ; -> 11
 
 ; the split function takes a single character to split on
-(split "o" "hello world"); returns [ "hell", " w", "rld" ]
+(split "o" "hello world"); -> [ "hell", " w", "rld" ]
 
 ```
 booleans
 ```lisp
-(= 3 2) ; returns false
-(= 1 1) ; returns true
-(= "Hey" "hey") ; returns true
+(= 3 2) ; -> false
+(= 1 1) ; -> true
+(= "Hey" "hey") ; -> true
 
-(! 1 3) ; returns true
-(! "Hey" (cat "He" "y")) ; returns false
+(! 1 3) ; -> true
+(! "Hey" (cat "He" "y")) ; -> false
 ```
 let bindings
 ```lisp
