@@ -127,7 +127,14 @@ imports
 (import "./math.huo") ; import file containing average function
 (let x (average [1,2,3,4,5,6] )) ; use imported function
 ```
-
+return
+```lisp
+; sometimes you just want to return a value or the composition
+; of a few values, for that you can use return
+(def pair x y (return [x, y]))
+(let x (pair 0 "start"))
+(print x) ; -> [ 0, "start" ]
+```
 ##compile
 make   
 make clean   
