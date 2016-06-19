@@ -1,12 +1,12 @@
 # huo
-Writing an interpreted language in C for fun.
+I started writing this interpreter as a hobby project, it is my first interpreter. I started it because I like the challenge of C and I think implementing language features is fun. I got carried away and implemented more functions and features than I expected, and now Huo is getting close to being a functional language. Huo means "living" or "fire" in Chinese. It's pretty hard to pronounce, so if you don't know Chinese you can just say "hoo-ah".
 
 ##features
 It has lisp-like syntax for now because it's easy to parse into a tree.
 ```lisp
 (+ 3 (* 4 3))
 ```
-Numbers are longs, numbers with decimals are floats.
+Whole numbers are longs, numbers with decimals are floats.
 ```lisp
 (+ 3 3.5) ; 6.500000
 
