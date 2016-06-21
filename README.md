@@ -44,6 +44,18 @@ booleans
 
 (! 1 3) ; -> true
 (! "Hey" (cat "He" "y")) ; -> false
+
+(> 4 3) ; -> true
+(< 10 1) ; -> false
+```
+if block
+```lisp
+; the if block requires three functions: conditional, true result and false result
+; to do an else-if just put another if block in the false result position
+(if (> 3 4)
+    (print "normal math")
+    (print "backwards land math")
+)
 ```
 let bindings
 ```lisp
