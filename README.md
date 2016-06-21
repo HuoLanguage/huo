@@ -15,7 +15,7 @@ Whole numbers are longs, numbers with decimals are floats.
 (* 3 (/ 10 4)) ; 7.500000
 ```
 basic math
-```c``lisp
+```lisp
 (+ 1 1) ; -> 2
 (* 2 6) ; -> 12
 (/ 9 7) ; -> 1.285714
