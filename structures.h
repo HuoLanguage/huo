@@ -59,4 +59,10 @@ struct Tree {
     struct Tree * parent;
 };
 
+struct Execution_bundle {
+    struct Tree * ast;
+    struct Tree_map * defined;
+    struct Map * let_map;
+};
+
 #endif /* _STRUCTURES_H */

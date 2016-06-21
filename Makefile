@@ -18,6 +18,7 @@ objs = \
   apply_core_function.o \
   execution_functions/populate_each_function.o \
   execution_functions/populate_reduce_function.o \
+  execution_functions/parallel_execution.o\
   execution_functions/for_each.o\
   execution_functions/for_loop.o\
   execution_functions/map_array.o\

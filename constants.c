@@ -110,6 +110,11 @@ struct String return_const = {
     .length = 6
 };
 
+struct String parallel_const = {
+    .body = "parallel",
+    .length = 8
+};
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';
