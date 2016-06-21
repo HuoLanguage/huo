@@ -1,5 +1,5 @@
 # huo
-I started writing this interpreter as a hobby project, it is my first interpreter. I started it because I like the challenge of C and I think implementing language features is fun. I got carried away and implemented more functions and features than I expected, and now Huo is getting close to being a functional language. Huo means "living" or "fire" in Chinese. It's pretty hard to pronounce, so if you don't know Chinese you can just say "hoo-ah".
+I started writing this interpreter as a hobby project, it is my first interpreter. I started it because I like the challenge of C and I think implementing language features is fun. I got carried away and implemented more functions and features than I expected, and now Huo is getting close to being a functional language. There are still a number of fairly major issues to be overcome before Huo could be a stable and useful language, but I will tackle them one at a time. Contributions are also welcome. Huo means "living" or "fire" in Chinese. It's pretty hard to pronounce, so if you don't know Chinese you can just say "hoo-ah".
 
 ##features
 It has lisp-like syntax for now because it's easy to parse into a tree.
@@ -47,8 +47,13 @@ booleans
 ```
 let bindings
 ```lisp
+; let bindings are stored in a key-value structure and are passed
+; by reference which means they are mutable
 (let x 5)
-(print (+ x 3) ; prints 8
+(let y [])
+(push 5 y)
+(print (+ x 3) ; -> 8
+(print y) ; -> [ 5 ]
 ```
 arrays
 ```lisp
@@ -118,6 +123,20 @@ do block
         (reduce z acc cur (* acc cur) 1)
     )
 )
+```
+parallel execution
+```lisp
+; a parallel block takes any number of functions and executes them
+; in parallel. The parallel block returns undefined. Beware of passing
+; the same variable to two different functions in a parallel block!
+
+(let x 0)
+(let y [])
+(parallel 
+    (for 0 100 (let x (+ x 1)))
+    (for 0 100 (set (length y) (length y) y))
+)
+; the above code mutates x and y in parallel
 ```
 read file
 ```lisp
