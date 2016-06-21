@@ -1,5 +1,5 @@
 # huo
-I started writing this interpreter as a hobby project, it is my first interpreter. I started it because I like the challenge of C and I think implementing language features is fun. I got carried away and implemented more functions and features than I expected, and now Huo is getting close to being a functional language. There are still a number of fairly major issues to be overcome before Huo could be a stable and useful language, but I will tackle them one at a time. Contributions are also welcome. Huo means "living" or "fire" in Chinese. It's pretty hard to pronounce, so if you don't know Chinese you can just say "hoo-ah".
+This is my first interpreter which I started as a hobby project. I'm doing it because I like the challenge of C and I think implementing language features is fun. My dream for it is to have a kind of minial simplicity and cool native features like matrix math and parallel processing. There are still a number of fairly major issues to be overcome before Huo could be a stable and useful language, but I will tackle them one at a time. Contributions are also welcome. Huo means "living" or "fire" in Chinese. It's pretty hard to pronounce, so if you don't know Chinese you can just say "hoo-ah".
 
 ##features
 It has lisp-like syntax for now because it's easy to parse into a tree.
