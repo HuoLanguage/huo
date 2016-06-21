@@ -2,7 +2,7 @@
 (let y [])
 (parallel
     (for 0 10 (let x (+ x 1)))
-    (for 0 100 (set (length y) (length y) y))
+    (for 0 999 (set (length y) (length y) y))
 )
 (print x)
 (print y)

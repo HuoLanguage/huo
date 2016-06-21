@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <string.h>
 #include "tokenizer.h"
 #include "parser.h"
 #include "structures.h"
@@ -16,6 +18,10 @@ int main(int argc, char const *argv[]) {
 
     FILE *fp;
     fp = fopen(argv[1], "r");
+    if(fp == NULL){
+        printf("Error: %d (%s)\n", errno, strerror(errno));
+        return 0;
+    }
 
     struct Tokens t = {
         .length = 0,

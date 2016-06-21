@@ -32,7 +32,7 @@ struct Value {
 
 struct Value_array {
     int size;
-    struct Value * values[100];
+    struct Value * values[1000];
 };
 
 struct Keyval {
@@ -41,8 +41,8 @@ struct Keyval {
 };
 
 struct Tree_map {
-    struct String * names [50];
-    struct Tree * trees [50];
+    struct String * names [250];
+    struct Tree * trees [250];
     int size;
 };
 
@@ -55,7 +55,7 @@ struct Tree {
     char type; // [o]pen, [f]unction [k]eyword [c]lose [s]tring [n]umber [b]racket [e]nd bracket
     int size;
     struct Value content;
-    struct Tree * children[100];
+    struct Tree * children[200];
     struct Tree * parent;
 };
 
