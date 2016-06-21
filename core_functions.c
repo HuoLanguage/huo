@@ -206,6 +206,33 @@ struct Value equals(struct Value a, struct Value b){
     return a;
 }
 
+struct Value greater_than(struct Value a, struct Value b){
+    if(a.type == 'f' && b.type == 'f'){
+        a.type = 'b';
+        if(a.data.fl > b.data.fl){
+            a.data.bl = bool_true;
+        } else {
+            a.data.bl = bool_false;
+        }
+    }
+    else if(a.type == 'l' && b.type == 'l'){
+        a.type = 'b';
+        if(a.data.ln > b.data.ln){
+            a.data.bl = bool_true;
+        } else {
+            a.data.bl = bool_false;
+        }
+    }
+    else {
+        printf("Error: mismatched types for values ");
+        print(a);
+        printf(" and ");
+        print(b);
+        printf(" in greater-than function.\n");
+    }
+    return a;
+}
+
 struct Value length(struct Value a){
     if(a.type != 'a' && a.type != 's'){
       printf("Type Error: value has no length property: ");

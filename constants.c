@@ -1,8 +1,8 @@
 #include "constants.h"
 
 struct String functions = {
-    .body = "*+-/!=\0",
-    .length = 6
+    .body = "*+-/!=<>\0",
+    .length = 8
 };
 
 struct String numbers = {

@@ -18,5 +18,6 @@ struct Value array_add(struct Value a, struct Value b);
 struct Value array_set(struct Value index, struct Value item, struct Value array);
 struct Value substring(int start, int end, struct Value str);
 struct Value split_string(struct Value a, struct Value str);
+struct Value greater_than(struct Value a, struct Value b);
 
 #endif

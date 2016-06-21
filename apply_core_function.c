@@ -38,5 +38,11 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
     else if(ast->type == '='){
         result = equals(a, b);
     }
+    else if(ast->type == '>'){
+        result = greater_than(a, b);
+    }
+    else if(ast->type == '<'){
+        result = greater_than(b, a);
+    }
     return result;
 }
