@@ -22,7 +22,7 @@ void parallel_execution(struct Tree * ast, struct Tree_map * defined, struct Map
         pthread_create(&tid[i], NULL, &parallel_routine, bundle[i]);
     }
     for (int j = 0; j < num_children; j++){
-        free(bundle[j]);
         pthread_join(tid[j], NULL);
+        free(bundle[j]);
     }
 }
