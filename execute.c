@@ -79,6 +79,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         // no special execution types found, check for more basic conditions
         int idx;
         if(!ast->size){
+            // ast with no children is either a value or a variable
             if(ast->type == 'k'){
                 for(int i = 0; i < let_map->size; i++){
                     if(string_matches(let_map->members[i]->key->data.str, ast->content.data.str)){
@@ -98,6 +99,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
                 if(string_matches(ast->content.data.str, print_const)){
                     print(a);
                     printf("\n");
+                    result.type = 'u';
                 }
                 if(string_matches(ast->content.data.str, length_const)){
                     return length(a);

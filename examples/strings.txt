@@ -3,4 +3,4 @@
 (print y)
 
 (let z (split " " x))
-(print z)
+(print (print z))
