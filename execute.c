@@ -86,6 +86,8 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
                         return *let_map->members[i]->val;
                     }
                 }
+                fprintf(stderr, "Undefined variable: %s\n", ast->content.data.str.body);
+                exit(0);
             } else {
                 return ast->content;
             }
