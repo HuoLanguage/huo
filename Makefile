@@ -1,4 +1,5 @@
 CFLAGS   += -g
+LIBS = -lpthread
 
 # Be super strict about everything
 CFLAGS   += -std=c99 -Werror -Wall -Wextra -pedantic -O2
@@ -10,6 +11,7 @@ CPPFLAGS += -MD -MF $(patsubst %.o,.%.mk,$@) -MP
 
 CPPFLAGS += -MD -MF $(patsubst execution_functions/%.o,.%.mk,$@) -MP
 -include $(patsubst %.o,.%.mk,$(obj))
+
 
 objs = \
   constants.o \
@@ -38,6 +40,7 @@ objs = \
 all: huo
 
 huo: $(objs)
+	cc -o huo $(objs) $(LIBS)
 
 clean: ; rm -f -- .*.mk *.o & rm -f & rm -f ./execution_functions/*.o
 
