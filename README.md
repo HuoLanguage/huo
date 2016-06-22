@@ -67,6 +67,15 @@ let bindings
 (print (+ x 3) ; -> 8
 (print y) ; -> [ 5 ]
 ```
+functions
+```lisp
+; the def function allows you to define functions with any number of parameters
+; the arguments to def are: the function name, any number of parameters, the function body
+(def biggest x y (if (> x y) (return x) (return y)))
+(def sum x (reduce x acc curr (+ acc curr) 0))
+(sum [1,2,3,4]) ; -> 10
+(biggest 10 5) ; -> 10
+```
 arrays
 ```lisp
 (let x [1,2,3,4])
