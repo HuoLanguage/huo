@@ -27,15 +27,16 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
 
 struct Tree * read_import(struct String file_name){
     struct Value file_contents = read_file(file_name);
-    struct Tokens tokens = {
-        .length = 0,
-        .counter = 0
-    };
+    struct Tokens * tokens = malloc(sizeof(struct Tokens));
+    tokens->length = 0;
+    tokens->counter = 0;
     struct Tree * root = malloc(sizeof(struct Tree));
     root->type = 'r';
     root->size = 0;
 
-    tokenize(file_contents.data.str, &tokens);
-    parse(root, &tokens);
+    tokenize(file_contents.data.str, tokens);
+    parse(root, tokens);
+
+    free(tokens);
     return root;
 }
