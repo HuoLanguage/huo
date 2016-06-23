@@ -6,8 +6,8 @@
 
 struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
     int start = 0;
-    struct Value array = execute(ast->children[0], defined, let_map);
     struct Value result;
+    struct Value array = execute(ast->children[0], defined, let_map);
     if(ast->size == 5){
         result = execute(ast->children[4], defined, let_map);
     } else {

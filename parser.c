@@ -50,7 +50,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
                 };
                 strcpy(content.body, token.data.body);
                 struct Value val = {
-                    .type='s',
+                    .type='k',
                     .data={
                         .str=content
                     }
@@ -66,7 +66,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
                 };
                 strcpy(content.body, token.data.body);
                 struct Value val = {
-                    .type='s',
+                    .type='k',
                     .data={
                         .str=content
                     }

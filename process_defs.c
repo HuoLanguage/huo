@@ -29,6 +29,9 @@ struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
                 if(arguments->members[i]->val->type == 's'){
                     ast->type = 's';
                 }
+                else if(arguments->members[i]->val->type == 'k') {
+                    ast->type = 'k';
+                }
                 else if(arguments->members[i]->val->type == 'a') {
                     ast->type = 'a';
                 } else {
