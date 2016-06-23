@@ -45,6 +45,7 @@ void copy_array(struct Value * a, struct Value_array * b){
 struct Tree * duplicate_tree(struct Tree * a){
     struct Tree * root = malloc(sizeof(struct Tree));
     root->type = a->type;
+    root->size = 0;
     copy_value(&root->content, &a->content);
     for(int i = 0; i < a->size; i++){
         root->children[i] = duplicate_tree(a->children[i]);
