@@ -10,6 +10,10 @@
 int store_defs(struct Tree * ast, struct Tree_map * defined){
     int num_defs = 0;
     for(int i = 0; i < ast->size; i++){
+        if (ast->children[i]->size == 0) {
+            perror("Not enough arguments for store_defs\n");
+            exit(1);
+        }
         if(string_matches(ast->children[i]->content.data.str, def_const)){
             defined->names[defined->size] = &ast->children[i]->children[0]->content.data.str;
             defined->trees[defined->size] = ast->children[i];
