@@ -20,35 +20,35 @@
 struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
     struct Value result;
     // first check for special kinds of execution
-    if(string_matches(ast->content.data.str, if_const)){
+    if(ast->type == 'k' && string_matches(ast->content.data.str, if_const)){
         return if_block(ast, defined, let_map);
     }
-    else if(string_matches(let_const, ast->content.data.str)){
+    else if(ast->type == 'k' && string_matches(let_const, ast->content.data.str)){
         store_let_binding(ast, defined, let_map);
         result.type = 'u';
     }
-    else if(string_matches(each_const, ast->content.data.str)){
+    else if(ast->type == 'k' && string_matches(each_const, ast->content.data.str)){
         for_each(ast, defined, let_map);
         result.type = 'u';
     }
-    else if(string_matches(map_const, ast->content.data.str)){
+    else if(ast->type == 'k' && string_matches(map_const, ast->content.data.str)){
         return map_array(ast, defined, let_map);
     }
-    else if(string_matches(reduce_const, ast->content.data.str)){
+    else if(ast->type == 'k' && string_matches(reduce_const, ast->content.data.str)){
         return reduce_array(ast, defined, let_map);
     }
-    else if(string_matches(set_const, ast->content.data.str)){
+    else if(ast->type == 'k' && string_matches(set_const, ast->content.data.str)){
         struct Value index = execute(ast->children[0], defined, let_map);
         struct Value item = execute(ast->children[1], defined, let_map);
         struct Value array = execute(ast->children[2], defined, let_map);
         result = array_set(index, item, array);
         return result;
     }
-    else if(string_matches(for_const, ast->content.data.str)){
+    else if(ast->type == 'k' && string_matches(for_const, ast->content.data.str)){
         for_loop(ast, defined, let_map);
         result.type = 'u'; //return undefined
     }
-    else if(string_matches(do_const, ast->content.data.str)){
+    else if(ast->type == 'k' && string_matches(do_const, ast->content.data.str)){
         for(int i = 0; i < ast->size; i++){
             if(i == ast->size-1){
                 result = execute(ast->children[i], defined, let_map);
@@ -57,10 +57,10 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
             }
         }
     }
-    else if(string_matches(read_const, ast->content.data.str)){
+    else if(ast->type == 'k' && string_matches(read_const, ast->content.data.str)){
         return read_file(ast->children[0]->content.data.str);
     }
-    else if(string_matches(substring_const, ast->content.data.str)){
+    else if(ast->type == 'k' && string_matches(substring_const, ast->content.data.str)){
         struct Value string = execute(ast->children[2], defined, let_map);
         struct Value start = execute(ast->children[0], defined, let_map);
         struct Value end = execute(ast->children[1], defined, let_map);
@@ -72,7 +72,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
             return substring(start.data.ln, end.data.ln, string);
         }
     }
-    else if(string_matches(parallel_const, ast->content.data.str)){
+    else if(ast->type == 'k' && string_matches(parallel_const, ast->content.data.str)){
         parallel_execution(ast, defined, let_map);
         result.type = 'u';
     } else {
