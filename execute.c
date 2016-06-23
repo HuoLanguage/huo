@@ -103,10 +103,10 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
                     printf("\n");
                     result.type = 'u';
                 }
-                if(string_matches(ast->content.data.str, length_const)){
+                else if(string_matches(ast->content.data.str, length_const)){
                     return length(a);
                 }
-                if(string_matches(ast->content.data.str, return_const)){
+                else if(string_matches(ast->content.data.str, return_const)){
                     return execute(ast->children[0], defined, let_map);
                 }
             }
