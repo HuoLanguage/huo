@@ -4,45 +4,44 @@
 #include "base_util.h"
 
 struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value b){
-    struct Value result;
 
     if(ast->type == 'k'){
         if(string_matches(ast->content.data.str, concat_const)){
-            result = concat(a, b);
+            a = concat(a, b);
         }
         else if(string_matches(ast->content.data.str, index_const)){
-            result = array_index(a, b);
+            a = array_index(a, b);
         }
         else if(string_matches(ast->content.data.str, push_const)){
-            result = array_push(a, b);
+            a = array_push(a, b);
         }
         else if(string_matches(split_const, ast->content.data.str)){
-            result = split_string(a, b);
+            a = split_string(a, b);
         }
     }
     else if(ast->type == '*'){
-        result = mul(a, b);
+        a = mul(a, b);
     }
     else if(ast->type == '+'){
-        result = add(a, b);
+        a = add(a, b);
     }
     else if(ast->type == '-'){
-        result = sub(a, b);
+        a = sub(a, b);
     }
     else if(ast->type == '/'){
-        result = divide(a, b);
+        a = divide(a, b);
     }
     else if(ast->type == '!'){
-        result = not(a, b);
+        a = not(a, b);
     }
     else if(ast->type == '='){
-        result = equals(a, b);
+        a = equals(a, b);
     }
     else if(ast->type == '>'){
-        result = greater_than(a, b);
+        a = greater_than(a, b);
     }
     else if(ast->type == '<'){
-        result = greater_than(b, a);
+        a = greater_than(b, a);
     }
-    return result;
+    return a;
 }
