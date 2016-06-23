@@ -12,15 +12,13 @@
 
 int main(int argc, char const *argv[]) {
     if(argc < 2){
-        printf("Error: you have run Huo without pointing it to a file.\n");
-        return 0;
+        ERROR("You have run Huo without pointing it to a file.");
     }
 
     FILE *fp;
     fp = fopen(argv[1], "r");
     if(fp == NULL){
-        printf("Error: %d (%s)\n", errno, strerror(errno));
-        return 0;
+        ERROR("Error opening file: %d (%s)", errno, strerror(errno));
     }
 
     struct Tokens t = {

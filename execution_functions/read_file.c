@@ -1,16 +1,15 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "../structures.h"
 #include "../execute.h"
+#include "../base_util.h"
 
 struct Value read_file(struct String file_name){
     struct Value result;
     FILE *fp;
     fp = fopen(file_name.body, "r");
     if(fp == NULL){
-        printf("Error: cannot find file: \"%s\"\n", file_name.body);
-        result.type = 'u';
-        return result;
+        ERROR("Cannot find file: \"%s\"", file_name.body);
+        /*result.type = 'u';
+        return result; */
     }
     struct String file = {
         .length = 0

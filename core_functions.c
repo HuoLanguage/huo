@@ -66,7 +66,7 @@ struct Value add(struct Value a, struct Value b){
 
 struct Value array_add(struct Value a, struct Value b){
     if(a.data.array->size != b.data.array->size){
-        printf("Error: tried to add arrays of different sizes");
+        ERROR("Tried to add arrays of different sizes: %i != %i", a.data.array->size, b.data.array->size);
     } else {
         for(int i = 0; i < a.data.array->size; i++){
             struct Value result = add(*a.data.array->values[i], *b.data.array->values[i]);
@@ -163,11 +163,7 @@ struct Value not(struct Value a, struct Value b){
             a.data.bl = bool_true;
         }
     } else {
-        printf("Error: mismatched types for values: ");
-        print(a);
-        printf(" and ");
-        print(b);
-        printf("in not function.\n");
+        ERROR("Mismatched types: %c != %c", a.type, b.type);
     }
     return a;
 }
@@ -197,11 +193,7 @@ struct Value equals(struct Value a, struct Value b){
             a.data.bl = bool_false;
         }
     } else {
-        printf("Error: mismatched types for values: ");
-        print(a);
-        printf(" and ");
-        print(b);
-        printf(" in equals function.\n");
+        ERROR("Mismatched types: %c != %c", a.type, b.type);
     }
     return a;
 }
@@ -224,22 +216,16 @@ struct Value greater_than(struct Value a, struct Value b){
         }
     }
     else {
-        printf("Error: mismatched types for values ");
-        print(a);
-        printf(" and ");
-        print(b);
-        printf(" in greater-than function.\n");
+        ERROR("Mismatched types: %c != %c", a.type, b.type);
     }
     return a;
 }
 
 struct Value length(struct Value a){
     if(a.type != 'a' && a.type != 's'){
-      printf("Type Error: value has no length property: ");
-      print(a);
-      printf("\n");
-      a.type = 'u';
-      return a;
+      ERROR("Type error: value has no length property");
+/*      a.type = 'u';
+      return a; */
     } else {
       struct Value length = {
           .type = 'l',
@@ -253,7 +239,7 @@ struct Value length(struct Value a){
 
 struct Value array_index(struct Value a, struct Value arr){
     if(a.type != 'l' || arr.type != 'a'){
-        printf("Error: index takes a number and an array.");
+        ERROR("Index takes a number and an array, but got ('%c' != 'l', '%c' != 'a').", a.type, arr.type);
     }
     return *arr.data.array->values[a.data.ln];
 }
@@ -280,15 +266,19 @@ struct Value array_push(struct Value a, struct Value arr){
 struct Value substring(int start, int end, struct Value str){
     struct Value result;
     result.type = 's';
-    if(start > str.data.str.length || end > str.data.str.length){
-        result.type = 'u';
+    if(start > str.data.str.length) {
+        ERROR("String start index out of range for substring: %i > %i", start, str.data.str.length); 
+    }
+    else if (end > str.data.str.length){
+        ERROR("String end index out of range for substring: %i > %i", end, str.data.str.length); 
+        /*result.type = 'u';
         printf("Error: start/end index out of range for substring.");
         // struct String message = {
         //     .body="Error: start/end index out of range for substring.",
         //     .length=50
         // };
         // result.data.str = message;
-        return result;
+        return result; */
     } else {
         struct String new_string = {
             .length=(end-start)

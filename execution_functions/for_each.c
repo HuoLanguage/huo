@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "../structures.h"
 #include "../execute.h"
 #include "populate_each_function.h"
@@ -7,8 +5,7 @@
 
 struct Value for_each(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
     if (ast->size < 4) {
-        perror("Not enough arguments for for_each\n");
-        exit(1);
+        ERROR("Not enough arguments for for_each: %i < 4\n", ast->size);
     }
     struct Value array = execute(ast->children[0], defined, let_map);
     for(int i = 0; i < array.data.array->size; i++){
