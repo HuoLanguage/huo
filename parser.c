@@ -7,7 +7,6 @@
 #include "build_array.h"
 
 void parse(struct Tree * root, struct Tokens *tokens){
-
     while(tokens->counter < tokens->length){
         struct Token token = tokens->tokens[tokens->counter];
         if(token.type == 'o'){
@@ -22,6 +21,14 @@ void parse(struct Tree * root, struct Tokens *tokens){
         }
         else if(is_a_function(token.type)){
             root->type = token.type;
+            struct String content =  string_copy_stack(&token.data);
+            struct Value val = {
+                .type='k',
+                .data={
+                    .str=content
+                }
+            };
+            root->content = val;
         }
         else if(token.type == 'b'){ //open bracket
             struct Tree * value = malloc(sizeof(struct Tree));
@@ -45,10 +52,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
                 struct Tree * value = malloc(sizeof(struct Tree));
                 value->type = token.type;
                 value->size = 0;
-                struct String content = {
-                    .length = token.data.length
-                };
-                strcpy(content.body, token.data.body);
+                struct String content = string_copy_stack(&token.data);
                 struct Value val = {
                     .type='k',
                     .data={
@@ -61,10 +65,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
                 root->size++;
             } else {
                 root->type = token.type;
-                struct String content = {
-                    .length = token.data.length
-                };
-                strcpy(content.body, token.data.body);
+                struct String content =  string_copy_stack(&token.data);
                 struct Value val = {
                     .type='k',
                     .data={
@@ -78,10 +79,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             struct Tree * value = malloc(sizeof(struct Tree));
             value->type = token.type;
             value->size = 0;
-            struct String content = {
-                .length = token.data.length
-            };
-            strcpy(content.body, token.data.body);
+            struct String content =  string_copy_stack(&token.data);
             struct Value val = {
                 .type='s',
                 .data={

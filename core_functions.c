@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include "structures.h"
 #include "constants.h"
 #include "base_util.h"
@@ -70,7 +71,7 @@ struct Value array_add(struct Value a, struct Value b){
     } else {
         for(int i = 0; i < a.data.array->size; i++){
             struct Value result = add(*a.data.array->values[i], *b.data.array->values[i]);
-            copy_value(a.data.array->values[i], &result);
+            copy_value_to(a.data.array->values[i], &result);
         }
     }
     return a;
@@ -130,11 +131,10 @@ struct Value divide(struct Value a, struct Value b){
 }
 
 struct Value concat(struct Value a, struct Value b){
-    int len = a.data.str.length;
-    a.data.str.length += b.data.str.length;
-    for(int l = 0; l < b.data.str.length; l++){
-        a.data.str.body[l+len] = b.data.str.body[l];
+    if (a.type != 's' || b.type != 's') {
+        ERROR("Tried to concat %c and %c", a.type, b.type);
     }
+    string_concat_to(&a.data.str, &b.data.str);
     return a;
 }
 
@@ -222,6 +222,9 @@ struct Value greater_than(struct Value a, struct Value b){
 }
 
 struct Value length(struct Value a){
+    if (a.type == 's') {
+        assert(string_is_sane(&a.data.str));
+    }
     if(a.type != 'a' && a.type != 's'){
       ERROR("Type error: value has no length property");
 /*      a.type = 'u';
@@ -242,6 +245,7 @@ struct Value array_index(struct Value a, struct Value list){
         return *list.data.array->values[a.data.ln];
     }
     else if(list.type == 's'){
+        assert(string_is_sane(&list.data.str));
         struct Value result = {
             .type='s',
             .data={
@@ -250,7 +254,14 @@ struct Value array_index(struct Value a, struct Value list){
                 }
             }
         };
+        result.data.str.body = malloc(sizeof(char) + 1);
+        if (result.data.str.body == NULL) {
+            ERROR("Malloc failure");
+        }
+            
+        assert(string_is_sane(&result.data.str));
         result.data.str.body[0] = list.data.str.body[a.data.ln];
+        result.data.str.body[1] = 0;
         return result;
     } else {
         ERROR("Index takes a number and a string or array, but got ('%c' != 'l', '%c' != ['a'|'s']).", a.type, list.type);
@@ -260,23 +271,20 @@ struct Value array_index(struct Value a, struct Value list){
 struct Value array_set(struct Value index, struct Value item, struct Value array){
     int idx = (int) index.data.ln;
     if(idx > array.data.array->size-1){
-        struct Value * val = malloc(sizeof(struct Value));
-        array.data.array->values[idx] = val;
         array.data.array->size = idx+1;
     }
-    copy_value(array.data.array->values[idx], &item);
+    array.data.array->values[idx] = copy_value_heap(&item);
     return array;
 }
 
 struct Value array_push(struct Value a, struct Value arr){
-    struct Value * val = malloc(sizeof(struct Value));
-    copy_value(val, &a);
-    arr.data.array->values[arr.data.array->size] = val;
+    arr.data.array->values[arr.data.array->size] = copy_value_heap(&a);
     arr.data.array->size++;
     return arr;
 }
 
 struct Value substring(int start, int end, struct Value str){
+    assert(string_is_sane(&str.data.str));
     struct Value result;
     result.type = 's';
     if(start < 0 || start > str.data.str.length) {
@@ -285,21 +293,29 @@ struct Value substring(int start, int end, struct Value str){
     else if (end < 0 || end > str.data.str.length){
         ERROR("String end index out of range for substring: should be 0 <= %i < %i", end, str.data.str.length);
     } else {
-        struct String new_string;
         if (end > start) {
-            new_string.length = (end - start);
+            result.data.str.length = (end - start);
+            result.data.str.body = malloc(sizeof(char) * (result.data.str.length + 1));
+            if (result.data.str.body == NULL) {
+                ERROR("Malloc failure");
+            }
+            for(int i = 0; i < result.data.str.length; i++){
+                result.data.str.body[i] = str.data.str.body[i + start];
+            }
+            result.data.str.body[result.data.str.length] = 0;
         } else {
-            new_string.length = 0;
+            result.data.str.length = 0;
+            free(result.data.str.body);
+            result.data.str.body = NULL;
         }
-        for(int i = 0; i < new_string.length; i++){
-            new_string.body[i] = str.data.str.body[i + start];
-        }
-        result.data.str = new_string;
+        assert(string_is_sane(&result.data.str));
         return result;
     }
 }
 
 struct Value split_string(struct Value a, struct Value str){
+    assert(string_is_sane(&a.data.str));
+    assert(string_is_sane(&str.data.str));
     int indexes[1000];
     int counter = 0;
     for(int i = 0; i < str.data.str.length; i++){
@@ -315,12 +331,10 @@ struct Value split_string(struct Value a, struct Value str){
     for(int l = 0; l <= counter; l++){
         int start = !l ? l : indexes[l-1] + 1;
         int end = (l < counter) ? indexes[l] : str.data.str.length;
-
-        struct Value * next_item = malloc(sizeof(struct Value));
+        
         struct Value item = substring(start, end, str);
-
-        copy_value(next_item, &item);
-        array->values[array->size] = next_item;
+        
+        array->values[array->size] = copy_value_heap(&item);
         array->size++;
     }
     result.data.array = array;

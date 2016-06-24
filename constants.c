@@ -1,119 +1,51 @@
 #include "constants.h"
+#include "base_util.h"
 
-struct String functions = {
-    .body = "*+-/!=<>\0",
-    .length = 8
-};
+struct String functions = STR_NEW("*+-/!=<>");
 
-struct String numbers = {
-    .body = "0123456789\0",
-    .length = 10
-};
+struct String numbers = STR_NEW("0123456789");
 
-struct String letters = {
-    .body = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ",
-    .length = 53
-};
+struct String letters = STR_NEW("_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
-struct String print_const = {
-    .body = "print",
-    .length = 5
-};
+struct String print_const = STR_NEW("print");
 
-struct String concat_const = {
-    .body = "cat",
-    .length = 3
-};
+struct String concat_const = STR_NEW("cat");
 
-struct String if_const = {
-    .body = "if",
-    .length = 2
-};
+struct String if_const = STR_NEW("if");
 
-struct String def_const = {
-    .body = "def",
-    .length = 3
-};
+struct String def_const = STR_NEW("def");
 
-struct String let_const = {
-    .body = "let",
-    .length = 3
-};
+struct String let_const = STR_NEW("let");
 
-struct String length_const = {
-    .body = "length",
-    .length = 6
-};
+struct String length_const = STR_NEW("length");
 
-struct String index_const = {
-    .body = "index",
-    .length = 5
-};
+struct String index_const = STR_NEW("index");
 
-struct String push_const = {
-    .body = "push",
-    .length = 4
-};
+struct String push_const = STR_NEW("push");
 
-struct String each_const = {
-    .body = "each",
-    .length = 4
-};
+struct String each_const = STR_NEW("each");
 
-struct String map_const = {
-    .body = "map",
-    .length = 3
-};
+struct String map_const = STR_NEW("map");
 
-struct String reduce_const = {
-    .body = "reduce",
-    .length = 6
-};
+struct String reduce_const = STR_NEW("reduce");
 
-struct String set_const = {
-    .body = "set",
-    .length = 3
-};
+struct String set_const = STR_NEW("set");
 
-struct String for_const = {
-    .body = "for",
-    .length = 3
-};
+struct String for_const = STR_NEW("for");
 
-struct String do_const = {
-    .body = "do",
-    .length = 2
-};
+struct String do_const = STR_NEW("do");
 
-struct String read_const = {
-    .body = "read",
-    .length = 4
-};
+struct String read_const = STR_NEW("read");
 
-struct String import_const = {
-    .body = "import",
-    .length = 6
-};
+struct String import_const = STR_NEW("import");
 
-struct String substring_const = {
-    .body = "substring",
-    .length = 9
-};
+struct String substring_const = STR_NEW("substring");
 
-struct String split_const = {
-    .body = "split",
-    .length = 5
-};
+struct String split_const = STR_NEW("split");
 
-struct String return_const = {
-    .body = "return",
-    .length = 6
-};
+struct String return_const = STR_NEW("return");
 
-struct String parallel_const = {
-    .body = "parallel",
-    .length = 8
-};
+struct String parallel_const = STR_NEW("parallel");
 
 const char bool_true = 't';
 const char bool_false = 'f';

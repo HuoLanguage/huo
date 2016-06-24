@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <assert.h>
 #include "tokenizer.h"
 #include "parser.h"
 #include "structures.h"
@@ -26,17 +27,26 @@ int main(int argc, char const *argv[]) {
         .counter = 0
     };
     struct String file = {
-        .length = 0
+        .length = 0,
+        .body = NULL
     };
 
     char c;
     while ((c = fgetc(fp)) != EOF){
         if(c != '\n'){
+            RESIZE(file.body, file.length + 1);
             file.body[file.length] = c;
             file.length++;
         }
     }
     fclose(fp);
+    
+    // Null character at end
+    RESIZE(file.body, file.length + 1);
+    file.body[file.length] = 0;
+    
+    assert(string_is_sane(&file));
+    
 
     struct Tokens * tokens = tokenize(file, &t);
     // for(int i = 0; i < tokens->length; i++){

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include "structures.h"
 #include "constants.h"
 #include "store_defs.h"
@@ -29,6 +30,7 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
 }
 
 struct Tree * read_import(struct String file_name){
+    assert(string_is_sane(&file_name));
     struct Value file_contents = read_file(file_name);
     struct Tokens * tokens = malloc(sizeof(struct Tokens));
     tokens->length = 0;

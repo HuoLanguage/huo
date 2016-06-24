@@ -14,7 +14,7 @@ void populate_reduce_function(
             } else {
               ast->type = 'n';
             }
-            copy_value(&ast->content, item);
+            ast->content = copy_value_stack(item);
         }
         else if(string_matches(&accumulator_key->data.str, &ast->content.data.str)){
             if(accumulator->type == 's'){
@@ -22,7 +22,7 @@ void populate_reduce_function(
             } else {
               ast->type = 'n';
             }
-            copy_value(&ast->content, accumulator);
+            ast->content = copy_value_stack(accumulator);
         }
     } else if(ast->size > 0){
         for(int i = 0; i < ast->size; i++){
