@@ -4,7 +4,6 @@
 #include "base_util.h"
 
 struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value b){
-
     if(ast->type == 'k'){
         if(string_matches(&ast->content.data.str, &concat_const)){
             a = concat(a, b);

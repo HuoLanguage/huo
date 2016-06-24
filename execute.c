@@ -38,6 +38,9 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         return reduce_array(ast, defined, let_map);
     }
     else if(ast->type == 'k' && string_matches(&set_const, &ast->content.data.str)){
+        if (ast->size < 3) {
+            ERROR("Not enough arguments for set: %i < 3", ast->size);
+        }
         struct Value index = execute(ast->children[0], defined, let_map);
         struct Value item = execute(ast->children[1], defined, let_map);
         struct Value array = execute(ast->children[2], defined, let_map);
@@ -87,8 +90,10 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
                     }
                 }
                 ERROR("Undefined variable: %s", ast->content.data.str.body);
-            } else {
+            } else if (ast->type == 's' || ast->type == 'n') {
                 return ast->content;
+            } else {
+                ERROR("Cannot get value of type '%c'", ast->type);
             }
         }
         else if(ast->type == 'k' && (idx = is_defined_func(defined, ast->content.data.str)) > -1){

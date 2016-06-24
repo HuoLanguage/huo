@@ -269,6 +269,12 @@ struct Value array_index(struct Value a, struct Value list){
 }
 
 struct Value array_set(struct Value index, struct Value item, struct Value array){
+    if (index.type != 'l') {
+        ERROR("Set index type invalid:  ('%c' != 'l')", index.type);
+    }
+    if (array.type != 'a') {
+        ERROR("Set array type invalid:  ('%c' != 'a')", array.type);
+    }
     int idx = (int) index.data.ln;
     if(idx > array.data.array->size-1){
         array.data.array->size = idx+1;
@@ -278,6 +284,9 @@ struct Value array_set(struct Value index, struct Value item, struct Value array
 }
 
 struct Value array_push(struct Value a, struct Value arr){
+    if (arr.type != 'a') {
+        ERROR("Push takes an item and an array, but got ('%c' != 'a').", arr.type);
+    }
     arr.data.array->values[arr.data.array->size] = copy_value_heap(&a);
     arr.data.array->size++;
     return arr;
