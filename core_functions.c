@@ -237,11 +237,24 @@ struct Value length(struct Value a){
     }
 }
 
-struct Value array_index(struct Value a, struct Value arr){
-    if(a.type != 'l' || arr.type != 'a'){
-        ERROR("Index takes a number and an array, but got ('%c' != 'l', '%c' != 'a').", a.type, arr.type);
+struct Value array_index(struct Value a, struct Value list){
+    if(list.type == 'a'){
+        return *list.data.array->values[a.data.ln];
     }
-    return *arr.data.array->values[a.data.ln];
+    else if(list.type == 's'){
+        struct Value result = {
+            .type='s',
+            .data={
+                .str={
+                    .length=0
+                }
+            }
+        };
+        result.data.str.body[0] = list.data.str.body[a.data.ln];
+        return result;
+    } else {
+        ERROR("Index takes a number and a string or array, but got ('%c' != 'l', '%c' != ['a'|'s']).", a.type, list.type);
+    }
 }
 
 struct Value array_set(struct Value index, struct Value item, struct Value array){
@@ -267,10 +280,10 @@ struct Value substring(int start, int end, struct Value str){
     struct Value result;
     result.type = 's';
     if(start < 0 || start > str.data.str.length) {
-        ERROR("String start index out of range for substring: should be 0 <= %i < %i", start, str.data.str.length); 
+        ERROR("String start index out of range for substring: should be 0 <= %i < %i", start, str.data.str.length);
     }
     else if (end < 0 || end > str.data.str.length){
-        ERROR("String end index out of range for substring: should be 0 <= %i < %i", end, str.data.str.length); 
+        ERROR("String end index out of range for substring: should be 0 <= %i < %i", end, str.data.str.length);
     } else {
         struct String new_string;
         if (end > start) {
