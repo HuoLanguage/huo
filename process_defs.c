@@ -24,7 +24,7 @@ struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx
 struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
     if(ast->type == 'k' && !ast->size){
         for(int i = 0; i < arguments->size; i++){
-            if(string_matches(arguments->members[i]->key->data.str, ast->content.data.str)){
+            if(string_matches(&arguments->members[i]->key->data.str, &ast->content.data.str)){
                 copy_value(&ast->content, arguments->members[i]->val);
                 if(arguments->members[i]->val->type == 's'){
                     ast->type = 's';
@@ -55,7 +55,7 @@ void populate_array(struct Map * arguments, struct Value_array * array){
     for(int i = 0; i < array->size; i++){
         if(array->values[i]->type == 'k'){
             for(int l = 0; l < arguments->size; l++){
-                if(string_matches(array->values[i]->data.str, arguments->members[i]->key->data.str)){
+                if(string_matches(&array->values[i]->data.str, &arguments->members[i]->key->data.str)){
                         copy_value(array->values[i], arguments->members[i]->val);
                 }
             }
@@ -82,7 +82,7 @@ struct Tree * get_defined_body(struct Tree * function){
 
 int is_defined_func(struct Tree_map * defined, struct String key){
     for(int i = 0; i < defined->size; i++){
-        if(string_matches(*defined->names[i], key)){
+        if(string_matches(defined->names[i], &key)){
             return i;
         }
     }

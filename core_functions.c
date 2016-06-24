@@ -157,7 +157,7 @@ struct Value not(struct Value a, struct Value b){
     }
     else if(a.type == 's' && b.type == 's'){
         a.type = 'b';
-        if(string_matches(a.data.str, b.data.str)){
+        if(string_matches(&a.data.str, &b.data.str)){
             a.data.bl = bool_false;
         } else {
             a.data.bl = bool_true;
@@ -187,7 +187,7 @@ struct Value equals(struct Value a, struct Value b){
     }
     else if(a.type == 's' && b.type == 's'){
         a.type = 'b';
-        if(string_matches(a.data.str, b.data.str)){
+        if(string_matches(&a.data.str, &b.data.str)){
             a.data.bl = bool_true;
         } else {
             a.data.bl = bool_false;

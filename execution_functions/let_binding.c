@@ -15,7 +15,7 @@ void store_let_binding(struct Tree * ast, struct Tree_map * defined, struct Map 
     let_binding->val = val_ptr;
     int index = -1;
     for(int i = 0; i < let_map->size; i++){
-        if(string_matches(let_binding->key->data.str, let_map->members[i]->key->data.str)){
+        if(string_matches(&let_binding->key->data.str, &let_map->members[i]->key->data.str)){
             index = i;
         }
     }

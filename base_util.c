@@ -54,13 +54,13 @@ struct Tree * duplicate_tree(struct Tree * a){
     return root;
 }
 
-int string_matches(struct String base, struct String compare){
-    if(base.length != compare.length){
+int string_matches(struct String *base, struct String *compare){
+    if(base->length != compare->length){
         return 0;
     }
     int counter = 0;
-    while(counter < base.length){
-        if(base.body[counter] != compare.body[counter]){
+    while(counter < base->length){
+        if(base->body[counter] != compare->body[counter]){
             return 0;
         }
         counter++;
