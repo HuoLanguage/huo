@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include "structures.h"
 #include "constants.h"
 #include "store_defs.h"
@@ -13,13 +14,13 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
         if (ast->children[i]->size == 0) {
             ERROR("Not enough arguments for store_defs: %i < 1", ast->children[i]->size);
         }
-        if(string_matches(ast->children[i]->content.data.str, def_const)){
+        if(string_matches(&ast->children[i]->content.data.str, &def_const)){
             defined->names[defined->size] = &ast->children[i]->children[0]->content.data.str;
             defined->trees[defined->size] = ast->children[i];
             defined->size++;
             num_defs++;
         }
-        else if(string_matches(ast->children[i]->content.data.str, import_const)){
+        else if(string_matches(&ast->children[i]->content.data.str, &import_const)){
             struct Tree * imported_ast = read_import(ast->children[i]->children[0]->content.data.str);
             store_defs(imported_ast, defined);
             num_defs++; // we're just skipping over an import statement here
@@ -29,6 +30,7 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
 }
 
 struct Tree * read_import(struct String file_name){
+    assert(string_is_sane(&file_name));
     struct Value file_contents = read_file(file_name);
     struct Tokens * tokens = malloc(sizeof(struct Tokens));
     tokens->length = 0;

@@ -9,8 +9,7 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
         if(tokens->tokens[tokens->counter].type == 's'){
             struct Value * val = malloc(sizeof(struct Value));
             val->type = 's';
-            val->data.str.length = tokens->tokens[tokens->counter].data.length;
-            strcpy(val->data.str.body, tokens->tokens[tokens->counter].data.body);
+            val->data.str = string_copy_stack(&tokens->tokens[tokens->counter].data);
             array->values[array->size] = val;
             array->size++;
         }
@@ -31,8 +30,8 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
         else if(tokens->tokens[tokens->counter].type == 'k'){
             struct Value * val = malloc(sizeof(struct Value));
             val->type = 'k';
-            val->data.str.length = tokens->tokens[tokens->counter].data.length;
-            strcpy(val->data.str.body, tokens->tokens[tokens->counter].data.body);
+            
+            val->data.str = string_copy_stack(&tokens->tokens[tokens->counter].data);
             array->values[array->size] = val;
             array->size++;
         }

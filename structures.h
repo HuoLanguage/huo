@@ -2,8 +2,8 @@
 #define _STRUCTURES_H
 
 struct String {
-    char body[750];
     int length;
+    char *body;
 };
 
 struct Token {
