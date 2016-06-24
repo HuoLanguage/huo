@@ -33,7 +33,9 @@ int main(int argc, char const *argv[]) {
 
     char c;
     while ((c = fgetc(fp)) != EOF){
-        if(c != '\n'){
+        if (c == 0) {
+            ERROR("Null byte in input file");
+        } else if(c != '\n'){
             RESIZE(file.body, file.length + 1);
             file.body[file.length] = c;
             file.length++;

@@ -63,8 +63,10 @@ struct Tokens * tokenize(struct String file, struct Tokens *content){
                     counter++;
                     s = file.body[counter];
                 }
-                RESIZE(t.data.body, t.data.length+1);
-                t.data.body[t.data.length] = 0;
+                if (t.data.length != 0) {
+                    RESIZE(t.data.body, t.data.length+1);
+                    t.data.body[t.data.length] = 0;
+                }
                 assert(string_is_sane(&t.data));
             }
             else if(is_a_function(c)){
