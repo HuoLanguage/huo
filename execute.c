@@ -65,7 +65,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         struct Value start = execute(ast->children[0], defined, let_map);
         struct Value end = execute(ast->children[1], defined, let_map);
         if(string.type != 's'){
-            printf("Error: non-string value passed into substring.");
+            ERROR("Non-string value passed into substring: %c.", string.type);
             result.type = 'u';
             return result;
         } else {
@@ -86,8 +86,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
                         return *let_map->members[i]->val;
                     }
                 }
-                fprintf(stderr, "Undefined variable: %s\n", ast->content.data.str.body);
-                exit(0);
+                ERROR("Undefined variable: %s", ast->content.data.str.body);
             } else {
                 return ast->content;
             }

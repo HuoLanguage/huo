@@ -1,6 +1,5 @@
 #include "../structures.h"
 #include "../base_util.h"
-#include <stdio.h>
 
 void populate_reduce_function(
   struct Value * accumulator_key,

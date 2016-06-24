@@ -1,6 +1,5 @@
 #include "../structures.h"
 #include "../base_util.h"
-#include <stdio.h>
 
 void populate_each_function(
   struct Value * item_key,

@@ -4,6 +4,9 @@
 #include "../base_util.h"
 
 struct Value for_each(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
+    if (ast->size < 4) {
+        ERROR("Not enough arguments for for_each: %i < 4\n", ast->size);
+    }
     struct Value array = execute(ast->children[0], defined, let_map);
     for(int i = 0; i < array.data.array->size; i++){
         struct Value * item = array.data.array->values[i];

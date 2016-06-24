@@ -5,6 +5,9 @@
 #include "../core_functions.h"
 
 struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
+    if (ast->size < 4) {
+        ERROR("Not enough arguments for reduce_array: %i < 4\n", ast->size);
+    }
     int start = 0;
     struct Value result;
     struct Value array = execute(ast->children[0], defined, let_map);

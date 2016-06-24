@@ -1,9 +1,11 @@
-#include <stdlib.h>
 #include "../structures.h"
 #include "../execute.h"
 #include "../base_util.h"
 
 void store_let_binding(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
+    if (ast->size < 2) {
+        ERROR("Not enough arguments for store_let_binding: %i < 2\n", ast->size);
+    }
     struct Keyval * let_binding = malloc(sizeof(struct Keyval));
     let_binding->key = malloc(sizeof(struct Value));
     copy_value(let_binding->key, &ast->children[0]->content);
