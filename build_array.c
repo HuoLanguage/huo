@@ -6,6 +6,9 @@
 void build_array(struct Value_array * array, struct Tokens * tokens){
     while(tokens->tokens[tokens->counter].type != 'e'){
         tokens->counter++;
+        if (tokens->counter >= tokens->length) {
+            ERROR("Unbalanced array");
+        }
         if(tokens->tokens[tokens->counter].type == 's'){
             struct Value * val = malloc(sizeof(struct Value));
             val->type = 's';
