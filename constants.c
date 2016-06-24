@@ -11,8 +11,8 @@ struct String numbers = {
 };
 
 struct String letters = {
-    .body = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    .length = 52
+    .body = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ",
+    .length = 53
 };
 
 struct String print_const = {

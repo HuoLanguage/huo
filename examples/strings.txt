@@ -1,6 +1,8 @@
-(let x "hello world")
+(def join arr str
+    (reduce arr acc cur (cat (cat acc str) cur))
+)
+(let x "hello_world_of_great_programming_languages")
 (let y (substring 0 4 x))
-(print y)
 
-(let z (split " " x))
-(print (print z))
+(let z (split "_" x))
+(print (join z " "))

@@ -266,27 +266,20 @@ struct Value array_push(struct Value a, struct Value arr){
 struct Value substring(int start, int end, struct Value str){
     struct Value result;
     result.type = 's';
-    if(start > str.data.str.length) {
-        ERROR("String start index out of range for substring: %i > %i", start, str.data.str.length); 
+    if(start < 0 || start > str.data.str.length) {
+        ERROR("String start index out of range for substring: should be 0 <= %i < %i", start, str.data.str.length); 
     }
-    else if (end > str.data.str.length){
-        ERROR("String end index out of range for substring: %i > %i", end, str.data.str.length); 
-        /*result.type = 'u';
-        printf("Error: start/end index out of range for substring.");
-        // struct String message = {
-        //     .body="Error: start/end index out of range for substring.",
-        //     .length=50
-        // };
-        // result.data.str = message;
-        return result; */
+    else if (end < 0 || end > str.data.str.length){
+        ERROR("String end index out of range for substring: should be 0 <= %i < %i", end, str.data.str.length); 
     } else {
-        struct String new_string = {
-            .length=(end-start)
-        };
-        int counter = 0;
-        for(int i = start; i < end; i++){
-            new_string.body[counter] = str.data.str.body[i];
-            counter++;
+        struct String new_string;
+        if (end > start) {
+            new_string.length = (end - start);
+        } else {
+            new_string.length = 0;
+        }
+        for(int i = 0; i < new_string.length; i++){
+            new_string.body[i] = str.data.str.body[i + start];
         }
         result.data.str = new_string;
         return result;

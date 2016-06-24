@@ -6,6 +6,7 @@
 
 struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx){
     struct Map * arguments = malloc(sizeof(struct Map));
+    arguments->size = 0;
     for(int i = 0; i < ast->size; i++){
         struct Keyval * store = malloc(sizeof(struct Keyval));
         struct Value * key = malloc(sizeof(struct Value));
@@ -27,6 +28,9 @@ struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
                 copy_value(&ast->content, arguments->members[i]->val);
                 if(arguments->members[i]->val->type == 's'){
                     ast->type = 's';
+                }
+                else if(arguments->members[i]->val->type == 'k') {
+                    ast->type = 'k';
                 }
                 else if(arguments->members[i]->val->type == 'a') {
                     ast->type = 'a';

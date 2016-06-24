@@ -50,7 +50,9 @@ int main(int argc, char const *argv[]) {
     // printTree(&root);
     // printf("\n");
     struct Tree_map * defined = malloc(sizeof(struct Tree_map));
+    defined->size = 0;
     struct Map * let_map = malloc(sizeof(struct Map));
+    let_map->size = 0;
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){
         execute(root.children[i], defined, let_map);
