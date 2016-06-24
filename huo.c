@@ -31,8 +31,10 @@ int main(int argc, char const *argv[]) {
 
     char c;
     while ((c = fgetc(fp)) != EOF){
-        file.body[file.length] = c;
-        file.length++;
+        if(c != '\n'){
+            file.body[file.length] = c;
+            file.length++;
+        }
     }
     fclose(fp);
 

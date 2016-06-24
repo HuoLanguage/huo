@@ -2,7 +2,7 @@
 #define _STRUCTURES_H
 
 struct String {
-    char body[500];
+    char body[750];
     int length;
 };
 

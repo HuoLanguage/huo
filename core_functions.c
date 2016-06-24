@@ -246,7 +246,7 @@ struct Value array_index(struct Value a, struct Value list){
             .type='s',
             .data={
                 .str={
-                    .length=0
+                    .length=1
                 }
             }
         };
