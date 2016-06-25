@@ -29,6 +29,7 @@ objs = \
   execution_functions/let_binding.o\
   execution_functions/reduce_ast.o\
   execution_functions/if_block.o\
+  execution_functions/switch.o\
   build_array.o \
   tokenizer.o \
   process_defs.o \

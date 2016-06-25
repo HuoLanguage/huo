@@ -47,6 +47,8 @@ struct String return_const = STR_NEW("return");
 
 struct String parallel_const = STR_NEW("parallel");
 
+struct String switch_const = STR_NEW("switch");
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

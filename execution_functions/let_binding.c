@@ -7,7 +7,7 @@ void store_let_binding(struct Tree * ast, struct Tree_map * defined, struct Map 
         ERROR("Not enough arguments for store_let_binding: %i < 2\n", ast->size);
     }
     struct Keyval * let_binding = malloc(sizeof(struct Keyval));
-    
+
     let_binding->key = copy_value_heap(&ast->children[0]->content);
     struct Value val = execute(ast->children[1], defined, let_map);
     let_binding->val = copy_value_heap(&val);
