@@ -29,6 +29,9 @@ struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx
 struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
     if(ast->type == 'k' && !ast->size){
         for(int i = 0; i < arguments->size; i++){
+            if (ast->content.type != 's') {
+                ERROR("Variable already bound?");
+            }
             if(string_matches(&arguments->members[i]->key->data.str, &ast->content.data.str)){
                 ast->content = copy_value_stack(arguments->members[i]->val);
                 if(arguments->members[i]->val->type == 's'){
