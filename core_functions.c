@@ -7,11 +7,12 @@
 #include "core_functions.h"
 
 void print(struct Value a){
-    if(a.type == 's'){
-        printf("\"%s\"", a.data.str.body);
-    }
-    else if(a.type == 'k'){
-        printf("%s", a.data.str.body);
+    if(a.type == 's' || a.type == 'k'){
+        if (a.data.str.length == 0) {
+            printf("\"\"");
+        } else {
+            printf("\"%s\"", a.data.str.body);
+        }
     }
     else if(a.type == 'l') {
         printf("%ld", a.data.ln);

@@ -12,6 +12,10 @@ struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx
         ERROR("Not enough arguments!: %i < %i", defined->trees[idx]->size - 1, ast->size);
     }
     for(int i = 0; i < ast->size; i++){
+        char t = defined->trees[idx]->children[i+1]->content.type;
+        if (t != 'k') {
+            ERROR("Invalid type for argument: '%c' != 'k'", t);
+        }
         struct Keyval * store = malloc(sizeof(struct Keyval));        
         
         arguments->members[i] = store;
@@ -23,12 +27,8 @@ struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx
 }
 
 struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
-    printTree(ast);
-    printf("\n");
     if(ast->type == 'k' && !ast->size){
         for(int i = 0; i < arguments->size; i++){
-            print(*arguments->members[i]->key);
-            printf("\n");
             if(string_matches(&arguments->members[i]->key->data.str, &ast->content.data.str)){
                 ast->content = copy_value_stack(arguments->members[i]->val);
                 if(arguments->members[i]->val->type == 's'){

@@ -69,7 +69,7 @@ int main(int argc, char const *argv[]) {
     let_map->size = 0;
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){
-        execute(root.children[i], defined, let_map);
+        execute(root.children[i], defined, let_map, 250);
     }
     return 0;
 }
