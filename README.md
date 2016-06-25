@@ -76,6 +76,21 @@ functions
 (sum [1,2,3,4]) ; -> 10
 (biggest 10 5) ; -> 10
 ```
+switch block
+```lisp
+; the switch block is convenient for matching a value against a large number
+; of possibilities ~ the switch block takes a value and a list of cases
+; each case is a comparator, a value, and a return function if the comparator is true
+(def describe_number x 
+    (switch x
+        (> 100 (return "That's a huge number!"))
+        (> 50  (return "Hmm, not so big, less than one hundred."))
+        (> 20  (return "I supoooose that's a decently sized number."))
+        (< 10  (return "Pfft, you call that a number?"))
+    )
+)
+(describe_number 110) ; -> "That's a huge number!"
+```
 arrays
 ```lisp
 (let x [1,2,3,4])
