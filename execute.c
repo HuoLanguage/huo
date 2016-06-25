@@ -67,6 +67,10 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         if (ast->size < 1) {
             ERROR("Not enough arguments for read: %i < 1", ast->size);
         }
+        char t = ast->children[0]->content.type;
+        if (t != 's' && t != 'k') {
+            ERROR("Invalid type for read: '%c' != ['s', 'k']", t);
+        }
         return read_file(ast->children[0]->content.data.str);
     }
     else if(ast->type == 'k' && string_matches(&substring_const, &ast->content.data.str)){
