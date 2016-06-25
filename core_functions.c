@@ -314,7 +314,6 @@ struct Value substring(int start, int end, struct Value str){
             result.data.str.body[result.data.str.length] = 0;
         } else {
             result.data.str.length = 0;
-            free(result.data.str.body);
             result.data.str.body = NULL;
         }
         assert(string_is_sane(&result.data.str));
@@ -323,12 +322,15 @@ struct Value substring(int start, int end, struct Value str){
 }
 
 struct Value split_string(struct Value a, struct Value str){
+    if (a.type != 's' || str.type != 's') {
+        ERROR("Split takes two strings, but got ('%c' != 's', '%c' != 's').", a.type, str.type);
+    }
     assert(string_is_sane(&a.data.str));
     assert(string_is_sane(&str.data.str));
     int indexes[1000];
     int counter = 0;
     for(int i = 0; i < str.data.str.length; i++){
-        if(a.data.str.body[0] == str.data.str.body[i]){
+        if(a.data.str.length == 0 || a.data.str.body[0] == str.data.str.body[i]){
             indexes[counter] = i;
             counter++;
         }

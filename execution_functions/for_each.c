@@ -8,6 +8,9 @@ struct Value for_each(struct Tree * ast, struct Tree_map * defined, struct Map *
         ERROR("Not enough arguments for for_each: %i < 4\n", ast->size);
     }
     struct Value array = execute(ast->children[0], defined, let_map);
+    if (array.type != 'a') {
+        ERROR("Invalid type for for_each iterable: '%c' != 'a'", array.type);
+    }
     for(int i = 0; i < array.data.array->size; i++){
         struct Value * item = array.data.array->values[i];
         struct Value index = {

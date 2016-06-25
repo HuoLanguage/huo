@@ -61,9 +61,15 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         }
     }
     else if(ast->type == 'k' && string_matches(&read_const, &ast->content.data.str)){
+        if (ast->size < 1) {
+            ERROR("Not enough arguments for read: %i < 1", ast->size);
+        }
         return read_file(ast->children[0]->content.data.str);
     }
     else if(ast->type == 'k' && string_matches(&substring_const, &ast->content.data.str)){
+        if (ast->size < 3) {
+            ERROR("Not enough arguments for substring: %i < 3", ast->size);
+        }
         struct Value string = execute(ast->children[2], defined, let_map);
         struct Value start = execute(ast->children[0], defined, let_map);
         struct Value end = execute(ast->children[1], defined, let_map);

@@ -11,6 +11,9 @@ struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct M
     int start = 0;
     struct Value result;
     struct Value array = execute(ast->children[0], defined, let_map);
+    if (array.type != 'a') {
+        ERROR("Invalid type for reduce_array: '%c' != 'a'\n", array.type);
+    }
     if(ast->size == 5){
         result = execute(ast->children[4], defined, let_map);
     } else {

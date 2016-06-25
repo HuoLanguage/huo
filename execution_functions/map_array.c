@@ -8,6 +8,9 @@ struct Value map_array(struct Tree * ast, struct Tree_map * defined, struct Map 
         ERROR("Not enough arguments for map_array: %i < 4\n", ast->size);
     }
     struct Value array = execute(ast->children[0], defined, let_map);
+    if (array.type != 'a') {
+        ERROR("Wrong type for map: '%c' != 'a'", array.type);
+    }
     for(int i = 0; i < array.data.array->size; i++){
         struct Value *item = array.data.array->values[i];
         struct Value index = {
