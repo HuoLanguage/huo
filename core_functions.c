@@ -242,11 +242,24 @@ struct Value length(struct Value a){
 }
 
 struct Value array_index(struct Value a, struct Value list){
+    if (a.type != 'l') {
+        ERROR("Invalid index type: '%c' != 'l'", a.type);
+    }
+    long l = a.data.ln;
+    if (l < 0) {
+        ERROR("Negative index: %li", l);
+    }
     if(list.type == 'a'){
-        return *list.data.array->values[a.data.ln];
+        if (l >= list.data.array->size) {
+            ERROR("Invalid index: %li (len %i)", l, list.data.array->size);
+        }
+        return *list.data.array->values[l];
     }
     else if(list.type == 's'){
         assert(string_is_sane(&list.data.str));
+        if (l >= list.data.str.length) {
+            ERROR("Invalid index: %li (len %i)", l, list.data.str.length);
+        }
         struct Value result = {
             .type='s',
             .data={
@@ -260,9 +273,9 @@ struct Value array_index(struct Value a, struct Value list){
             ERROR("Malloc failure");
         }
             
-        assert(string_is_sane(&result.data.str));
-        result.data.str.body[0] = list.data.str.body[a.data.ln];
+        result.data.str.body[0] = list.data.str.body[l];
         result.data.str.body[1] = 0;
+        assert(string_is_sane(&result.data.str));
         return result;
     } else {
         ERROR("Index takes a number and a string or array, but got ('%c' != 'l', '%c' != ['a'|'s']).", a.type, list.type);
