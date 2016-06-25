@@ -60,7 +60,7 @@ void populate_array(struct Map * arguments, struct Value_array * array){
     for(int i = 0; i < array->size; i++){
         if(array->values[i]->type == 'k'){
             for(int l = 0; l < arguments->size; l++){
-                if(string_matches(&array->values[i]->data.str, &arguments->members[i]->key->data.str)){
+                if(string_matches(&array->values[i]->data.str, &arguments->members[l]->key->data.str)){
                         array->values[i] = copy_value_heap(arguments->members[i]->val);
                         if (array->values[i]->type != 'k') {
                             break;
