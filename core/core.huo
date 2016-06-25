@@ -1,6 +1,11 @@
+(def max x y (if (> x y)(return x)(return y)))
+
+(def min x y (if (< x y)(return x)(return y)))
+
 (def join arr str
     (reduce arr acc cur (cat (cat acc str) cur))
 )
+
 (def char_to_int str
     (switch str
         (= "1" (return 1))
@@ -15,6 +20,7 @@
         (= "0" (return 0))
     )
 )
+
 (def exponent n x
     (do
         (let result n)
@@ -24,6 +30,7 @@
         (return result)
     )
 )
+
 (def str_to_int str
     (do
         (let counter (- (length str) 1))
