@@ -289,11 +289,22 @@ struct Value array_set(struct Value index, struct Value item, struct Value array
     if (array.type != 'a') {
         ERROR("Set array type invalid:  ('%c' != 'a')", array.type);
     }
+    // Have to copy before incrementing size or else 
+    // recursive copies segfault
+    struct Value *val = copy_value_heap(&item);
     int idx = (int) index.data.ln;
-    if(idx > array.data.array->size-1){
-        array.data.array->size = idx+1;
+    if (idx < 0) {
+        ERROR("Invalid array index: %i", idx);
     }
-    array.data.array->values[idx] = copy_value_heap(&item);
+    if (idx >= array.data.array->size) {
+        while (array.data.array->size < idx) {
+            struct Value undef = {.type='u'};
+            array_push(undef, array);
+        }
+        array_push(*val, array); // double-copy, but oh well.
+    } else {
+        array.data.array->values[idx] = val;
+    }
     return array;
 }
 
