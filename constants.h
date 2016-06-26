@@ -29,6 +29,7 @@ extern struct String split_const;
 extern struct String return_const;
 extern struct String parallel_const;
 extern struct String switch_const;
+extern struct String default_const;
 
 extern const char bool_true;
 extern const char bool_false;

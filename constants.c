@@ -49,6 +49,8 @@ struct String parallel_const = STR_NEW("parallel");
 
 struct String switch_const = STR_NEW("switch");
 
+struct String default_const = STR_NEW("default");
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';
