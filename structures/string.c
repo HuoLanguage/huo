@@ -3,6 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include "../base_util.h"
+#include <stdbool.h>
 #include "string.h"
 
 
@@ -87,18 +88,18 @@ void string_copy_to(struct String *to, struct String *from) {
     assert(string_is_sane(to));
 }
 
-int string_matches(struct String *base, struct String *compare){
+bool string_matches(struct String *base, struct String *compare){
     assert(string_is_sane(base));
     assert(string_is_sane(compare));
     if(base->length != compare->length){
-        return 0;
+        return false;
     }
     int counter = 0;
     while(counter < base->length){
         if(base->body[counter] != compare->body[counter]){
-            return 0;
+            return false;
         }
         counter++;
     }
-    return 1;
+    return true;
 }

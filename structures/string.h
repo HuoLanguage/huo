@@ -3,7 +3,6 @@
 #include <stdbool.h>
 // _STRING_H already exists!
 
-
 struct String {
     int length;
     char *body;
@@ -24,6 +23,6 @@ struct String string_copy_stack(struct String *from);
 struct String *copy_string_heap(struct String *from);
 void string_copy_to(struct String *to, struct String *from);
 void string_concat_to(struct String *to, struct String *from);
-int string_matches(struct String *base, struct String *compare);
+bool string_matches(struct String *base, struct String *compare);
 
 #endif
