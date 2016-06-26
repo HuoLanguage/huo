@@ -7,9 +7,11 @@
 #include "build_array.h"
 
 void parse(struct Tree * root, struct Tokens *tokens){
+    int p_nest = 0;
     while(tokens->counter < tokens->length){
         struct Token token = tokens->tokens[tokens->counter];
         if(token.type == 'o'){
+            p_nest += 1;
             struct Tree * tree = malloc(sizeof(struct Tree));
             tree->type = 'f';
             tree->size = 0;
@@ -111,7 +113,15 @@ void parse(struct Tree * root, struct Tokens *tokens){
             root->size++;
         }
         else if(token.type == 'c'){
+            //if (p_nest == 0)
+            //    return;
+            //p_nest -= 1;
+           // if (p_nest < 0) {
+            //    ERROR("Invalid nesting");
+            //}
             return;
+        } else if(token.type == 'e'){
+            ERROR("Invalid nesting");
         }
         tokens->counter++;
     }
