@@ -8,7 +8,7 @@
 
 void print(struct Value a){
     if(a.type == 's' || a.type == 'k'){
-        printf("\"%s\"", string_string(&a.data.str));
+        printf("\"%s\"", string_to_chars(&a.data.str));
     }
     else if(a.type == 'l') {
         printf("%ld", a.data.ln);
@@ -219,59 +219,38 @@ struct Value greater_than(struct Value a, struct Value b){
 }
 
 struct Value length(struct Value a){
+    struct Value length = {
+          .type = 'l'
+    };
     if (a.type == 's') {
-        assert(string_is_sane(&a.data.str));
-    }
-    if(a.type != 'a' && a.type != 's'){
-      ERROR("Type error: value has no length property");
-/*      a.type = 'u';
-      return a; */
+        length.data.ln = string_length(&a.data.str);
+    } else if (a.type == 'a') {
+        length.data.ln = (long)a.data.array->size;
     } else {
-      struct Value length = {
-          .type = 'l',
-          .data = {
-            .ln= a.type=='a'?(long)a.data.array->size:a.data.str.length
-          }
-      };
-      return length;
+        ERROR("Type error: value of type '%c' has no length property", a.type);
     }
+    return length;
 }
 
-struct Value array_index(struct Value a, struct Value list){
-    if (a.type != 'l') {
-        ERROR("Invalid index type: '%c' != 'l'", a.type);
-    }
-    long l = a.data.ln;
-    if (l < 0) {
-        ERROR("Negative index: %li", l);
-    }
+struct Value index(struct Value a, struct Value list) {
+    long i = a.data.ln;
     if(list.type == 'a'){
-        if (l >= list.data.array->size) {
-            ERROR("Invalid index: %li (len %i)", l, list.data.array->size);
+        if (i < 0) {
+            ERROR("Negative index: %li", i);
         }
-        return *list.data.array->values[l];
+        long len = length(list).data.ln;
+        if (i >= len) {
+            ERROR("Invalid index: %li (len %li)", i, len);
+        }
+        return *list.data.array->values[i];
     }
     else if(list.type == 's'){
-        assert(string_is_sane(&list.data.str));
-        if (l >= list.data.str.length) {
-            ERROR("Invalid index: %li (len %i)", l, list.data.str.length);
-        }
         struct Value result = {
             .type='s',
             .data={
-                .str={
-                    .length=1
-                }
+                .str=string_from_char(string_index(&list.data.str, i))
             }
         };
-        result.data.str.body = malloc(sizeof(char) + 1);
-        if (result.data.str.body == NULL) {
-            ERROR("Malloc failure");
-        }
-            
-        result.data.str.body[0] = list.data.str.body[l];
-        result.data.str.body[1] = 0;
-        assert(string_is_sane(&result.data.str));
         return result;
     } else {
         ERROR("Index takes a number and a string or array, but got ('%c' != 'l', '%c' != ['a'|'s']).", a.type, list.type);

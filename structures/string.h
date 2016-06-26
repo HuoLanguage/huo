@@ -16,13 +16,16 @@ struct String {
         .body=(str)\
 }
 
-struct String string_new(char *str);
+struct String string_from_char(char c);
+struct String string_from_chars(char *str);
 bool string_is_sane(struct String *s);
 struct String string_copy_stack(struct String *from);
 struct String *copy_string_heap(struct String *from);
 void string_copy_to(struct String *to, struct String *from);
 void string_concat_to(struct String *to, struct String *from);
 bool string_matches(struct String *base, struct String *compare);
-char *string_string(struct String *s);
+char *string_to_chars(struct String *s);
+long string_length(struct String *s);
+char string_index(struct String *s, long i);
 
 #endif

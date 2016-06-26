@@ -14,8 +14,18 @@ bool string_is_sane(struct String *s) {
     return true;
 }
 
+struct String string_from_char(char c) {
+    struct String s = {
+        .length = 1,
+        .body = malloc(sizeof(char) * 2)
+    };
+    s.body[0] = c;
+    s.body[1] = 0;
+    assert(string_is_sane(&s));
+    return s;
+}
 
-struct String string_new(char *str) {
+struct String string_from_chars(char *str) {
     struct String s;
     if (str == NULL) {
         s.length = 0;
@@ -111,10 +121,24 @@ bool string_matches(struct String *base, struct String *compare){
     return true;
 }
 
-char *string_string(struct String *s) {
+char *string_to_chars(struct String *s) {
     assert(string_is_sane(s));
     if (s->length == 0) {
         return "";
     }
     return s->body;
+}
+long string_length(struct String *s) {
+    assert(string_is_sane(s));
+    return s->length;
+}
+char string_index(struct String *s, long i) {
+    assert(string_is_sane(s));
+    if (i < 0) {
+        ERROR("Negative index");
+    }
+    if (i >= s->length) {
+        ERROR("Index out of range: %li >= %i", i, s->length);
+    }
+    return s->body[i];
 }
