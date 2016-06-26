@@ -30,9 +30,8 @@ struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
     if(ast->type == 'k' && !ast->size){
         for(int i = 0; i < arguments->size; i++){
             if (ast->content.type != 's') {
-                ERROR("Variable already bound?");
-            }
-            if(string_matches(&arguments->members[i]->key->data.str, &ast->content.data.str)){
+                //ERROR("Variable already bound?");
+            } else if(string_matches(&arguments->members[i]->key->data.str, &ast->content.data.str)){
                 ast->content = copy_value_stack(arguments->members[i]->val);
                 if(arguments->members[i]->val->type == 's'){
                     ast->type = 's';
@@ -84,12 +83,9 @@ struct Tree * get_defined_body(struct Tree * function){
         if (function->size <= index) {
             ERROR("No function body!");
         }
-        if(function->children[index]->type == 'k'){
+        if(!function->children[index]->size){
             index++;
         } else {
-            if (!function->children[index]->size) {
-                ERROR("Invalid type for function body: '%c'", function->children[index]->type);
-            }
             check = 0;
             function = function->children[index];
         }
