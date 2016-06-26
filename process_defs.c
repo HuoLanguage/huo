@@ -4,8 +4,9 @@
 #include "base_util.h"
 #include "core_functions.h"
 #include "process_defs.h"
+#include "execute.h"
 
-struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx){
+struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, struct Map * let_map, int idx, int max_depth){
     struct Map * arguments = malloc(sizeof(struct Map));
     arguments->size = 0;
     if (defined->trees[idx]->size <= ast->size) {
@@ -16,11 +17,11 @@ struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, int idx
         if (t != 'k') {
             ERROR("Invalid type for argument: '%c' != 'k'", t);
         }
-        struct Keyval * store = malloc(sizeof(struct Keyval));        
-        
+        struct Keyval * store = malloc(sizeof(struct Keyval));
+        struct Value val = execute(ast->children[i], defined, let_map, max_depth - 1);
         arguments->members[i] = store;
         arguments->members[i]->key = copy_value_heap(&defined->trees[idx]->children[i+1]->content);
-        arguments->members[i]->val = copy_value_heap(&ast->children[i]->content);
+        arguments->members[i]->val = copy_value_heap(&val);
         arguments->size++;
     }
     return arguments;
@@ -44,6 +45,7 @@ struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
                 } else {
                     ast->type = 'n';
                 }
+                return ast;
             }
         }
     }

@@ -14,6 +14,7 @@
 #include "execution_functions/let_binding.h"
 #include "execution_functions/reduce_ast.h"
 #include "execution_functions/if_block.h"
+#include "execution_functions/switch.h"
 #include "execution_functions/parallel_execution.h"
 #include "apply_core_function.h"
 
@@ -88,6 +89,9 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
             return substring(start.data.ln, end.data.ln, string);
         }
     }
+    else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&switch_const, &ast->content.data.str)){
+        return switch_case(ast, defined, let_map, max_depth - 1);
+    }
     else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&parallel_const, &ast->content.data.str)){
         parallel_execution(ast, defined, let_map, max_depth - 1);
         result.type = 'u';
@@ -141,7 +145,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
 }
 
 struct Value execute_defined_func(struct Tree * ast, struct Tree_map * defined, struct Map * let_map, int idx, int max_depth){
-    struct Map * arguments = make_args_map(ast, defined, idx);
+    struct Map * arguments = make_args_map(ast, defined, let_map, idx, max_depth - 1);
     struct Tree * populated_ast = populate_args(arguments, duplicate_tree(get_defined_body(defined->trees[idx])));
     return execute(populated_ast, defined, let_map, max_depth-1);
 }
