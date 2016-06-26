@@ -125,7 +125,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
                     result.type = 'u';
                 }
                 else if(string_matches(&ast->content.data.str, &length_const)){
-                    return length(a);
+                    return value_from_long(length(a));
                 }
                 else if(string_matches(&ast->content.data.str, &return_const)){
                     return execute(ast->children[0], defined, let_map, max_depth-1);

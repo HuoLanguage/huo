@@ -218,18 +218,22 @@ struct Value greater_than(struct Value a, struct Value b){
     return a;
 }
 
-struct Value length(struct Value a){
-    struct Value length = {
-          .type = 'l'
+struct Value value_from_long(long l) {
+    struct Value v = {
+          .type = 'l',
+          .data.ln = l
     };
+    return v;
+}
+
+long length(struct Value a) {
     if (a.type == 's') {
-        length.data.ln = string_length(&a.data.str);
+        return string_length(&a.data.str);
     } else if (a.type == 'a') {
-        length.data.ln = (long)a.data.array->size;
+        return (long) a.data.array->size;
     } else {
         ERROR("Type error: value of type '%c' has no length property", a.type);
     }
-    return length;
 }
 
 struct Value index(struct Value a, struct Value list) {
@@ -238,7 +242,7 @@ struct Value index(struct Value a, struct Value list) {
         if (i < 0) {
             ERROR("Negative index: %li", i);
         }
-        long len = length(list).data.ln;
+        long len = length(list);
         if (i >= len) {
             ERROR("Invalid index: %li (len %li)", i, len);
         }
