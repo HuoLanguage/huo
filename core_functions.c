@@ -7,16 +7,16 @@
 #include "core_functions.h"
 
 void print(struct Value a){
-    if(a.type == 's' || a.type == 'k'){
+    if(a.type == STRING || a.type == KEYWORD){
         printf("\"%s\"", string_to_chars(&a.data.str));
     }
-    else if(a.type == 'l') {
+    else if(a.type == LONG) {
         printf("%ld", a.data.ln);
     }
-    else if(a.type == 'f') {
+    else if(a.type == FLOAT) {
         printf("%f", a.data.fl);
     }
-    else if(a.type == 'b') {
+    else if(a.type == BOOL) {
         if(a.data.bl == bool_true){
             printf("True");
         }
@@ -27,7 +27,7 @@ void print(struct Value a){
             printf("Unknown");
         }
     }
-    else if(a.type == 'a') {
+    else if(a.type == ARRAY) {
         printf("[ ");
         for(int i = 0; i < a.data.array->size; i++){
             print(*a.data.array->values[i]);
@@ -37,26 +37,26 @@ void print(struct Value a){
         }
         printf(" ]");
     }
-    else if(a.type == 'u') {
+    else if(a.type == UNDEF) {
         printf("undefined");
     }
 }
 
 struct Value add(struct Value a, struct Value b){
-    if(a.type == 'l' && b.type == 'l'){
+    if(a.type == LONG && b.type == LONG){
         a.data.ln = a.data.ln + b.data.ln;
     }
-    else if(a.type == 'f' && b.type == 'f'){
+    else if(a.type == FLOAT && b.type == FLOAT){
         a.data.fl = a.data.fl + b.data.fl;
     }
-    else if(a.type == 'f' && b.type == 'l'){
+    else if(a.type == FLOAT && b.type == LONG){
         a.data.fl = a.data.fl + (float)b.data.ln;
     }
-    else if(a.type == 'l' && b.type == 'f'){
+    else if(a.type == LONG && b.type == FLOAT){
         a.data.fl = (float)a.data.ln + b.data.fl;
-        a.type = 'f';
+        a.type = FLOAT;
     }
-    else if(a.type == 'a' && b.type == 'a'){
+    else if(a.type == ARRAY && b.type == ARRAY){
         return array_add(a, b);
     }
     return a;
@@ -75,60 +75,60 @@ struct Value array_add(struct Value a, struct Value b){
 }
 
 struct Value mul(struct Value a, struct Value b){
-    if(a.type == 'l' && b.type == 'l'){
+    if(a.type == LONG && b.type == LONG){
         a.data.ln = a.data.ln * b.data.ln;
     }
-    else if(a.type == 'f' && b.type == 'f'){
+    else if(a.type == FLOAT && b.type == FLOAT){
         a.data.fl = a.data.fl * b.data.fl;
     }
-    else if(a.type == 'f' && b.type == 'l'){
+    else if(a.type == FLOAT && b.type == LONG){
         a.data.fl = a.data.fl * (float)b.data.ln;
     }
-    else if(a.type == 'l' && b.type == 'f'){
+    else if(a.type == LONG && b.type == FLOAT){
         a.data.fl = (float)a.data.ln * b.data.fl;
-        a.type = 'f';
+        a.type = FLOAT;
     }
     return a;
 }
 
 struct Value sub(struct Value a, struct Value b){
-    if(a.type == 'l' && b.type == 'l'){
+    if(a.type == LONG && b.type == LONG){
         a.data.ln = a.data.ln - b.data.ln;
     }
-    else if(a.type == 'f' && b.type == 'f'){
+    else if(a.type == FLOAT && b.type == FLOAT){
         a.data.fl = a.data.fl - b.data.fl;
     }
-    else if(a.type == 'f' && b.type == 'l'){
+    else if(a.type == FLOAT && b.type == LONG){
         a.data.fl = a.data.fl - (float)b.data.ln;
     }
-    else if(a.type == 'l' && b.type == 'f'){
+    else if(a.type == LONG && b.type == FLOAT){
         a.data.fl = (float)a.data.ln - b.data.fl;
-        a.type = 'f';
+        a.type = FLOAT;
     }
     return a;
 }
 
 struct Value divide(struct Value a, struct Value b){
-    if(a.type == 'l' && b.type == 'l'){
+    if(a.type == LONG && b.type == LONG){
         a.data.fl = (float)a.data.ln/(float)b.data.ln;
-        a.type = 'f';
+        a.type = FLOAT;
     }
-    else if(a.type == 'f' && b.type == 'f'){
+    else if(a.type == FLOAT && b.type == FLOAT){
         a.data.fl = a.data.fl/b.data.fl;
     }
-    else if(a.type == 'f' && b.type == 'l'){
+    else if(a.type == FLOAT && b.type == LONG){
         a.data.fl = a.data.fl/(float)b.data.ln;
     }
-    else if(a.type == 'l' && b.type == 'f'){
+    else if(a.type == LONG && b.type == FLOAT){
         a.data.fl = (float)a.data.ln/b.data.fl;
-        a.type = 'f';
+        a.type = FLOAT;
     }
-    a.type = 'f';
+    a.type = FLOAT;
     return a;
 }
 
 struct Value concat(struct Value a, struct Value b){
-    if (a.type != 's' || b.type != 's') {
+    if (a.type != STRING || b.type != STRING) {
         ERROR("Tried to concat %c and %c", a.type, b.type);
     }
     string_concat_to(&a.data.str, &b.data.str);
@@ -136,24 +136,24 @@ struct Value concat(struct Value a, struct Value b){
 }
 
 struct Value not(struct Value a, struct Value b){
-    if(a.type == 'f' && b.type == 'f'){
-        a.type = 'b';
+    if(a.type == FLOAT && b.type == FLOAT){
+        a.type = BOOL;
         if(a.data.fl == b.data.fl){
             a.data.bl = bool_false;
         } else {
             a.data.bl = bool_true;
         }
     }
-    else if(a.type == 'l' && b.type == 'l'){
-        a.type = 'b';
+    else if(a.type == LONG && b.type == LONG){
+        a.type = BOOL;
         if(a.data.ln == b.data.ln){
             a.data.bl = bool_false;
         } else {
             a.data.bl = bool_true;
         }
     }
-    else if(a.type == 's' && b.type == 's'){
-        a.type = 'b';
+    else if(a.type == STRING && b.type == STRING){
+        a.type = BOOL;
         if(string_matches(&a.data.str, &b.data.str)){
             a.data.bl = bool_false;
         } else {
@@ -166,24 +166,24 @@ struct Value not(struct Value a, struct Value b){
 }
 
 struct Value equals(struct Value a, struct Value b){
-    if(a.type == 'f' && b.type == 'f'){
-        a.type = 'b';
+    if(a.type == FLOAT && b.type == FLOAT){
+        a.type = BOOL;
         if(a.data.fl == b.data.fl){
             a.data.bl = bool_true;
         } else {
             a.data.bl = bool_false;
         }
     }
-    else if(a.type == 'l' && b.type == 'l'){
-        a.type = 'b';
+    else if(a.type == LONG && b.type == LONG){
+        a.type = BOOL;
         if(a.data.ln == b.data.ln){
             a.data.bl = bool_true;
         } else {
             a.data.bl = bool_false;
         }
     }
-    else if(a.type == 's' && b.type == 's'){
-        a.type = 'b';
+    else if(a.type == STRING && b.type == STRING){
+        a.type = BOOL;
         if(string_matches(&a.data.str, &b.data.str)){
             a.data.bl = bool_true;
         } else {
@@ -196,16 +196,16 @@ struct Value equals(struct Value a, struct Value b){
 }
 
 struct Value greater_than(struct Value a, struct Value b){
-    if(a.type == 'f' && b.type == 'f'){
-        a.type = 'b';
+    if(a.type == FLOAT && b.type == FLOAT){
+        a.type = BOOL;
         if(a.data.fl > b.data.fl){
             a.data.bl = bool_true;
         } else {
             a.data.bl = bool_false;
         }
     }
-    else if(a.type == 'l' && b.type == 'l'){
-        a.type = 'b';
+    else if(a.type == LONG && b.type == LONG){
+        a.type = BOOL;
         if(a.data.ln > b.data.ln){
             a.data.bl = bool_true;
         } else {
@@ -218,55 +218,12 @@ struct Value greater_than(struct Value a, struct Value b){
     return a;
 }
 
-struct Value value_from_long(long l) {
-    struct Value v = {
-          .type = 'l',
-          .data.ln = l
-    };
-    return v;
-}
-
-long length(struct Value a) {
-    if (a.type == 's') {
-        return string_length(&a.data.str);
-    } else if (a.type == 'a') {
-        return (long) a.data.array->size;
-    } else {
-        ERROR("Type error: value of type '%c' has no length property", a.type);
-    }
-}
-
-struct Value index(struct Value a, struct Value list) {
-    long i = a.data.ln;
-    if(list.type == 'a'){
-        if (i < 0) {
-            ERROR("Negative index: %li", i);
-        }
-        long len = length(list);
-        if (i >= len) {
-            ERROR("Invalid index: %li (len %li)", i, len);
-        }
-        return *list.data.array->values[i];
-    }
-    else if(list.type == 's'){
-        struct Value result = {
-            .type='s',
-            .data={
-                .str=string_from_char(string_index(&list.data.str, i))
-            }
-        };
-        return result;
-    } else {
-        ERROR("Index takes a number and a string or array, but got ('%c' != 'l', '%c' != ['a'|'s']).", a.type, list.type);
-    }
-}
-
 struct Value array_set(struct Value index, struct Value item, struct Value array){
-    if (index.type != 'l') {
-        ERROR("Set index type invalid:  ('%c' != 'l')", index.type);
+    if (index.type != LONG) {
+        ERROR("Set index type invalid:  ('%c' != LONG)", index.type);
     }
-    if (array.type != 'a') {
-        ERROR("Set array type invalid:  ('%c' != 'a')", array.type);
+    if (array.type != ARRAY) {
+        ERROR("Set array type invalid:  ('%c' != ARRAY)", array.type);
     }
     // Have to copy before incrementing size or else 
     // recursive copies segfault
@@ -277,7 +234,7 @@ struct Value array_set(struct Value index, struct Value item, struct Value array
     }
     if (idx >= array.data.array->size) {
         while (array.data.array->size < idx) {
-            struct Value undef = {.type='u'};
+            struct Value undef = {.type=UNDEF};
             array_push(undef, array);
         }
         array_push(*val, array); // double-copy, but oh well.
@@ -288,8 +245,8 @@ struct Value array_set(struct Value index, struct Value item, struct Value array
 }
 
 struct Value array_push(struct Value a, struct Value arr){
-    if (arr.type != 'a') {
-        ERROR("Push takes an item and an array, but got ('%c' != 'a').", arr.type);
+    if (arr.type != ARRAY) {
+        ERROR("Push takes an item and an array, but got ('%c' != ARRAY).", arr.type);
     }
     arr.data.array->values[arr.data.array->size] = copy_value_heap(&a);
     arr.data.array->size++;
@@ -299,7 +256,7 @@ struct Value array_push(struct Value a, struct Value arr){
 struct Value substring(int start, int end, struct Value str){
     assert(string_is_sane(&str.data.str));
     struct Value result;
-    result.type = 's';
+    result.type = STRING;
     if(start < 0 || start > str.data.str.length) {
         ERROR("String start index out of range for substring: should be 0 <= %i < %i", start, str.data.str.length);
     }
@@ -326,8 +283,8 @@ struct Value substring(int start, int end, struct Value str){
 }
 
 struct Value split_string(struct Value a, struct Value str){
-    if (a.type != 's' || str.type != 's') {
-        ERROR("Split takes two strings, but got ('%c' != 's', '%c' != 's').", a.type, str.type);
+    if (a.type != STRING || str.type != STRING) {
+        ERROR("Split takes two strings, but got ('%c' != STRING, '%c' != STRING).", a.type, str.type);
     }
     assert(string_is_sane(&a.data.str));
     assert(string_is_sane(&str.data.str));
@@ -340,7 +297,7 @@ struct Value split_string(struct Value a, struct Value str){
         }
     }
     struct Value result;
-    result.type = 'a';
+    result.type = ARRAY;
     struct Value_array * array = malloc(sizeof(struct Value_array));
     array->size = 0;
     for(int l = 0; l <= counter; l++){

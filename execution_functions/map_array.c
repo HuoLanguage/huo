@@ -11,13 +11,13 @@ struct Value map_array(struct Tree * ast, struct Tree_map * defined, struct Map 
         ERROR("Not enough arguments for map_array: %i < 4\n", ast->size);
     }
     struct Value array = execute(ast->children[0], defined, let_map, max_depth - 1);
-    if (array.type != 'a') {
-        ERROR("Wrong type for map: '%c' != 'a'", array.type);
+    if (array.type != ARRAY) {
+        ERROR("Wrong type for map: '%c' != ARRAY", array.type);
     }
     for(int i = 0; i < array.data.array->size; i++){
         struct Value *item = array.data.array->values[i];
         struct Value index = {
-            .type = 'l',
+            .type = LONG,
             .data = {
                 .ln=(long)i
             }

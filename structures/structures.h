@@ -2,6 +2,7 @@
 #define _STRUCTURES_H
 
 #include "string.h"
+#include "value.h"
 
 struct Token {
     char type;
@@ -12,19 +13,6 @@ struct Tokens {
     struct Token tokens[10000];
     int length;
     int counter;
-};
-
-union Data {
-    char bl;
-    long ln;
-    float fl;
-    struct String str;
-    struct Value_array * array;
-};
-
-struct Value {
-    char type; // [f]loat [b]ool [l]ong [s]tring [a]rray [u]ndefined
-    union Data data;
 };
 
 struct Value_array {

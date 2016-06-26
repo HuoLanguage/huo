@@ -12,7 +12,7 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
         }
         if(c == 's'){
             struct Value * val = malloc(sizeof(struct Value));
-            val->type = 's';
+            val->type = STRING;
             val->data.str = string_copy_stack(&tokens->tokens[tokens->counter].data);
             array->values[array->size] = val;
             array->size++;
@@ -21,11 +21,11 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
             struct Value * val = malloc(sizeof(struct Value));
             if(string_contains(dot_const, &tokens->tokens[tokens->counter].data)){
                 float content = atof(tokens->tokens[tokens->counter].data.body);
-                val->type='f';
+                val->type=FLOAT;
                 val->data.fl=content;
             } else {
                 long content = atol(tokens->tokens[tokens->counter].data.body);
-                val->type='l';
+                val->type=LONG;
                 val->data.ln=content;
             }
             array->values[array->size] = val;
@@ -33,7 +33,7 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
         }
         else if(c == 'k'){
             struct Value * val = malloc(sizeof(struct Value));
-            val->type = 'k';
+            val->type = KEYWORD;
             
             val->data.str = string_copy_stack(&tokens->tokens[tokens->counter].data);
             array->values[array->size] = val;
@@ -41,7 +41,7 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
         }
         else if(c == 'b'){
             struct Value * val = malloc(sizeof(struct Value));
-            val->type = 'a';
+            val->type = ARRAY;
             val->data.array = malloc(sizeof(struct Value_array));
             val->data.array->size = 0;
             build_array(val->data.array, tokens);

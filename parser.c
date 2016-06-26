@@ -25,7 +25,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             root->type = token.type;
             struct String content =  string_copy_stack(&token.data);
             struct Value val = {
-                .type='k',
+                .type=KEYWORD,
                 .data={
                     .str=content
                 }
@@ -34,10 +34,10 @@ void parse(struct Tree * root, struct Tokens *tokens){
         }
         else if(token.type == 'b'){ //open bracket
             struct Tree * value = malloc(sizeof(struct Tree));
-            value->type = 'a'; // a for array
+            value->type = ARRAY; // a for array
             value->size = 0;
             struct Value content = {
-                .type='a',
+                .type=ARRAY,
             };
             content.data.array = malloc(sizeof(struct Value_array));
             content.data.array->size = 0;
@@ -56,7 +56,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
                 value->size = 0;
                 struct String content = string_copy_stack(&token.data);
                 struct Value val = {
-                    .type='k',
+                    .type=KEYWORD,
                     .data={
                         .str=content
                     }
@@ -69,7 +69,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
                 root->type = token.type;
                 struct String content =  string_copy_stack(&token.data);
                 struct Value val = {
-                    .type='k',
+                    .type=KEYWORD,
                     .data={
                         .str=content
                     }
@@ -83,7 +83,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             value->size = 0;
             struct String content =  string_copy_stack(&token.data);
             struct Value val = {
-                .type='s',
+                .type=STRING,
                 .data={
                     .str=content
                 }
@@ -100,11 +100,11 @@ void parse(struct Tree * root, struct Tokens *tokens){
             struct Value val;
             if(string_contains(dot_const, &token.data)){
                 float content = atof(token.data.body);
-                val.type='f';
+                val.type=FLOAT;
                 val.data.fl=content;
             } else {
                 long content = atol(token.data.body);
-                val.type='l';
+                val.type=LONG;
                 val.data.ln=content;
             }
             value->content = val;

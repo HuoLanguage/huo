@@ -7,9 +7,9 @@ void populate_reduce_function(
   struct Tree * ast,
   struct Value * item,
   struct Value * accumulator){
-    if(!ast->size && ast->type == 'k' && ast->content.type == 'k'){
+    if(!ast->size && ast->type == 'k' && ast->content.type == KEYWORD){
         if(string_matches(&current_key->data.str, &ast->content.data.str)){
-            if(item->type == 's'){
+            if(item->type == STRING){
               ast->type = item->type;
             } else {
               ast->type = 'n';
@@ -17,7 +17,7 @@ void populate_reduce_function(
             ast->content = copy_value_stack(item);
         }
         else if(string_matches(&accumulator_key->data.str, &ast->content.data.str)){
-            if(accumulator->type == 's'){
+            if(accumulator->type == STRING){
               ast->type = accumulator->type;
             } else {
               ast->type = 'n';

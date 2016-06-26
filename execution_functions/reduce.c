@@ -20,8 +20,8 @@ struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct M
     int start = 0;
     struct Value result;
     struct Value array = execute(ast->children[0], defined, let_map, max_depth - 1);
-    if (array.type != 'a') {
-        ERROR("Invalid type for reduce_array: '%c' != 'a'\n", array.type);
+    if (array.type != ARRAY) {
+        ERROR("Invalid type for reduce_array: '%c' != ARRAY\n", array.type);
     }
     if (array.data.array->size <= 0) {
         return copy_value_stack(&array);

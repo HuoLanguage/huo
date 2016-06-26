@@ -14,8 +14,8 @@ struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, struct 
     }
     for(int i = 0; i < ast->size; i++){
         char t = defined->trees[idx]->children[i+1]->content.type;
-        if (t != 'k') {
-            ERROR("Invalid type for argument: '%c' != 'k'", t);
+        if (t != KEYWORD) {
+            ERROR("Invalid type for argument: '%c' != KEYWORD", t);
         }
         struct Keyval * store = malloc(sizeof(struct Keyval));
         struct Value val = execute(ast->children[i], defined, let_map, max_depth - 1);
@@ -30,14 +30,14 @@ struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, struct 
 struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
     if(ast->type == 'k' && !ast->size){
         for(int i = 0; i < arguments->size; i++){
-            if (ast->content.type != 's' && ast->content.type != 'k') {
+            if (ast->content.type != STRING && ast->content.type != KEYWORD) {
                 //ERROR("Variable already bound?");
             } else if(string_matches(&arguments->members[i]->key->data.str, &ast->content.data.str)){
                 ast->content = copy_value_stack(arguments->members[i]->val);
-                if(arguments->members[i]->val->type == 's'){
+                if(arguments->members[i]->val->type == STRING){
                     ast->type = 's';
                 }
-                else if(arguments->members[i]->val->type == 'k') {
+                else if(arguments->members[i]->val->type == KEYWORD) {
                     ast->type = 'k';
                 }
                 else if(arguments->members[i]->val->type == 'a') {
@@ -62,11 +62,11 @@ struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
 
 void populate_array(struct Map * arguments, struct Value_array * array){
     for(int i = 0; i < array->size; i++){
-        if(array->values[i]->type == 'k'){
+        if(array->values[i]->type == KEYWORD){
             for(int l = 0; l < arguments->size; l++){
                 if(string_matches(&array->values[i]->data.str, &arguments->members[l]->key->data.str)){
                         array->values[i] = copy_value_heap(arguments->members[l]->val);
-                        if (array->values[i]->type != 'k') {
+                        if (array->values[i]->type != KEYWORD) {
                             break;
                         }
                 }

@@ -10,20 +10,20 @@
 struct Value copy_value_stack(struct Value * b){
     struct Value a;
     a.type = b->type;
-    if(b->type == 's' || b->type == 'k'){
+    if(b->type == STRING || b->type == KEYWORD){
         assert(string_is_sane(&b->data.str));
         a.data.str = string_copy_stack(&b->data.str);
         assert(string_is_sane(&a.data.str));
-    } else if(b->type == 'f'){
+    } else if(b->type == FLOAT){
         a.data.fl = b->data.fl;
-    } else if(b->type == 'l'){
+    } else if(b->type == LONG){
         a.data.ln = b->data.ln;
-    } else if (b->type == 'b'){
+    } else if (b->type == BOOL){
         a.data.bl = b->data.bl;
-    } else if (b->type == 'a'){
+    } else if (b->type == ARRAY){
         copy_array(&a, b->data.array);
-    } else if (b->type == 'u'){
-        //a.type == 'u';
+    } else if (b->type == UNDEF){
+        //a.type == UNDEF;
     } else {
         ERROR("Unknown type: %c", a.type);
     }
@@ -36,20 +36,20 @@ struct Value *copy_value_heap(struct Value * b){
         ERROR("Malloc failure");
     }
     a->type = b->type;
-    if(b->type == 's' || b->type == 'k'){
+    if(b->type == STRING || b->type == KEYWORD){
         assert(string_is_sane(&b->data.str));
         a->data.str = string_copy_stack(&b->data.str);
         assert(string_is_sane(&a->data.str));
-    } else if(b->type == 'f'){
+    } else if(b->type == FLOAT){
         a->data.fl = b->data.fl;
-    } else if(b->type == 'l'){
+    } else if(b->type == LONG){
         a->data.ln = b->data.ln;
-    } else if (b->type == 'b'){
+    } else if (b->type == BOOL){
         a->data.bl = b->data.bl;
-    } else if (b->type == 'a'){
+    } else if (b->type == ARRAY){
         copy_array(a, b->data.array);
-    } else if (b->type == 'u'){
-        //a->type == 'u';
+    } else if (b->type == UNDEF){
+        //a->type == UNDEF;
     } else {
         ERROR("Unknown type: %c", a->type);
     }
@@ -58,22 +58,22 @@ struct Value *copy_value_heap(struct Value * b){
 
 void copy_value_to(struct Value * a, struct Value * b){
     a->type = b->type;
-    if(a->type == 's' || a->type == 'k'){
+    if(a->type == STRING || a->type == KEYWORD){
         assert(string_is_sane(&a->data.str));
         assert(string_is_sane(&b->data.str));
         string_copy_to(&a->data.str, &b->data.str);
         assert(string_is_sane(&a->data.str));
         assert(string_is_sane(&b->data.str));
-    } else if(a->type == 'f'){
+    } else if(a->type == FLOAT){
         a->data.fl = b->data.fl;
-    } else if(a->type == 'l'){
+    } else if(a->type == LONG){
         a->data.ln = b->data.ln;
-    } else if (a->type == 'b'){
+    } else if (a->type == BOOL){
         a->data.bl = b->data.bl;
-    } else if (a->type == 'a'){
+    } else if (a->type == ARRAY){
         copy_array(a, b->data.array);
-    } else if (b->type == 'u'){
-       // a->type == 'u';
+    } else if (b->type == UNDEF){
+       // a->type == UNDEF;
     } else {
         ERROR("Unknown type: %c", a->type);
     }

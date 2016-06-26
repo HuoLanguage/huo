@@ -7,13 +7,13 @@ void populate_each_function(
   struct Tree * ast,
   struct Value * item,
   struct Value * index){
-    if (item_key->type != 'k') {
+    if (item_key->type != KEYWORD) {
         ERROR("Invalid item key type: '%c'", index_key->type);
     }
-    if (index_key->type != 'k') {
+    if (index_key->type != KEYWORD) {
         ERROR("Invalid index key type: '%c'", index_key->type);
     }
-    if(!ast->size && ast->type == 'k' && ast->content.type == 'k'){
+    if(!ast->size && ast->type == 'k' && ast->content.type == KEYWORD){
         if(string_matches(&item_key->data.str, &ast->content.data.str)){
             if(item->type == 's'){
               ast->type = item->type;
