@@ -10,7 +10,7 @@ void populate_reduce_function(
     if(!ast->size && ast->type == 'k' && ast->content.type == KEYWORD){
         if(string_matches(&current_key->data.str, &ast->content.data.str)){
             if(item->type == STRING){
-              ast->type = item->type;
+              ast->type = 's';
             } else {
               ast->type = 'n';
             }
@@ -18,7 +18,7 @@ void populate_reduce_function(
         }
         else if(string_matches(&accumulator_key->data.str, &ast->content.data.str)){
             if(accumulator->type == STRING){
-              ast->type = accumulator->type;
+              ast->type = 's';
             } else {
               ast->type = 'n';
             }

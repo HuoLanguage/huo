@@ -15,8 +15,8 @@ void populate_each_function(
     }
     if(!ast->size && ast->type == 'k' && ast->content.type == KEYWORD){
         if(string_matches(&item_key->data.str, &ast->content.data.str)){
-            if(item->type == 's'){
-              ast->type = item->type;
+            if(item->type == STRING){
+              ast->type = 's';
             } else {
               ast->type = 'n';
             }

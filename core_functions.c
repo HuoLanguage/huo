@@ -17,14 +17,11 @@ void print(struct Value a){
         printf("%f", a.data.fl);
     }
     else if(a.type == BOOL) {
-        if(a.data.bl == bool_true){
+        if (a.data.bl){
             printf("True");
         }
-        else if(a.data.bl == bool_false){
+        else{
             printf("False");
-        }
-        else if(a.data.bl == bool_undefined){
-            printf("Unknown");
         }
     }
     else if(a.type == ARRAY) {

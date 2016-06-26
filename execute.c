@@ -107,10 +107,10 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
                     }
                 }
                 ERROR("Undefined variable: %s", ast->content.data.str.body);
-            } else if (ast->type == 's' || ast->type == 'n' || ast->type == ARRAY) {
+            } else if (ast->type == 's' || ast->type == 'n' || ast->type == 'a') {
                 return ast->content;
             } else {
-                ERROR("Cannot get value of type '%c'", ast->type);
+                ERROR("Cannot get value of type '%c' %i", ast->type, (int) ast->type);
             }
         }
         else if(ast->type == 'k' && ast->content.type == KEYWORD && (idx = is_defined_func(defined, ast->content.data.str)) > -1){

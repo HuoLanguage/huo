@@ -13,10 +13,10 @@ struct Value if_block(struct Tree * ast, struct Tree_map * defined, struct Map *
     if(result.type != BOOL){
         ERROR("Invalid result type for if statement conditional: %c", result.type);
     }
-    else if(result.data.bl == 't'){ // result is boolean true
+    else if(result.data.bl){ // result is boolean true
         result = execute(ast->children[1], defined, let_map, max_depth - 1);
     }
-    else if(result.data.bl == 'f'){ // result is boolean false
+    else { // result is boolean false
         result = execute(ast->children[2], defined, let_map, max_depth - 1);
     }
     return result;

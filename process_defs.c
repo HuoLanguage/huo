@@ -40,7 +40,7 @@ struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
                 else if(arguments->members[i]->val->type == KEYWORD) {
                     ast->type = 'k';
                 }
-                else if(arguments->members[i]->val->type == 'a') {
+                else if(arguments->members[i]->val->type == ARRAY) {
                     ast->type = 'a';
                 } else {
                     ast->type = 'n';

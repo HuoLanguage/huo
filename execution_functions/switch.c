@@ -16,7 +16,7 @@ struct Value switch_case(struct Tree * ast, struct Tree_map * defined, struct Ma
         if(result.type != BOOL){
             ERROR("Switch test return non-boolean value (%c != BOOL)", result.type);
         } else {
-            if(result.data.bl == 't'){
+            if(result.data.bl){
                 return execute(return_value, defined, let_map, max_depth - 1);
             }
         }
