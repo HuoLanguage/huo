@@ -14,15 +14,22 @@ bool string_is_sane(struct String *s) {
     return true;
 }
 
-/*
+
 struct String string_new(char *str) {
-    struct String s = {
-        .length = strlen(str);
-        .data=str;
+    struct String s;
+    if (str == NULL) {
+        s.length = 0;
+        s.body = NULL;
+    } else {
+        int l = strlen(str);
+        s.length = l;
+        s.body = malloc(sizeof(char) * (l + 1));
+        strcpy(s.body, str);
+        s.body[s.length] = 0;
     }
-    assert(string_is_sane(s));
+    assert(string_is_sane(&s));
     return s;
-}*/
+}
 
 void string_concat_to(struct String *to, struct String *from) {
     assert(string_is_sane(from));
@@ -102,4 +109,12 @@ bool string_matches(struct String *base, struct String *compare){
         counter++;
     }
     return true;
+}
+
+char *string_string(struct String *s) {
+    assert(string_is_sane(s));
+    if (s->length == 0) {
+        return "";
+    }
+    return s->body;
 }

@@ -8,11 +8,7 @@
 
 void print(struct Value a){
     if(a.type == 's' || a.type == 'k'){
-        if (a.data.str.length == 0) {
-            printf("\"\"");
-        } else {
-            printf("\"%s\"", a.data.str.body);
-        }
+        printf("\"%s\"", string_string(&a.data.str));
     }
     else if(a.type == 'l') {
         printf("%ld", a.data.ln);
