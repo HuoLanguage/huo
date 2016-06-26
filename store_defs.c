@@ -31,7 +31,14 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
             num_defs++;
         }
         else if(string_matches(&ast->children[i]->content.data.str, &import_const)){
-            struct Tree * imported_ast = read_import(ast->children[i]->content.data.str);
+            if (ast->children[i]->size == 0) {
+                ERROR("No import definition found");
+            }
+            char c = ast->children[i]->children[0]->content.type;
+            if (c != 'k' && c != 's') {
+                ERROR("Invalid type: '%c'", c);
+            }
+            struct Tree * imported_ast = read_import(ast->children[i]->children[0]->content.data.str);
             store_defs(imported_ast, defined);
             num_defs++; // we're just skipping over an import statement here
         }
