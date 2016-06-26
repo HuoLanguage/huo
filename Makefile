@@ -12,8 +12,12 @@ CPPFLAGS += -MD -MF $(patsubst %.o,.%.mk,$@) -MP
 CPPFLAGS += -MD -MF $(patsubst execution_functions/%.o,.%.mk,$@) -MP
 -include $(patsubst %.o,.%.mk,$(obj))
 
+CPPFLAGS += -MD -MF $(patsubst structures/%.o,.%.mk,$@) -MP
+-include $(patsubst %.o,.%.mk,$(obj))
+
 
 objs = \
+  structures/string.o \
   constants.o \
   base_util.o \
   core_functions.o \
@@ -43,7 +47,7 @@ all: huo
 huo: $(objs)
 	cc -o huo $(objs) $(LIBS)
 
-clean: ; rm -f -- .*.mk *.o & rm -f & rm -f ./execution_functions/*.o
+clean: ; rm -f -- .*.mk *.o & rm -f & rm -f ./execution_functions/*.o & rm -f ./structures/*.o
 
 .PHONY: all clean
 .DELETE_ON_ERROR:

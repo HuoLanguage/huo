@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include "structures.h"
+#include "structures/structures.h"
 #include "constants.h"
 #include "store_defs.h"
 #include "tokenizer.h"

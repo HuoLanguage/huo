@@ -1,7 +1,7 @@
 #ifndef _EXECUTE_H
 #define _EXECUTE_H
 
-#include "structures.h"
+#include "structures/structures.h"
 
 struct Value reduce(struct Tree * ast, struct Tree_map * defined, struct Map * let_map);
 struct Value execute (struct Tree *, struct Tree_map *, struct Map * let_map, int max_depth);

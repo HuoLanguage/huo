@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include "structures.h"
+#include "structures/structures.h"
 #include "constants.h"
 #include "base_util.h"
 

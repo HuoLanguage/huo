@@ -1,10 +1,7 @@
 #ifndef _STRUCTURES_H
 #define _STRUCTURES_H
 
-struct String {
-    int length;
-    char *body;
-};
+#include "string.h"
 
 struct Token {
     char type;

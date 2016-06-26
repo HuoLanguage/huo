@@ -1,7 +1,7 @@
 #ifndef _CORE_FUNCTIONS_H
 #define _CORE_FUNCTIONS_H
 
-#include "structures.h"
+#include "structures/structures.h"
 
 void print(struct Value a);
 struct Value add(struct Value a, struct Value b);

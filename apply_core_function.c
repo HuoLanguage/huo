@@ -1,5 +1,5 @@
 #include "constants.h"
-#include "structures.h"
+#include "structures/structures.h"
 #include "core_functions.h"
 #include "base_util.h"
 

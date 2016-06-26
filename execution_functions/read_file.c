@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "../structures.h"
+#include "../structures/structures.h"
 #include "../execute.h"
 #include "../base_util.h"
 

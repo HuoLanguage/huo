@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "structures.h"
+#include "structures/structures.h"
 #include "core_functions.h"
 #include "base_util.h"
 #include "process_defs.h"

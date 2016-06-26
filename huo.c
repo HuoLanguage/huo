@@ -6,7 +6,7 @@
 #include <assert.h>
 #include "tokenizer.h"
 #include "parser.h"
-#include "structures.h"
+#include "structures/structures.h"
 #include "execute.h"
 #include "store_defs.h"
 #include "base_util.h"
