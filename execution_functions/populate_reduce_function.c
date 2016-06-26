@@ -7,7 +7,7 @@ void populate_reduce_function(
   struct Tree * ast,
   struct Value * item,
   struct Value * accumulator){
-    if(!ast->size && ast->type == 'k'){
+    if(!ast->size && ast->type == 'k' && ast->content.type == 'k'){
         if(string_matches(&current_key->data.str, &ast->content.data.str)){
             if(item->type == 's'){
               ast->type = item->type;

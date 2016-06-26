@@ -23,10 +23,10 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         ERROR("Max depth exceeded in computation");
     }
     // first check for special kinds of execution
-    if(ast->type == 'k' && string_matches(&ast->content.data.str, &if_const)){
+    if(ast->type == 'k'  && ast->content.type == 'k'&& string_matches(&ast->content.data.str, &if_const)){
         return if_block(ast, defined, let_map, max_depth - 1);
     }
-    else if(ast->type == 'k' && string_matches(&let_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&let_const, &ast->content.data.str)){
         store_let_binding(ast, defined, let_map, max_depth - 1);
         result.type = 'u';
     }
@@ -34,13 +34,13 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         for_each(ast, defined, let_map, max_depth - 1);
         result.type = 'u';
     }
-    else if(ast->type == 'k' && string_matches(&map_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&map_const, &ast->content.data.str)){
         return map_array(ast, defined, let_map, max_depth - 1);
     }
-    else if(ast->type == 'k' && string_matches(&reduce_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&reduce_const, &ast->content.data.str)){
         return reduce_array(ast, defined, let_map, max_depth - 1);
     }
-    else if(ast->type == 'k' && string_matches(&set_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&set_const, &ast->content.data.str)){
         if (ast->size < 3) {
             ERROR("Not enough arguments for set: %i < 3", ast->size);
         }
@@ -50,11 +50,11 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         result = array_set(index, item, array);
         return result;
     }
-    else if(ast->type == 'k' && string_matches(&for_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&for_const, &ast->content.data.str)){
         for_loop(ast, defined, let_map, max_depth - 1);
         result.type = 'u'; //return undefined
     }
-    else if(ast->type == 'k' && string_matches(&do_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&do_const, &ast->content.data.str)){
         for(int i = 0; i < ast->size; i++){
             if(i == ast->size-1){
                 result = execute(ast->children[i], defined, let_map, max_depth - 1);
@@ -63,7 +63,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
             }
         }
     }
-    else if(ast->type == 'k' && string_matches(&read_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&read_const, &ast->content.data.str)){
         if (ast->size < 1) {
             ERROR("Not enough arguments for read: %i < 1", ast->size);
         }
@@ -73,7 +73,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
         }
         return read_file(ast->children[0]->content.data.str);
     }
-    else if(ast->type == 'k' && string_matches(&substring_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&substring_const, &ast->content.data.str)){
         if (ast->size < 3) {
             ERROR("Not enough arguments for substring: %i < 3", ast->size);
         }
@@ -88,7 +88,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
             return substring(start.data.ln, end.data.ln, string);
         }
     }
-    else if(ast->type == 'k' && string_matches(&parallel_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == 'k' && string_matches(&parallel_const, &ast->content.data.str)){
         parallel_execution(ast, defined, let_map, max_depth - 1);
         result.type = 'u';
     } else {
@@ -103,18 +103,18 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Map *
                     }
                 }
                 ERROR("Undefined variable: %s", ast->content.data.str.body);
-            } else if (ast->type == 's' || ast->type == 'n') {
+            } else if (ast->type == 's' || ast->type == 'n' || ast->type == 'a') {
                 return ast->content;
             } else {
                 ERROR("Cannot get value of type '%c'", ast->type);
             }
         }
-        else if(ast->type == 'k' && (idx = is_defined_func(defined, ast->content.data.str)) > -1){
+        else if(ast->type == 'k' && ast->content.type == 'k' && (idx = is_defined_func(defined, ast->content.data.str)) > -1){
             return execute_defined_func(ast, defined, let_map, idx, max_depth - 1);
         }
         else if(ast->size == 1){
             struct Value a = execute(ast->children[0], defined, let_map,  max_depth-1);
-            if(ast->type == 'k'){
+            if(ast->type == 'k' && ast->content.type == 'k'){
                 if(string_matches(&ast->content.data.str, &print_const)){
                     print(a);
                     printf("\n");

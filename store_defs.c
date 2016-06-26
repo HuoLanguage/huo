@@ -11,11 +11,11 @@
 int store_defs(struct Tree * ast, struct Tree_map * defined){
     int num_defs = 0;
     for(int i = 0; i < ast->size; i++){
-        if (ast->children[i]->size == 0) {
-            ERROR("Not enough arguments for store_defs: %i < 1", ast->children[i]->size);
+        if (ast->children[i]->type != 'k') {
+            continue;
         }
-        if (ast->children[i]->children[0]->content.type != 'k') {
-            ERROR("Invalid function def type: '%c'", ast->children[i]->children[0]->type);
+        if (ast->children[i]->content.type != 'k') {
+            continue;
         }
         if(string_matches(&ast->children[i]->children[0]->content.data.str, &def_const)){
             defined->names[defined->size] = &ast->children[i]->children[0]->content.data.str;
