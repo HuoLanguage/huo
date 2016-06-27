@@ -25,7 +25,7 @@ struct Value map_array(struct Tree * ast, struct Tree_map * defined, struct Map 
         struct Tree * function = duplicate_tree(ast->children[3]);
         populate_each_function(&ast->children[1]->content, &ast->children[2]->content, function, item, &index);
         struct Value result = execute(function, defined, let_map, max_depth - 1);
-        array.data.array->values[i] = copy_value_heap(&result);
+        array.data.array->values[i] = value_copy_heap(&result);
     }
     return array;
 }

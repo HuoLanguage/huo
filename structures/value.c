@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "structures.h"
 #include "value.h"
 
@@ -8,6 +9,79 @@
         ERROR("Invalid type: '%i' != '%i'", (v)->type, (tp));\
     } while (0)
 
+
+struct Value value_copy_stack(struct Value * b){
+    struct Value a;
+    a.type = b->type;
+    if(b->type == STRING || b->type == KEYWORD){
+        assert(string_is_sane(&b->data.str));
+        a.data.str = string_copy_stack(&b->data.str);
+        assert(string_is_sane(&a.data.str));
+    } else if(b->type == FLOAT){
+        a.data.fl = b->data.fl;
+    } else if(b->type == LONG){
+        a.data.ln = b->data.ln;
+    } else if (b->type == BOOL){
+        a.data.bl = b->data.bl;
+    } else if (b->type == ARRAY){
+        copy_array(&a, b->data.array);
+    } else if (b->type == UNDEF){
+        //a.type == UNDEF;
+    } else {
+        ERROR("Unknown type: %c", a.type);
+    }
+    return a;
+}
+
+struct Value *value_copy_heap(struct Value * b){
+    struct Value *a = malloc(sizeof(struct Value));
+    if (a == NULL) {
+        ERROR("Malloc failure");
+    }
+    a->type = b->type;
+    if(b->type == STRING || b->type == KEYWORD){
+        assert(string_is_sane(&b->data.str));
+        a->data.str = string_copy_stack(&b->data.str);
+        assert(string_is_sane(&a->data.str));
+    } else if(b->type == FLOAT){
+        a->data.fl = b->data.fl;
+    } else if(b->type == LONG){
+        a->data.ln = b->data.ln;
+    } else if (b->type == BOOL){
+        a->data.bl = b->data.bl;
+    } else if (b->type == ARRAY){
+        copy_array(a, b->data.array);
+    } else if (b->type == UNDEF){
+        //a->type == UNDEF;
+    } else {
+        ERROR("Unknown type: %c", a->type);
+    }
+    return a;
+}
+
+void value_copy_to(struct Value * a, struct Value * b){
+    a->type = b->type;
+    if(a->type == STRING || a->type == KEYWORD){
+        assert(string_is_sane(&a->data.str));
+        assert(string_is_sane(&b->data.str));
+        string_copy_to(&a->data.str, &b->data.str);
+        assert(string_is_sane(&a->data.str));
+        assert(string_is_sane(&b->data.str));
+    } else if(a->type == FLOAT){
+        a->data.fl = b->data.fl;
+    } else if(a->type == LONG){
+        a->data.ln = b->data.ln;
+    } else if (a->type == BOOL){
+        a->data.bl = b->data.bl;
+    } else if (a->type == ARRAY){
+        copy_array(a, b->data.array);
+    } else if (b->type == UNDEF){
+       // a->type == UNDEF;
+    } else {
+        ERROR("Unknown type: %c", a->type);
+    }
+}
+    
 float value_as_float(struct Value *v) {
     CHECK_TYPE(v, FLOAT);
     return v->data.fl;

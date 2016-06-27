@@ -41,6 +41,10 @@ struct Value value_from_array(struct Value_array *arr);
 struct Value value_from_keyword(struct String *str);
 struct Value value_from_undef();
 
+struct Value value_copy_stack(struct Value * b);
+struct Value *value_copy_heap(struct Value * b);
+void value_copy_to(struct Value * a, struct Value * b);
+
 long length(struct Value a);
 struct Value index(long index, struct Value arr);
 

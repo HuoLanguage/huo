@@ -29,9 +29,6 @@
 } while (0)
 
 int string_contains(char ch, struct String* string);
-struct Value copy_value_stack(struct Value * b);
-struct Value *copy_value_heap(struct Value * b);
-void copy_value_to(struct Value * a, struct Value * b);
 void printTree(struct Tree *tree);
 struct Tree * duplicate_tree(struct Tree * a);
 void copy_array(struct Value * a, struct Value_array * b);

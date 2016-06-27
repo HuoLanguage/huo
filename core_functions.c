@@ -65,7 +65,7 @@ struct Value array_add(struct Value a, struct Value b){
     } else {
         for(int i = 0; i < a.data.array->size; i++){
             struct Value result = add(*a.data.array->values[i], *b.data.array->values[i]);
-            copy_value_to(a.data.array->values[i], &result);
+            value_copy_to(a.data.array->values[i], &result);
         }
     }
     return a;
@@ -224,7 +224,7 @@ struct Value array_set(struct Value index, struct Value item, struct Value array
     }
     // Have to copy before incrementing size or else 
     // recursive copies segfault
-    struct Value *val = copy_value_heap(&item);
+    struct Value *val = value_copy_heap(&item);
     int idx = (int) index.data.ln;
     if (idx < 0) {
         ERROR("Invalid array index: %i", idx);
@@ -245,7 +245,7 @@ struct Value array_push(struct Value a, struct Value arr){
     if (arr.type != ARRAY) {
         ERROR("Push takes an item and an array, but got ('%c' != ARRAY).", arr.type);
     }
-    arr.data.array->values[arr.data.array->size] = copy_value_heap(&a);
+    arr.data.array->values[arr.data.array->size] = value_copy_heap(&a);
     arr.data.array->size++;
     return arr;
 }
@@ -303,7 +303,7 @@ struct Value split_string(struct Value a, struct Value str){
         
         struct Value item = substring(start, end, str);
         
-        array->values[array->size] = copy_value_heap(&item);
+        array->values[array->size] = value_copy_heap(&item);
         array->size++;
     }
     result.data.array = array;

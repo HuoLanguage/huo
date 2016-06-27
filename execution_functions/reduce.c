@@ -24,7 +24,7 @@ struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct M
         ERROR("Invalid type for reduce_array: '%c' != ARRAY\n", array.type);
     }
     if (array.data.array->size <= 0) {
-        return copy_value_stack(&array);
+        return value_copy_stack(&array);
     }
     if(ast->size == 5){
         result = execute(ast->children[4], defined, let_map, max_depth - 1);

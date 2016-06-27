@@ -20,11 +20,11 @@ void populate_each_function(
             } else {
               ast->type = 'n';
             }
-            ast->content = copy_value_stack(item);
+            ast->content = value_copy_stack(item);
         }
         else if(string_matches(&index_key->data.str, &ast->content.data.str)){
             ast->type = 'n';
-            ast->content = copy_value_stack(index);
+            ast->content = value_copy_stack(index);
         }
     } else if(ast->size > 0){
         for(int i = 0; i < ast->size; i++){

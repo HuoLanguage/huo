@@ -13,9 +13,9 @@ void store_let_binding(struct Tree * ast, struct Tree_map * defined, struct Map 
     if (ast->children[0]->type != 'k') {
         ERROR("Invalid type for let keyword: '%c'", ast->children[0]->type);
     }
-    let_binding->key = copy_value_heap(&ast->children[0]->content);
+    let_binding->key = value_copy_heap(&ast->children[0]->content);
     struct Value val = execute(ast->children[1], defined, let_map, max_depth - 1);
-    let_binding->val = copy_value_heap(&val);
+    let_binding->val = value_copy_heap(&val);
     int index = -1;
     for(int i = 0; i < let_map->size; i++){
         if(string_matches(&let_binding->key->data.str, &let_map->members[i]->key->data.str)){

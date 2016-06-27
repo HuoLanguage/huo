@@ -20,8 +20,8 @@ struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, struct 
         struct Keyval * store = malloc(sizeof(struct Keyval));
         struct Value val = execute(ast->children[i], defined, let_map, max_depth - 1);
         arguments->members[i] = store;
-        arguments->members[i]->key = copy_value_heap(&defined->trees[idx]->children[i+1]->content);
-        arguments->members[i]->val = copy_value_heap(&val);
+        arguments->members[i]->key = value_copy_heap(&defined->trees[idx]->children[i+1]->content);
+        arguments->members[i]->val = value_copy_heap(&val);
         arguments->size++;
     }
     return arguments;
@@ -33,7 +33,7 @@ struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
             if (ast->content.type != STRING && ast->content.type != KEYWORD) {
                 //ERROR("Variable already bound?");
             } else if(string_matches(&arguments->members[i]->key->data.str, &ast->content.data.str)){
-                ast->content = copy_value_stack(arguments->members[i]->val);
+                ast->content = value_copy_stack(arguments->members[i]->val);
                 if(arguments->members[i]->val->type == STRING){
                     ast->type = 's';
                 }
@@ -65,7 +65,7 @@ void populate_array(struct Map * arguments, struct Value_array * array){
         if(array->values[i]->type == KEYWORD){
             for(int l = 0; l < arguments->size; l++){
                 if(string_matches(&array->values[i]->data.str, &arguments->members[l]->key->data.str)){
-                        array->values[i] = copy_value_heap(arguments->members[l]->val);
+                        array->values[i] = value_copy_heap(arguments->members[l]->val);
                         if (array->values[i]->type != KEYWORD) {
                             break;
                         }
