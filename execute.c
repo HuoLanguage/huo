@@ -115,21 +115,8 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scope
         int idx;
         if(!ast->size){
             // ast with no children is either a value or a variable
-            if(ast->type == 'k'){
-                int found = 0;
-                struct Map * current_scope = scopes->scopes[scopes->current];
-                for(int i = 0; i < current_scope->size; i++){
-                    if(string_matches(&current_scope->members[i]->key->data.str, &ast->content.data.str)){
-                        result = *current_scope->members[i]->val;
-                        found = 1;
-                    }
-                }
-                if(!found){
-                    ERROR("Undefined variable: %s", ast->content.data.str.body);
-                }
-            } else {
-                result = ast->content;
-            }
+            result = value_copy_stack(&ast->content);
+            sub_vars(&result, scopes, max_depth - 1);
         }
         else if(ast->type == 'k' && (idx = is_defined_func(defined, ast->content.data.str)) > -1){
             make_args_map(ast, defined, scopes, idx, max_depth-1);
