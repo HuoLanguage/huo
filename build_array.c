@@ -32,7 +32,7 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
         else if(c == 'k'){
             struct Value * val = malloc(sizeof(struct Value));
             val->type = KEYWORD;
-            
+
             val->data.str = string_copy_stack(&tokens->tokens[tokens->counter].data);
             array->values[array->size] = val;
             array->size++;
@@ -49,10 +49,10 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
             //pass
         } else {
             for (int i = 0; i <= tokens->counter; i++) {
-                struct String s = tokens->tokens[i].data;
-                printf("%i \"", i);
-                printf(s.length == 0 ? "" : s.body);
-                printf("\" '%c' '%i'\n", tokens->tokens[i].type, (int) tokens->tokens[i].type);
+                // struct String s = tokens->tokens[i].data;
+                // printf("%i \"", i);
+                // printf(s.length == 0 ? "" : s.body);
+                // printf("\" '%c' '%i'\n", tokens->tokens[i].type, (int) tokens->tokens[i].type);
             }
             ERROR("Invalid token type in array: '%c'", c);
         }

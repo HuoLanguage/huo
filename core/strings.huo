@@ -1,0 +1,88 @@
+(def join arr str
+    (reduce arr acc cur (cat (cat acc str) cur))
+)
+
+(def char_to_uppercase str
+    (switch str
+        (= "a" (return "A"))
+        (= "b" (return "B"))
+        (= "c" (return "C"))
+        (= "d" (return "D"))
+        (= "e" (return "E"))
+        (= "f" (return "F"))
+        (= "g" (return "G"))
+        (= "h" (return "H"))
+        (= "i" (return "I"))
+        (= "j" (return "J"))
+        (= "k" (return "K"))
+        (= "l" (return "L"))
+        (= "m" (return "M"))
+        (= "n" (return "N"))
+        (= "o" (return "O"))
+        (= "p" (return "P"))
+        (= "q" (return "Q"))
+        (= "r" (return "R"))
+        (= "s" (return "S"))
+        (= "t" (return "T"))
+        (= "u" (return "U"))
+        (= "v" (return "V"))
+        (= "w" (return "W"))
+        (= "x" (return "X"))
+        (= "y" (return "Y"))
+        (= "z" (return "Z"))
+        (default (return str))
+    )
+)
+(def char_to_lowercase str
+    (switch str
+        (= "A" (return "a"))
+        (= "B" (return "b"))
+        (= "C" (return "c"))
+        (= "D" (return "d"))
+        (= "E" (return "e"))
+        (= "F" (return "f"))
+        (= "G" (return "g"))
+        (= "H" (return "h"))
+        (= "I" (return "i"))
+        (= "J" (return "j"))
+        (= "K" (return "k"))
+        (= "L" (return "l"))
+        (= "M" (return "m"))
+        (= "N" (return "n"))
+        (= "O" (return "o"))
+        (= "P" (return "p"))
+        (= "Q" (return "q"))
+        (= "R" (return "r"))
+        (= "S" (return "s"))
+        (= "T" (return "t"))
+        (= "U" (return "u"))
+        (= "V" (return "v"))
+        (= "W" (return "w"))
+        (= "X" (return "x"))
+        (= "Y" (return "y"))
+        (= "Z" (return "z"))
+        (default (return str))
+    )
+)
+
+(def str_to_uppercase str
+    (do
+        (each str chr idx
+            (do
+                (let str (set idx (char_to_uppercase chr) str))
+            )
+        )
+        (return str)
+    )
+)
+
+(def str_to_lowercase str
+    (do
+        (each str chr idx
+            (do
+                (let str (set idx (char_to_uppercase chr) str))
+            )
+        )
+        (return str)
+    )
+)

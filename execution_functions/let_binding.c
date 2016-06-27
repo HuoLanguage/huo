@@ -1,31 +1,34 @@
 #include "../structures/structures.h"
 #include "../execute.h"
 #include "../base_util.h"
+#include "../core_functions.h"
 
-void store_let_binding(struct Tree * ast, struct Tree_map * defined, struct Map * let_map, int max_depth){
-    if (max_depth <= 0) {
-        ERROR("Max depth exceeded in computation");
-    }
-    if (ast->size < 2) {
-        ERROR("Not enough arguments for store_let_binding: %i < 2\n", ast->size);
-    }
+void store_let_value(struct Value * key, struct Value * value, struct Scopes * scopes){
+    struct Map * let_store = scopes->scopes[scopes->current];
     struct Keyval * let_binding = malloc(sizeof(struct Keyval));
-    if (ast->children[0]->type != 'k') {
-        ERROR("Invalid type for let keyword: '%c'", ast->children[0]->type);
+    if (key->type != KEYWORD) {
+        ERROR("Invalid type for let keyword: '%c'", key->type);
     }
-    let_binding->key = value_copy_heap(&ast->children[0]->content);
-    struct Value val = execute(ast->children[1], defined, let_map, max_depth - 1);
-    let_binding->val = value_copy_heap(&val);
+    let_binding->key = value_copy_heap(key);
+    let_binding->val = value_copy_heap(value);
     int index = -1;
-    for(int i = 0; i < let_map->size; i++){
-        if(string_matches(&let_binding->key->data.str, &let_map->members[i]->key->data.str)){
+    for(int i = 0; i < let_store->size; i++){
+        if(string_matches(&let_binding->key->data.str, &let_store->members[i]->key->data.str)){
             index = i;
         }
     }
     if(index > -1){
-        let_map->members[index] = let_binding;
+        let_store->members[index] = let_binding;
     } else {
-        let_map->members[let_map->size] = let_binding;
-        let_map->size++;
+        let_store->members[let_store->size] = let_binding;
+        let_store->size++;
     }
+}
+
+void store_let_binding(struct Tree * key, struct Tree * value, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+    if (max_depth <= 0) {
+        ERROR("Max depth exceeded in computation");
+    }
+    struct Value val = execute(value, defined, scopes, max_depth - 1);
+    store_let_value(&key->content, &val, scopes);
 }

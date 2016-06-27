@@ -17,7 +17,7 @@ struct Tokens {
 
 struct Value_array {
     int size;
-    struct Value * values[1000];
+    struct Value * values[10000];
 };
 
 struct Keyval {
@@ -36,6 +36,12 @@ struct Map {
     struct Keyval * members[200];
 };
 
+struct Scopes {
+    struct Map * scopes[250];
+    int size;
+    int current;
+};
+
 struct Tree {
     char type; // [o]pen, [f]unction [k]eyword [c]lose [s]tring [n]umber [b]racket [e]nd bracket
     int size;
@@ -47,7 +53,7 @@ struct Tree {
 struct Execution_bundle {
     struct Tree * ast;
     struct Tree_map * defined;
-    struct Map * let_map;
+    struct Scopes * scopes;
     int max_depth;
 };
 

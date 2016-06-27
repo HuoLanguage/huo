@@ -3,6 +3,7 @@
 
 #include "../structures/structures.h"
 
-struct Value for_each(struct Tree * ast, struct Tree_map * defined, struct Map * let_map, int max_depth);
+struct Value for_each(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth);
+struct Value for_each_string(struct Value string, struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth);
 
 #endif

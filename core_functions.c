@@ -215,6 +215,7 @@ struct Value greater_than(struct Value a, struct Value b){
     return a;
 }
 
+
 struct Value array_set(struct Value index, struct Value item, struct Value array){
     if (index.type != LONG) {
         ERROR("Set index type invalid:  ('%c' != LONG)", index.type);
@@ -222,7 +223,7 @@ struct Value array_set(struct Value index, struct Value item, struct Value array
     if (array.type != ARRAY) {
         ERROR("Set array type invalid:  ('%c' != ARRAY)", array.type);
     }
-    // Have to copy before incrementing size or else 
+    // Have to copy before incrementing size or else
     // recursive copies segfault
     struct Value *val = value_copy_heap(&item);
     int idx = (int) index.data.ln;
@@ -239,6 +240,12 @@ struct Value array_set(struct Value index, struct Value item, struct Value array
         array.data.array->values[idx] = val;
     }
     return array;
+}
+
+struct Value string_set(struct Value index, struct Value item, struct Value string){
+    long idx = index.data.ln;
+    string.data.str.body[idx] = item.data.str.body[0];
+    return string;
 }
 
 struct Value array_push(struct Value a, struct Value arr){
@@ -300,9 +307,9 @@ struct Value split_string(struct Value a, struct Value str){
     for(int l = 0; l <= counter; l++){
         int start = !l ? l : indexes[l-1] + 1;
         int end = (l < counter) ? indexes[l] : str.data.str.length;
-        
+
         struct Value item = substring(start, end, str);
-        
+
         array->values[array->size] = value_copy_heap(&item);
         array->size++;
     }

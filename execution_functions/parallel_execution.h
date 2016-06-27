@@ -3,6 +3,6 @@
 
 #include "../structures/structures.h"
 
-void parallel_execution(struct Tree * ast, struct Tree_map * defined, struct Map * let_map, int max_depth);
+void parallel_execution(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth);
 
 #endif

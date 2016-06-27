@@ -5,75 +5,25 @@
 #include "core_functions.h"
 #include "process_defs.h"
 #include "execute.h"
+#include "execution_functions/let_binding.h"
 
-struct Map * make_args_map(struct Tree * ast, struct Tree_map * defined, struct Map * let_map, int idx, int max_depth){
-    struct Map * arguments = malloc(sizeof(struct Map));
-    arguments->size = 0;
+void make_args_map(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int idx, int max_depth){
+    // we want to evaluate the values passed into the function
+    // but store the result in the next scope, not the current one
     if (defined->trees[idx]->size <= ast->size) {
         ERROR("Not enough arguments!: %i < %i", defined->trees[idx]->size - 1, ast->size);
     }
+    struct Value vals[ast->size];
     for(int i = 0; i < ast->size; i++){
-        char t = defined->trees[idx]->children[i+1]->content.type;
+        vals[i] = execute(ast->children[i], defined, scopes, max_depth - 1);
+    }
+    make_scope(scopes);
+    for(int l = 0; l < ast->size; l++){
+    	char t = defined->trees[idx]->children[l+1]->content.type;
         if (t != KEYWORD) {
             ERROR("Invalid type for argument: '%c' != KEYWORD", t);
         }
-        struct Keyval * store = malloc(sizeof(struct Keyval));
-        struct Value val = execute(ast->children[i], defined, let_map, max_depth - 1);
-        arguments->members[i] = store;
-        arguments->members[i]->key = value_copy_heap(&defined->trees[idx]->children[i+1]->content);
-        arguments->members[i]->val = value_copy_heap(&val);
-        arguments->size++;
-    }
-    return arguments;
-}
-
-struct Tree * populate_args(struct Map * arguments, struct Tree * ast){
-    if(ast->type == 'k' && !ast->size){
-        for(int i = 0; i < arguments->size; i++){
-            if (ast->content.type != STRING && ast->content.type != KEYWORD) {
-                //ERROR("Variable already bound?");
-            } else if(string_matches(&arguments->members[i]->key->data.str, &ast->content.data.str)){
-                ast->content = value_copy_stack(arguments->members[i]->val);
-                if(arguments->members[i]->val->type == STRING){
-                    ast->type = 's';
-                }
-                else if(arguments->members[i]->val->type == KEYWORD) {
-                    ast->type = 'k';
-                }
-                else if(arguments->members[i]->val->type == ARRAY) {
-                    ast->type = 'a';
-                } else {
-                    ast->type = 'n';
-                }
-                return ast;
-            }
-        }
-    }
-    if(ast->type == 'a'){
-        populate_array(arguments, ast->content.data.array);
-    }
-    else {
-        for(int i = 0; i < ast->size; i++){
-            populate_args(arguments, ast->children[i]);
-        }
-    }
-    return ast;
-}
-
-void populate_array(struct Map * arguments, struct Value_array * array){
-    for(int i = 0; i < array->size; i++){
-        if(array->values[i]->type == KEYWORD){
-            for(int l = 0; l < arguments->size; l++){
-                if(string_matches(&array->values[i]->data.str, &arguments->members[l]->key->data.str)){
-                        array->values[i] = value_copy_heap(arguments->members[l]->val);
-                        if (array->values[i]->type != KEYWORD) {
-                            break;
-                        }
-                }
-            }
-        } else if(array->values[i]->type == 'a'){
-            populate_array(arguments, array->values[i]->data.array);
-        }
+        store_let_value(&defined->trees[idx]->children[l+1]->content, &vals[l], scopes);
     }
 }
 

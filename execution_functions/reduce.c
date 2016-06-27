@@ -1,10 +1,10 @@
 #include "../structures/structures.h"
 #include "../execute.h"
 #include "../base_util.h"
-#include "populate_reduce_function.h"
+#include "let_binding.h"
 #include "../core_functions.h"
 
-struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct Map * let_map, int max_depth){
+struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
@@ -19,7 +19,7 @@ struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct M
     }
     int start = 0;
     struct Value result;
-    struct Value array = execute(ast->children[0], defined, let_map, max_depth - 1);
+    struct Value array = execute(ast->children[0], defined, scopes, max_depth - 1);
     if (array.type != ARRAY) {
         ERROR("Invalid type for reduce_array: '%c' != ARRAY\n", array.type);
     }
@@ -27,17 +27,17 @@ struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct M
         return value_copy_stack(&array);
     }
     if(ast->size == 5){
-        result = execute(ast->children[4], defined, let_map, max_depth - 1);
+        result = execute(ast->children[4], defined, scopes, max_depth - 1);
     } else {
-        result = * array.data.array->values[0];
+        result = *array.data.array->values[0];
         start = 1;
     }
     for(int i = start; i < array.data.array->size; i++){
         struct Value * item = array.data.array->values[i];
         struct Tree * function = duplicate_tree(ast->children[3]);
-
-        populate_reduce_function(&ast->children[1]->content, &ast->children[2]->content, function, item, &result);
-        result = execute(function, defined, let_map, max_depth - 1);
+        store_let_value(&ast->children[1]->content, &result, scopes);
+        store_let_value(&ast->children[2]->content, item, scopes);
+        result = execute(function, defined, scopes, max_depth - 1);
     }
     return result;
 }

@@ -23,8 +23,6 @@ objs = \
   base_util.o \
   core_functions.o \
   apply_core_function.o \
-  execution_functions/populate_each_function.o \
-  execution_functions/populate_reduce_function.o \
   execution_functions/parallel_execution.o\
   execution_functions/for_each.o\
   execution_functions/for_loop.o\
@@ -35,6 +33,7 @@ objs = \
   execution_functions/reduce_ast.o\
   execution_functions/if_block.o\
   execution_functions/switch.o\
+  execution_functions/while_loop.o\
   build_array.o \
   tokenizer.o \
   process_defs.o \

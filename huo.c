@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <string.h>
 #include <assert.h>
+#include "constants.h"
 #include "tokenizer.h"
 #include "parser.h"
 #include "structures/structures.h"
@@ -42,13 +43,13 @@ int main(int argc, char const *argv[]) {
         }
     }
     fclose(fp);
-    
+
     // Null character at end
     RESIZE(file.body, file.length + 1);
     file.body[file.length] = 0;
-    
+
     assert(string_is_sane(&file));
-    
+
 
     struct Tokens * tokens = tokenize(file, &t);
     // for(int i = 0; i < tokens->length; i++){
@@ -65,11 +66,20 @@ int main(int argc, char const *argv[]) {
     // printf("\n");
     struct Tree_map * defined = malloc(sizeof(struct Tree_map));
     defined->size = 0;
-    struct Map * let_map = malloc(sizeof(struct Map));
-    let_map->size = 0;
+    struct Scopes * scopes = malloc(sizeof(struct Scopes));
+    scopes->size = 1;
+    scopes->current = 0;
+
+    struct Map * root_scope = malloc(sizeof(struct Map));
+    root_scope->size = 0;
+    scopes->scopes[0] = root_scope;
+
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){
-        execute(root.children[i], defined, let_map, 250);
+        struct Map * local_scopes = malloc(sizeof(struct Map));
+        local_scopes->size = 0;
+        execute(root.children[i], defined, scopes, RECURSE_MAX);
+        free(local_scopes);
     }
     return 0;
 }

@@ -32,5 +32,6 @@ int string_contains(char ch, struct String* string);
 void printTree(struct Tree *tree);
 struct Tree * duplicate_tree(struct Tree * a);
 void copy_array(struct Value * a, struct Value_array * b);
+void make_scope(struct Scopes * scopes);
 
 #endif
