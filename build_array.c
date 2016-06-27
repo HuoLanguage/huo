@@ -20,13 +20,11 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
         else if(c == 'n'){
             struct Value * val = malloc(sizeof(struct Value));
             if(string_contains(dot_const, &tokens->tokens[tokens->counter].data)){
-                float content = atof(tokens->tokens[tokens->counter].data.body);
-                val->type=FLOAT;
-                val->data.fl=content;
+                float f = atof(tokens->tokens[tokens->counter].data.body);
+                *val = value_from_float(f);
             } else {
-                long content = atol(tokens->tokens[tokens->counter].data.body);
-                val->type=LONG;
-                val->data.ln=content;
+                long l = atol(tokens->tokens[tokens->counter].data.body);
+                *val = value_from_long(l);
             }
             array->values[array->size] = val;
             array->size++;

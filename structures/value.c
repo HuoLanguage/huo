@@ -107,8 +107,6 @@ struct String value_as_keyword(struct Value *v) {
     return v->data.str;
 }
 
-
-
 long length(struct Value a);
 struct Value index(long index, struct Value arr);
 
