@@ -1,3 +1,7 @@
+(def join arr str
+    (reduce arr acc cur (cat (cat acc str) cur))
+)
+
 (def char_to_uppercase str
     (switch str
         (= "a" (return "A"))
