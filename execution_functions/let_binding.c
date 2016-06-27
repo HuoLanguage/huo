@@ -15,6 +15,7 @@ void store_let_value(struct Value * key, struct Value * value, struct Scopes * s
     for(int i = 0; i < let_store->size; i++){
         if(string_matches(&let_binding->key->data.str, &let_store->members[i]->key->data.str)){
             index = i;
+            break;
         }
     }
     if(index > -1){
