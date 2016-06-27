@@ -7,9 +7,13 @@ struct Value read_file(struct String file_name){
     assert(string_is_sane(&file_name));
     struct Value result;
     FILE *fp;
-    fp = fopen(file_name.body, "r");
+    char *s = "";
+    if (file_name.length != 0) {
+        s = file_name.body;
+    }
+    fp = fopen(s, "r");
     if(fp == NULL){
-        ERROR("Cannot find file: \"%s\"", file_name.body);
+        ERROR("Cannot find file: \"%s\"", s);
         /*result.type = 'u';
         return result; */
     }

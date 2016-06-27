@@ -7,12 +7,12 @@
 #include "execute.h"
 #include "execution_functions/let_binding.h"
 
-void make_args_map(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int idx){
+void make_args_map(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int idx, int max_depth){
     // we want to evaluate the values passed into the function
     // but store the result in the next scope, not the current one
     struct Value vals[ast->size];
     for(int i = 0; i < ast->size; i++){
-        vals[i] = execute(ast->children[i], defined, scopes);
+        vals[i] = execute(ast->children[i], defined, scopes, max_depth - 1);
     }
     make_scope(scopes);
     for(int l = 0; l < ast->size; l++){
@@ -25,6 +25,9 @@ struct Tree * get_defined_body(struct Tree * function){
     int check = 1;
     int index = 1;
     while(check){
+        if (function->size <= index) {
+            ERROR("No function body!");
+        }
         if(!function->children[index]->size){
             index++;
         } else {

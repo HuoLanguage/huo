@@ -31,6 +31,10 @@ struct Tokens * tokenize(struct String file, struct Tokens *content){
             else if(is_a_number(c)){
                 t.type = 'n';
                 while(is_a_number(c) || c == dot_const){
+                    if (counter >= file.length) {
+                        counter += 1; // to counter below "counter--"
+                        break;
+                    }
                     RESIZE(t.data.body, t.data.length+1);
                     t.data.body[t.data.length] = file.body[counter];
                     t.data.length++;
@@ -45,16 +49,24 @@ struct Tokens * tokenize(struct String file, struct Tokens *content){
             else if(is_a_quote(c)){
                 t.type = 's';
                 counter++;
+                if (counter >= file.length) {
+                    ERROR("Mismatched quotes");
+                }
                 char s = file.body[counter];
                 while(!is_a_quote(s)){
+                    if (counter >= file.length) {
+                        ERROR("Mismatched quotes");
+                    }
                     RESIZE(t.data.body, t.data.length+1);
                     t.data.body[t.data.length] = file.body[counter];
                     t.data.length++;
                     counter++;
                     s = file.body[counter];
                 }
-                RESIZE(t.data.body, t.data.length+1);
-                t.data.body[t.data.length] = 0;
+                if (t.data.length != 0) {
+                    RESIZE(t.data.body, t.data.length+1);
+                    t.data.body[t.data.length] = 0;
+                }
                 assert(string_is_sane(&t.data));
             }
             else if(is_a_function(c)){
@@ -63,6 +75,10 @@ struct Tokens * tokenize(struct String file, struct Tokens *content){
             else if(is_a_letter(c)){
                 t.type = 'k';
                 while(is_a_letter(c)){
+                    if (counter >= file.length) {
+                        counter += 1; // to counter below "counter--"
+                        break;
+                    }
                     RESIZE(t.data.body, t.data.length+1);
                     t.data.body[t.data.length] = file.body[counter];
                     t.data.length++;

@@ -6,6 +6,9 @@
 void store_let_value(struct Value * key, struct Value * value, struct Scopes * scopes){
     struct Map * let_store = scopes->scopes[scopes->current];
     struct Keyval * let_binding = malloc(sizeof(struct Keyval));
+    if (key->type != 'k') {
+        ERROR("Invalid type for let keyword: '%c'", key->type);
+    }
     let_binding->key = copy_value_heap(key);
     let_binding->val = copy_value_heap(value);
     int index = -1;
@@ -22,7 +25,10 @@ void store_let_value(struct Value * key, struct Value * value, struct Scopes * s
     }
 }
 
-void store_let_binding(struct Tree * key, struct Tree * value, struct Tree_map * defined, struct Scopes * scopes){
-    struct Value val = execute(value, defined, scopes);
+void store_let_binding(struct Tree * key, struct Tree * value, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+    if (max_depth <= 0) {
+        ERROR("Max depth exceeded in computation");
+    }
+    struct Value val = execute(value, defined, scopes, max_depth - 1);
     store_let_value(&key->content, &val, scopes);
 }
