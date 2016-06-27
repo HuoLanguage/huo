@@ -32,7 +32,7 @@ struct Value {
 
 struct Value_array {
     int size;
-    struct Value * values[1000];
+    struct Value * values[10000];
 };
 
 struct Keyval {
