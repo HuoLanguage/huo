@@ -1,6 +1,9 @@
 #include "constants.h"
 #include "base_util.h"
 
+const int RECURSE_MAX = 250;
+const int LOOP_MAX = 10000;
+
 struct String functions = STR_NEW("*+-/!=<>");
 
 struct String numbers = STR_NEW("0123456789");
@@ -50,6 +53,8 @@ struct String parallel_const = STR_NEW("parallel");
 struct String switch_const = STR_NEW("switch");
 
 struct String default_const = STR_NEW("default");
+
+struct String while_const = STR_NEW("while");
 
 const char bool_true = 't';
 const char bool_false = 'f';

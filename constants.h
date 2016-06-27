@@ -5,6 +5,9 @@
 #include "structures.h"
 #include "base_util.h"
 
+extern const int RECURSE_MAX;
+extern const int LOOP_MAX;
+
 extern struct String functions;
 extern struct String numbers;
 extern struct String letters;
@@ -30,6 +33,7 @@ extern struct String return_const;
 extern struct String parallel_const;
 extern struct String switch_const;
 extern struct String default_const;
+extern struct String while_const;
 
 extern const char bool_true;
 extern const char bool_false;

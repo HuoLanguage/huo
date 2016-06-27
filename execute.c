@@ -16,6 +16,7 @@
 #include "execution_functions/if_block.h"
 #include "execution_functions/switch.h"
 #include "execution_functions/parallel_execution.h"
+#include "execution_functions/while_loop.h"
 #include "apply_core_function.h"
 
 struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
@@ -40,6 +41,10 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scope
     }
     else if(ast->type == 'k' && string_matches(&map_const, &ast->content.data.str)){
         result = map_array(ast, defined, scopes, max_depth-1);
+    }
+    else if(ast->type == 'k' && string_matches(&while_const, &ast->content.data.str)){
+        while_loop(ast, defined, scopes, max_depth - 1);
+        result.type = 'u';
     }
     else if(ast->type == 'k' && string_matches(&reduce_const, &ast->content.data.str)){
         result = reduce_array(ast, defined, scopes, max_depth-1);

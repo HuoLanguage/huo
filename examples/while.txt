@@ -1,0 +1,6 @@
+(let x [])
+(while
+    (< (length x) 100)
+    (push 0 x)
+)
+(print x)

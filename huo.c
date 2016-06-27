@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <string.h>
 #include <assert.h>
+#include "constants.h"
 #include "tokenizer.h"
 #include "parser.h"
 #include "structures.h"
@@ -77,7 +78,7 @@ int main(int argc, char const *argv[]) {
     for(int i = num_defs; i < root.size; i++){
         struct Map * local_scopes = malloc(sizeof(struct Map));
         local_scopes->size = 0;
-        execute(root.children[i], defined, scopes, 250);
+        execute(root.children[i], defined, scopes, RECURSE_MAX);
         free(local_scopes);
     }
     return 0;
