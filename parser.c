@@ -34,7 +34,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
         }
         else if(token.type == 'b'){ //open bracket
             struct Tree * value = malloc(sizeof(struct Tree));
-            value->type = ARRAY; // a for array
+            value->type = 'a'; // a for array
             value->size = 0;
             struct Value content = {
                 .type=ARRAY,
