@@ -207,11 +207,11 @@ void sub_vars(struct Value *v, struct Scopes *scopes, int max_depth) {
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    if (v->type == ARRAY) {
+    if (v->type == 'a') {
         for (int i = 0; i < v->data.array->size; i++) {
             sub_vars(v->data.array->values[i], scopes, max_depth);
         }
-    } else if (v->type == KEYWORD) {
+    } else if (v->type == 'k') {
         int found = 0;
         struct Map * current_scope = scopes->scopes[scopes->current];
         for(int i = 0; i < current_scope->size; i++){

@@ -115,7 +115,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scope
         int idx;
         if(!ast->size){
             // ast with no children is either a value or a variable
-            result = value_copy_stack(&ast->content);
+            result = copy_value_stack(&ast->content);
             sub_vars(&result, scopes, max_depth - 1);
         }
         else if(ast->type == 'k' && (idx = is_defined_func(defined, ast->content.data.str)) > -1){
