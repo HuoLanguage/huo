@@ -203,6 +203,30 @@ void make_scope(struct Scopes * scopes){
     scopes->current++;
 }
 
+void sub_vars(struct Value *v, struct Scopes *scopes, int max_depth) {
+    if (max_depth <= 0) {
+        ERROR("Max depth exceeded in computation");
+    }
+    if (v->type == 'a') {
+        for (int i = 0; i < v->data.array->size; i++) {
+            sub_vars(v->data.array->values[i], scopes, max_depth);
+        }
+    } else if (v->type == 'k') {
+        int found = 0;
+        struct Map * current_scope = scopes->scopes[scopes->current];
+        for(int i = 0; i < current_scope->size; i++){
+            if(string_matches(&current_scope->members[i]->key->data.str, &v->data.str)){
+                *v = *current_scope->members[i]->val;
+                found = 1;
+                break;
+            }
+        }
+        if(!found){
+            ERROR("Undefined variable: %s", v->data.str.body);
+        }
+    }
+}
+
 void printTree(struct Tree *tree){
     if(!tree->size){
       if(tree->type == 'k'){
