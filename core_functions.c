@@ -7,11 +7,12 @@
 #include "core_functions.h"
 
 void print(struct Value a){
-    if(a.type == 's'){
-        printf("\"%s\"", a.data.str.body);
-    }
-    else if(a.type == 'k'){
-        printf("%s", a.data.str.body);
+    if(a.type == 's' || a.type == 'k'){
+        if (a.data.str.length == 0) {
+            printf("\"\"");
+        } else {
+            printf("\"%s\"", a.data.str.body);
+        }
     }
     else if(a.type == 'l') {
         printf("%ld", a.data.ln);
@@ -241,11 +242,24 @@ struct Value length(struct Value a){
 }
 
 struct Value array_index(struct Value a, struct Value list){
+    if (a.type != 'l') {
+        ERROR("Invalid index type: '%c' != 'l'", a.type);
+    }
+    long l = a.data.ln;
+    if (l < 0) {
+        ERROR("Negative index: %li", l);
+    }
     if(list.type == 'a'){
-        return *list.data.array->values[a.data.ln];
+        if (l >= list.data.array->size) {
+            ERROR("Invalid index: %li (len %i)", l, list.data.array->size);
+        }
+        return *list.data.array->values[l];
     }
     else if(list.type == 's'){
         assert(string_is_sane(&list.data.str));
+        if (l >= list.data.str.length) {
+            ERROR("Invalid index: %li (len %i)", l, list.data.str.length);
+        }
         struct Value result = {
             .type='s',
             .data={
@@ -259,9 +273,9 @@ struct Value array_index(struct Value a, struct Value list){
             ERROR("Malloc failure");
         }
 
-        assert(string_is_sane(&result.data.str));
-        result.data.str.body[0] = list.data.str.body[a.data.ln];
+        result.data.str.body[0] = list.data.str.body[l];
         result.data.str.body[1] = 0;
+        assert(string_is_sane(&result.data.str));
         return result;
     } else {
         ERROR("Index takes a number and a string or array, but got ('%c' != 'l', '%c' != ['a'|'s']).", a.type, list.type);
@@ -269,11 +283,28 @@ struct Value array_index(struct Value a, struct Value list){
 }
 
 struct Value array_set(struct Value index, struct Value item, struct Value array){
-    long idx = index.data.ln;
-    if(idx > array.data.array->size-1){
-        array.data.array->size = idx+1;
+    if (index.type != 'l') {
+        ERROR("Set index type invalid:  ('%c' != 'l')", index.type);
     }
-    array.data.array->values[idx] = copy_value_heap(&item);
+    if (array.type != 'a') {
+        ERROR("Set array type invalid:  ('%c' != 'a')", array.type);
+    }
+    // Have to copy before incrementing size or else
+    // recursive copies segfault
+    struct Value *val = copy_value_heap(&item);
+    int idx = (int) index.data.ln;
+    if (idx < 0) {
+        ERROR("Invalid array index: %i", idx);
+    }
+    if (idx >= array.data.array->size) {
+        while (array.data.array->size < idx) {
+            struct Value undef = {.type='u'};
+            array_push(undef, array);
+        }
+        array_push(*val, array); // double-copy, but oh well.
+    } else {
+        array.data.array->values[idx] = val;
+    }
     return array;
 }
 
@@ -284,6 +315,9 @@ struct Value string_set(struct Value index, struct Value item, struct Value stri
 }
 
 struct Value array_push(struct Value a, struct Value arr){
+    if (arr.type != 'a') {
+        ERROR("Push takes an item and an array, but got ('%c' != 'a').", arr.type);
+    }
     arr.data.array->values[arr.data.array->size] = copy_value_heap(&a);
     arr.data.array->size++;
     return arr;
@@ -311,7 +345,6 @@ struct Value substring(int start, int end, struct Value str){
             result.data.str.body[result.data.str.length] = 0;
         } else {
             result.data.str.length = 0;
-            free(result.data.str.body);
             result.data.str.body = NULL;
         }
         assert(string_is_sane(&result.data.str));
@@ -320,12 +353,15 @@ struct Value substring(int start, int end, struct Value str){
 }
 
 struct Value split_string(struct Value a, struct Value str){
+    if (a.type != 's' || str.type != 's') {
+        ERROR("Split takes two strings, but got ('%c' != 's', '%c' != 's').", a.type, str.type);
+    }
     assert(string_is_sane(&a.data.str));
     assert(string_is_sane(&str.data.str));
     int indexes[1000];
     int counter = 0;
     for(int i = 0; i < str.data.str.length; i++){
-        if(a.data.str.body[0] == str.data.str.body[i]){
+        if(a.data.str.length == 0 || a.data.str.body[0] == str.data.str.body[i]){
             indexes[counter] = i;
             counter++;
         }

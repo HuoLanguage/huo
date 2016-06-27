@@ -26,7 +26,8 @@ struct String string_new(char *str) {
 struct String string_copy_stack(struct String *from) {
     assert(string_is_sane(from));
     struct String s = {
-        .length = 0
+        .length = 0,
+        .body = NULL
     };
     string_copy_to(&s, from);
     assert(string_is_sane(&s));

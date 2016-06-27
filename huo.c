@@ -33,7 +33,9 @@ int main(int argc, char const *argv[]) {
 
     char c;
     while ((c = fgetc(fp)) != EOF){
-        if(c != '\n'){
+        if (c == 0) {
+            ERROR("Null byte in input file");
+        } else if(c != '\n'){
             RESIZE(file.body, file.length + 1);
             file.body[file.length] = c;
             file.length++;
@@ -75,7 +77,7 @@ int main(int argc, char const *argv[]) {
     for(int i = num_defs; i < root.size; i++){
         struct Map * local_scopes = malloc(sizeof(struct Map));
         local_scopes->size = 0;
-        execute(root.children[i], defined, scopes);
+        execute(root.children[i], defined, scopes, 250);
         free(local_scopes);
     }
     return 0;

@@ -3,6 +3,6 @@
 
 #include "../structures.h"
 
-struct Value reduce_ast(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes);
+struct Value reduce_ast(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth);
 
 #endif

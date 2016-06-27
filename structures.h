@@ -69,6 +69,7 @@ struct Execution_bundle {
     struct Tree * ast;
     struct Tree_map * defined;
     struct Scopes * scopes;
+    int max_depth;
 };
 
 #endif /* _STRUCTURES_H */
