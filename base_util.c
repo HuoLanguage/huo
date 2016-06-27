@@ -195,6 +195,13 @@ int string_matches(struct String *base, struct String *compare){
     return 1;
 }
 
+void make_scope(struct Scopes * scopes){
+    scopes->scopes[scopes->size] = malloc(sizeof(struct Map));
+    scopes->scopes[scopes->size]->size = 0;
+    scopes->size++;
+    scopes->current++;
+}
+
 void printTree(struct Tree *tree){
     if(!tree->size){
       if(tree->type == 'k'){

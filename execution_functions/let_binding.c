@@ -1,26 +1,28 @@
 #include "../structures.h"
 #include "../execute.h"
 #include "../base_util.h"
+#include "../core_functions.h"
 
-void store_let_binding(struct Tree * ast, struct Tree_map * defined, struct Map * let_map){
-    if (ast->size < 2) {
-        ERROR("Not enough arguments for store_let_binding: %i < 2\n", ast->size);
-    }
+void store_let_value(struct Value * key, struct Value * value, struct Scopes * scopes){
+    struct Map * let_store = scopes->scopes[scopes->current];
     struct Keyval * let_binding = malloc(sizeof(struct Keyval));
-
-    let_binding->key = copy_value_heap(&ast->children[0]->content);
-    struct Value val = execute(ast->children[1], defined, let_map);
-    let_binding->val = copy_value_heap(&val);
+    let_binding->key = copy_value_heap(key);
+    let_binding->val = copy_value_heap(value);
     int index = -1;
-    for(int i = 0; i < let_map->size; i++){
-        if(string_matches(&let_binding->key->data.str, &let_map->members[i]->key->data.str)){
+    for(int i = 0; i < let_store->size; i++){
+        if(string_matches(&let_binding->key->data.str, &let_store->members[i]->key->data.str)){
             index = i;
         }
     }
     if(index > -1){
-        let_map->members[index] = let_binding;
+        let_store->members[index] = let_binding;
     } else {
-        let_map->members[let_map->size] = let_binding;
-        let_map->size++;
+        let_store->members[let_store->size] = let_binding;
+        let_store->size++;
     }
+}
+
+void store_let_binding(struct Tree * key, struct Tree * value, struct Tree_map * defined, struct Scopes * scopes){
+    struct Value val = execute(value, defined, scopes);
+    store_let_value(&key->content, &val, scopes);
 }

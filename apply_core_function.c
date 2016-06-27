@@ -6,13 +6,13 @@
 struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value b){
 
     if(ast->type == 'k'){
-        if(string_matches(&ast->content.data.str, &concat_const)){
+        if(string_matches(&concat_const, &ast->content.data.str)){
             a = concat(a, b);
         }
-        else if(string_matches(&ast->content.data.str, &index_const)){
+        else if(string_matches(&index_const, &ast->content.data.str)){
             a = array_index(a, b);
         }
-        else if(string_matches(&ast->content.data.str, &push_const)){
+        else if(string_matches(&push_const, &ast->content.data.str)){
             a = array_push(a, b);
         }
         else if(string_matches(&split_const, &ast->content.data.str)){

@@ -258,7 +258,7 @@ struct Value array_index(struct Value a, struct Value list){
         if (result.data.str.body == NULL) {
             ERROR("Malloc failure");
         }
-            
+
         assert(string_is_sane(&result.data.str));
         result.data.str.body[0] = list.data.str.body[a.data.ln];
         result.data.str.body[1] = 0;
@@ -269,12 +269,18 @@ struct Value array_index(struct Value a, struct Value list){
 }
 
 struct Value array_set(struct Value index, struct Value item, struct Value array){
-    int idx = (int) index.data.ln;
+    long idx = index.data.ln;
     if(idx > array.data.array->size-1){
         array.data.array->size = idx+1;
     }
     array.data.array->values[idx] = copy_value_heap(&item);
     return array;
+}
+
+struct Value string_set(struct Value index, struct Value item, struct Value string){
+    long idx = index.data.ln;
+    string.data.str.body[idx] = item.data.str.body[0];
+    return string;
 }
 
 struct Value array_push(struct Value a, struct Value arr){
@@ -331,9 +337,9 @@ struct Value split_string(struct Value a, struct Value str){
     for(int l = 0; l <= counter; l++){
         int start = !l ? l : indexes[l-1] + 1;
         int end = (l < counter) ? indexes[l] : str.data.str.length;
-        
+
         struct Value item = substring(start, end, str);
-        
+
         array->values[array->size] = copy_value_heap(&item);
         array->size++;
     }

@@ -1,3 +1,5 @@
+(import "core/strings.huo")
+
 (def max x y (if (> x y)(return x)(return y)))
 
 (def min x y (if (< x y)(return x)(return y)))

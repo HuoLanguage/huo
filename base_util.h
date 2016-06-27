@@ -51,5 +51,6 @@ int string_matches(struct String *base, struct String *compare);
 void printTree(struct Tree *tree);
 struct Tree * duplicate_tree(struct Tree * a);
 void copy_array(struct Value * a, struct Value_array * b);
+void make_scope(struct Scopes * scopes);
 
 #endif

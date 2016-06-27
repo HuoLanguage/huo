@@ -3,6 +3,6 @@
 
 #include "../structures.h"
 
-void for_loop(struct Tree * ast, struct Tree_map * defined, struct Map * let_map);
+void for_loop(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes);
 
 #endif

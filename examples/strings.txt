@@ -1,3 +1,4 @@
+(import "core/core.huo")
 (def join arr str
     (reduce arr acc cur (cat (cat acc str) cur))
 )
@@ -6,3 +7,4 @@
 
 (let z (split "_" x))
 (print (join z " "))
+(print (str_to_uppercase x))
