@@ -1,5 +1,5 @@
 #include "constants.h"
-#include "structures.h"
+#include "structures/structures.h"
 #include "core_functions.h"
 #include "base_util.h"
 
@@ -9,7 +9,7 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
             a = concat(a, b);
         }
         else if(string_matches(&index_const, &ast->content.data.str)){
-            a = array_index(a, b);
+            a = index(value_as_long(&a), b);
         }
         else if(string_matches(&push_const, &ast->content.data.str)){
             a = array_push(a, b);

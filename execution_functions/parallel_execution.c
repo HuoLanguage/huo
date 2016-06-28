@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <pthread.h>
-#include "../structures.h"
+#include "../structures/structures.h"
 #include "../execute.h"
 #include "../base_util.h"
 

@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "../structures.h"
+#include "../structures/structures.h"
 #include "../execute.h"
 #include "../base_util.h"
 
@@ -14,7 +14,7 @@ struct Value read_file(struct String file_name){
     fp = fopen(s, "r");
     if(fp == NULL){
         ERROR("Cannot find file: \"%s\"", s);
-        /*result.type = 'u';
+        /*result.type = UNDEF;
         return result; */
     }
     struct String file = {
@@ -36,7 +36,7 @@ struct Value read_file(struct String file_name){
     RESIZE(file.body, file.length + 1);
     file.body[file.length] = 0;
     assert(string_is_sane(&file));
-    result.type = 's';
+    result.type = STRING;
     result.data.str = file;
     return result;
 }

@@ -1,4 +1,4 @@
-#include "../structures.h"
+#include "../structures/structures.h"
 #include "../constants.h"
 #include "../execute.h"
 #include "../base_util.h"
@@ -9,10 +9,10 @@ void while_loop(struct Tree * ast, struct Tree_map * defined, struct Scopes * sc
     }
     for(int i = 0; i < LOOP_MAX; i++){
         struct Value condition = execute(ast->children[0], defined, scopes, max_depth - 1);
-        if(condition.type != 'b'){
+        if(condition.type != BOOL){
             ERROR("First argument to 'while' function must return boolean: ('%c' != b)\n", condition.type);
         }
-        if(condition.data.bl == 't'){
+        if(condition.data.bl){
             execute(ast->children[1], defined, scopes, max_depth - 1);
         } else {
             break;

@@ -10,12 +10,19 @@
 void make_args_map(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int idx, int max_depth){
     // we want to evaluate the values passed into the function
     // but store the result in the next scope, not the current one
+    if (defined->trees[idx]->size <= ast->size) {
+        ERROR("Not enough arguments!: %i < %i", defined->trees[idx]->size - 1, ast->size);
+    }
     struct Value vals[ast->size];
     for(int i = 0; i < ast->size; i++){
         vals[i] = execute(ast->children[i], defined, scopes, max_depth - 1);
     }
     make_scope(scopes);
     for(int l = 0; l < ast->size; l++){
+    	char t = defined->trees[idx]->children[l+1]->content.type;
+        if (t != KEYWORD) {
+            ERROR("Invalid type for argument: '%c' != KEYWORD", t);
+        }
         store_let_value(&defined->trees[idx]->children[l+1]->content, &vals[l], scopes);
     }
 }

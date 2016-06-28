@@ -1,4 +1,4 @@
-#include "../structures.h"
+#include "../structures/structures.h"
 #include "../constants.h"
 #include "../execute.h"
 #include "../base_util.h"
@@ -16,15 +16,15 @@ struct Value switch_case(struct Tree * ast, struct Tree_map * defined, struct Sc
         struct Tree * return_value = routine->children[1];
         routine->children[1] = ast->children[0];
         struct Value result = execute(routine, defined, scopes, max_depth - 1);
-        if(result.type != 'b'){
-            ERROR("Switch test return non-boolean value (%c != 'b')", result.type);
+        if(result.type != BOOL){
+            ERROR("Switch test return non-boolean value (%c != BOOL)", result.type);
         } else {
-            if(result.data.bl == 't'){
+            if(result.data.bl){
                 return execute(return_value, defined, scopes, max_depth - 1);
             }
         }
     }
     struct Value result;
-    result.type = 'u';
+    result.type = UNDEF;
     return result;
 }

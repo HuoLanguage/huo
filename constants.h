@@ -2,7 +2,7 @@
 #define _CONSTANTS_H
 
 #include <stddef.h>
-#include "structures.h"
+#include "structures/string.h"
 #include "base_util.h"
 
 extern const int RECURSE_MAX;

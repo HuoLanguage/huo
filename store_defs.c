@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include "structures.h"
+#include "structures/structures.h"
 #include "constants.h"
 #include "store_defs.h"
 #include "tokenizer.h"
@@ -14,7 +14,7 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
         if (ast->children[i]->type != 'k') {
             continue;
         }
-        if (ast->children[i]->content.type != 'k') {
+        if (ast->children[i]->content.type != KEYWORD) {
             continue;
         }
         if(string_matches(&ast->children[i]->content.data.str, &def_const)){
@@ -22,7 +22,7 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
                 ERROR("No function definition found");
             }
             char c = ast->children[i]->children[0]->content.type;
-            if (c != 'k') {
+            if (c != KEYWORD) {
                 ERROR("Invalid type: '%c'", c);
             }
             defined->names[defined->size] = &ast->children[i]->children[0]->content.data.str;
@@ -35,7 +35,7 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
                 ERROR("No import definition found");
             }
             char c = ast->children[i]->children[0]->content.type;
-            if (c != 'k' && c != 's') {
+            if (c != KEYWORD && c != STRING) {
                 ERROR("Invalid type: '%c'", c);
             }
             struct Tree * imported_ast = read_import(ast->children[i]->children[0]->content.data.str);

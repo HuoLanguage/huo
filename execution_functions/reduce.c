@@ -1,4 +1,4 @@
-#include "../structures.h"
+#include "../structures/structures.h"
 #include "../execute.h"
 #include "../base_util.h"
 #include "let_binding.h"
@@ -20,11 +20,11 @@ struct Value reduce_array(struct Tree * ast, struct Tree_map * defined, struct S
     int start = 0;
     struct Value result;
     struct Value array = execute(ast->children[0], defined, scopes, max_depth - 1);
-    if (array.type != 'a') {
-        ERROR("Invalid type for reduce_array: '%c' != 'a'\n", array.type);
+    if (array.type != ARRAY) {
+        ERROR("Invalid type for reduce_array: '%c' != ARRAY\n", array.type);
     }
     if (array.data.array->size <= 0) {
-        return copy_value_stack(&array);
+        return value_copy_stack(&array);
     }
     if(ast->size == 5){
         result = execute(ast->children[4], defined, scopes, max_depth - 1);
