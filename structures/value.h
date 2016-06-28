@@ -46,6 +46,7 @@ struct Value *value_copy_heap(struct Value * b);
 void value_copy_to(struct Value * a, struct Value * b);
 
 long length(struct Value a);
-struct Value index(long index, struct Value arr);
+/*long name to avoid conflict with string.h index()*/
+struct Value iterator_index(long index, struct Value arr);
 
 #endif

@@ -81,7 +81,7 @@ void value_copy_to(struct Value * a, struct Value * b){
         ERROR("Unknown type: %c", a->type);
     }
 }
-    
+
 float value_as_float(struct Value *v) {
     CHECK_TYPE(v, FLOAT);
     return v->data.fl;
@@ -108,7 +108,7 @@ struct String value_as_keyword(struct Value *v) {
 }
 
 long length(struct Value a);
-struct Value index(long index, struct Value arr);
+struct Value iterator_index(long index, struct Value arr);
 
 struct Value value_from_float(float f) {
     struct Value v = {
@@ -174,7 +174,7 @@ long length(struct Value a) {
     }
 }
 
-struct Value index(long i, struct Value list) {
+struct Value iterator_index(long i, struct Value list) {
     if(list.type == ARRAY){
         if (i < 0) {
             ERROR("Negative index: %li", i);

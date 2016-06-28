@@ -56,6 +56,8 @@ struct String default_const = STR_NEW("default");
 
 struct String while_const = STR_NEW("while");
 
+struct String eval_const = STR_NEW("eval");
+
 const char bool_true = 't';
 const char bool_false = 'f';
 const char bool_undefined = 'u';

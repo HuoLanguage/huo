@@ -1,0 +1,3 @@
+(eval "(print (+ 10 5))")
+(eval "(def add_five x (+ 5 x))")
+(eval "(print (add_five 20))")

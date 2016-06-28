@@ -76,10 +76,7 @@ int main(int argc, char const *argv[]) {
 
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){
-        struct Map * local_scopes = malloc(sizeof(struct Map));
-        local_scopes->size = 0;
         execute(root.children[i], defined, scopes, RECURSE_MAX);
-        free(local_scopes);
     }
     return 0;
 }

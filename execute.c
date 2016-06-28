@@ -17,6 +17,7 @@
 #include "execution_functions/switch.h"
 #include "execution_functions/parallel_execution.h"
 #include "execution_functions/while_loop.h"
+#include "execution_functions/evaluate.h"
 #include "apply_core_function.h"
 
 struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
@@ -66,7 +67,7 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scope
         }
     }
     else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&for_const, &ast->content.data.str)){
-    
+
         for_loop(ast, defined, scopes, max_depth - 1);
         result.type = UNDEF; //result = undefined
     }
@@ -135,7 +136,10 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scope
                     result = value_from_long(length(a));
                 }
                 else if(string_matches(&ast->content.data.str, &return_const)){
-                    result = execute(ast->children[0], defined, scopes, max_depth-1);
+                    result = a;
+                }
+                else if(string_matches(&ast->content.data.str, &eval_const)){
+                    eval(&a, defined, scopes, max_depth - 1);
                 }
             }
         }
