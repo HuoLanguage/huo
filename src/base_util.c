@@ -41,7 +41,8 @@ void make_scope(struct Scopes * scopes){
     scopes->current++;
 }
 
-void sub_vars(struct Value *v, struct Scopes *scopes, int max_depth) {
+int sub_vars(struct Value *v, struct Scopes *scopes, int max_depth) {
+    int found = 0;
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
@@ -50,7 +51,6 @@ void sub_vars(struct Value *v, struct Scopes *scopes, int max_depth) {
             sub_vars(v->data.array->values[i], scopes, max_depth);
         }
     } else if (v->type == KEYWORD) {
-        int found = 0;
         struct Map * current_scope = scopes->scopes[scopes->current];
         for(int i = 0; i < current_scope->size; i++){
             if(string_matches(&current_scope->members[i]->key->data.str, &v->data.str)){
@@ -59,10 +59,8 @@ void sub_vars(struct Value *v, struct Scopes *scopes, int max_depth) {
                 break;
             }
         }
-        if(!found){
-            ERROR("Undefined variable: %s", v->data.str.body);
-        }
     }
+    return found;
 }
 
 void printTree(struct Tree *tree){

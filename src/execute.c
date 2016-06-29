@@ -23,12 +23,34 @@
 
 struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
     struct Value result;
+    struct Value found_result;
+    int idx;
+    int variable_in_scope = 0;
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
+    if(ast->type == 'k' && ast->content.type == KEYWORD){
+        found_result = value_copy_stack(&ast->content);
+        variable_in_scope = sub_vars(&found_result, scopes, max_depth - 1);
+    }
     // first check for special kinds of execution
-    if(ast->type == 'k'  && ast->content.type == KEYWORD && string_matches(&ast->content.data.str, &if_const)){
+    if(variable_in_scope && found_result.type == AST){
+        struct Tree * function = found_result.data.ast;
+        make_args_map(ast, defined, scopes, function, max_depth-1);
+        result = execute(get_defined_body(function), defined, scopes, max_depth-1);
+        scopes->current--;
+    }
+    else if(ast->type == 'k'  && ast->content.type == KEYWORD && string_matches(&ast->content.data.str, &if_const)){
         result = if_block(ast, defined, scopes, max_depth-1);
+    }
+    else if(ast->type == 'k' && string_matches(&ast->content.data.str, &func_const)){
+        result.type = AST;
+        result.data.ast = ast;
+    }
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && (idx = is_defined_func(defined, ast->content.data.str)) > -1){
+        make_args_map(ast, defined, scopes, defined->trees[idx], max_depth-1);
+        result = execute(duplicate_tree(get_defined_body(defined->trees[idx])), defined, scopes, max_depth-1);
+        scopes->current--;
     }
     else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&let_const, &ast->content.data.str)){
         if (ast->size < 2) {
@@ -114,16 +136,16 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scope
         result.type = UNDEF;
     } else {
         // no special execution types found, check for more basic conditions
-        int idx;
         if(!ast->size){
             // ast with no children is either a value or a variable
-            result = value_copy_stack(&ast->content);
-            sub_vars(&result, scopes, max_depth - 1);
-        }
-        else if(ast->type == 'k' && ast->content.type == KEYWORD && (idx = is_defined_func(defined, ast->content.data.str)) > -1){
-            make_args_map(ast, defined, scopes, idx, max_depth-1);
-            result = execute(duplicate_tree(get_defined_body(defined->trees[idx])), defined, scopes, max_depth-1);
-            scopes->current--;
+            if(!variable_in_scope && ast->content.type == KEYWORD){
+                ERROR("Undefined variable: %s", ast->content.data.str.body);
+            }
+            else if(variable_in_scope){
+                return found_result;
+            } else {
+                result = ast->content;
+            }
         }
         else if(ast->size == 1){
             struct Value a = execute(ast->children[0], defined, scopes, max_depth - 1);

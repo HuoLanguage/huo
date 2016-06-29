@@ -6,7 +6,7 @@ const int LOOP_MAX = 10000;
 
 struct String functions = STR_NEW("*+-/!=<>");
 
-struct String numbers = STR_NEW("0123456789");
+struct String numbers = STR_NEW("-0123456789");
 
 struct String letters = STR_NEW("_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
@@ -59,6 +59,8 @@ struct String while_const = STR_NEW("while");
 struct String eval_const = STR_NEW("eval");
 
 struct String read_line_const = STR_NEW("readline");
+
+struct String func_const = STR_NEW("func");
 
 const char open_parens_const = '(';
 const char close_parens_const = ')';

@@ -49,7 +49,7 @@ all: huo
 huo: $(objs)
 	cc -o huo $(objs) $(LIBS)
 
-clean: ; rm -f -- .*.mk *.o & rm -f & rm -f ./execution_functions/*.o & rm -f ./structures/*.o
+clean: ; rm -f -- .*.mk *.o & rm -f & rm -f ./src/execution_functions/*.o & rm -f ./src/structures/*.o
 
 .PHONY: all clean
 .DELETE_ON_ERROR:

@@ -10,6 +10,7 @@ enum Value_type {
     STRING,
     ARRAY,
     KEYWORD,
+    AST,
     UNDEF
 };
 
@@ -18,6 +19,7 @@ union Data {
     long ln;
     float fl;
     struct String str;
+    struct Tree * ast;
     struct Value_array * array;
 };
 

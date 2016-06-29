@@ -4,11 +4,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <execinfo.h>
 #include "structures/structures.h"
 
 /* Macro because it makes printf errors easier to detect at compile time */
 /* Minor hack because c99 doesn't allow zero-length varargs for macros */
 #define ERROR(...) do {\
+    void * buffer[5];\
+    char ** strings;\
+    backtrace(buffer, 5);\
+    strings = backtrace_symbols(buffer, 5);\
+    for (int i = 0; i < 5; i++){\
+        printf ("%s\n", strings[i]);\
+    }\
+    free (strings);\
     fprintf(stderr, "Error at %s:%s:%i: ", __FILE__, __func__, __LINE__);\
     fprintf(stderr, __VA_ARGS__);\
     fprintf(stderr, "\n");\
@@ -34,6 +43,6 @@ void printTree(struct Tree *tree);
 struct Tree * duplicate_tree(struct Tree * a);
 void copy_array(struct Value * a, struct Value_array * b);
 void make_scope(struct Scopes * scopes);
-void sub_vars(struct Value *v, struct Scopes *scopes, int max_depth);
+int sub_vars(struct Value *v, struct Scopes *scopes, int max_depth);
 
 #endif

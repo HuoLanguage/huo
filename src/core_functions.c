@@ -252,7 +252,7 @@ struct Value string_set(struct Value index, struct Value item, struct Value stri
 
 struct Value array_push(struct Value a, struct Value arr){
     if (arr.type != ARRAY) {
-        ERROR("Push takes an item and an array, but got ('%c' != ARRAY).", arr.type);
+        ERROR("Push takes an item and an array, but got ('%d' != ARRAY).", arr.type);
     }
     arr.data.array->values[arr.data.array->size] = value_copy_heap(&a);
     arr.data.array->size++;
