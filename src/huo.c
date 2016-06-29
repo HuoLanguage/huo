@@ -108,9 +108,9 @@ int main(int argc, char const *argv[]) {
 
     // This is a little "brittle", but it works for now
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-h") || strcmp(argv[i], "--help")) {
+        if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
             help_flag = true;
-        } else if (strcmp(argv[i], "-c")) {
+        } else if (!strcmp(argv[i], "-c")) {
             if (i == argc - 1) {
                 fprintf(stderr, "Argument expected for %s option\n", argv[i]);
                 error_flag = true;
