@@ -6,6 +6,13 @@
 #include "base_util.h"
 #include "core_functions.h"
 
+char *strdup(const char *str) {
+    size_t len = strlen(str);
+    char *dup = malloc(sizeof(char) * (len + 1));
+    strcpy(dup, str);
+    return dup;
+}
+
 void copy_array(struct Value * a, struct Value_array * b){
     struct Value_array * array = malloc(sizeof(struct Value_array));
     array->size = b->size;

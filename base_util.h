@@ -28,6 +28,7 @@
     }\
 } while (0)
 
+char *strdup(const char *str);
 int string_contains(char ch, struct String* string);
 void printTree(struct Tree *tree);
 struct Tree * duplicate_tree(struct Tree * a);
