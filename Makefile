@@ -6,43 +6,43 @@ CFLAGS   += -std=c99 -Werror -Wall -Wextra -pedantic -O2
 CPPFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
 
 # Automatically sort out header dependencies
-CPPFLAGS += -MD -MF $(patsubst %.o,.%.mk,$@) -MP
+CPPFLAGS += -MD -MF $(patsubst src/%.o,.%.mk,$@) -MP
 -include $(patsubst %.o,.%.mk,$(obj))
 
-CPPFLAGS += -MD -MF $(patsubst execution_functions/%.o,.%.mk,$@) -MP
+CPPFLAGS += -MD -MF $(patsubst src/execution_functions/%.o,.%.mk,$@) -MP
 -include $(patsubst %.o,.%.mk,$(obj))
 
-CPPFLAGS += -MD -MF $(patsubst structures/%.o,.%.mk,$@) -MP
+CPPFLAGS += -MD -MF $(patsubst src/structures/%.o,.%.mk,$@) -MP
 -include $(patsubst %.o,.%.mk,$(obj))
 
 
 objs = \
-  structures/string.o \
-  structures/value.o \
-  constants.o \
-  base_util.o \
-  core_functions.o \
-  apply_core_function.o \
-  execution_functions/parallel_execution.o\
-  execution_functions/for_each.o\
-  execution_functions/for_loop.o\
-  execution_functions/map_array.o\
-  execution_functions/reduce.o\
-  execution_functions/read_file.o\
-  execution_functions/let_binding.o\
-  execution_functions/reduce_ast.o\
-  execution_functions/if_block.o\
-  execution_functions/switch.o\
-  execution_functions/while_loop.o\
-  execution_functions/evaluate.o\
-  execution_functions/read_line.o\
-  build_array.o \
-  tokenizer.o \
-  process_defs.o \
-  store_defs.o \
-  parser.o \
-  execute.o \
-  huo.o
+  src/structures/string.o \
+  src/structures/value.o \
+  src/constants.o \
+  src/base_util.o \
+  src/core_functions.o \
+  src/apply_core_function.o \
+  src/execution_functions/parallel_execution.o\
+  src/execution_functions/for_each.o\
+  src/execution_functions/for_loop.o\
+  src/execution_functions/map_array.o\
+  src/execution_functions/reduce.o\
+  src/execution_functions/read_file.o\
+  src/execution_functions/let_binding.o\
+  src/execution_functions/reduce_ast.o\
+  src/execution_functions/if_block.o\
+  src/execution_functions/switch.o\
+  src/execution_functions/while_loop.o\
+  src/execution_functions/evaluate.o\
+  src/execution_functions/read_line.o\
+  src/build_array.o \
+  src/tokenizer.o \
+  src/process_defs.o \
+  src/store_defs.o \
+  src/parser.o \
+  src/execute.o \
+  src/huo.o
 
 all: huo
 

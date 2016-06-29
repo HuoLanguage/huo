@@ -1,5 +1,22 @@
 # huo
-This is my first interpreter which I started as a hobby project. I'm doing it because I like the challenge of C and I think implementing language features is fun. My dream for it is to have a kind of minimal simplicity and cool native features like matrix math and parallel processing. There are still a number of fairly major issues to be overcome before Huo could be a stable and useful language, but I will tackle them one at a time. Contributions are also welcome. Huo means "living" or "fire" in Chinese. It's pretty hard to pronounce, so if you don't know Chinese you can just say "hoo-ah".
+Huo is an interpreted language which I started as a hobby project. The original vision for Huo was to be simple and have some cool native features like matrix math and parallel processing. The interpreter is fairly small and easy to work with and the syntax is easy to understand. Huo means "living" or "fire" in Chinese. It's pretty hard to pronounce, so if you don't know Chinese you can just say "hoo-ah". 
+
+If you would like to contribute to Huo open an issue describing the work you would like to do. If the change is accepted then you can make a pull request with your changes and it will be merged in after review.
+
+##compile
+make   
+
+##run
+Create a file containing Huo code and run it with the interpreter:
+```shell
+$ ./huo test.huo
+```
+Or you can run the included REPL which is written in Huo. To exit the REPL simply type "exit".
+```shell
+./huo repl.huo
+:huo:> (print "Hello, world!")
+"Hello, world!"
+```
 
 ##features
 It has lisp-like syntax for now because it's easy to parse into a tree.
@@ -195,19 +212,4 @@ return
 (def pair x y (return [x, y]))
 (let x (pair 0 "start"))
 (print x) ; -> [ 0, "start" ]
-```
-##compile
-make   
-make clean   
-
-##run
-create a huo file:   
-test.huo
-```code
-(print (+ 1 3 ( * 2 3 ) ( / 6 2 )))
-```
-
-run the file:
-```shell
-$ ./huo test.huo
 ```
