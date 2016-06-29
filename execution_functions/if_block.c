@@ -1,7 +1,6 @@
 #include "../structures/structures.h"
 #include "../execute.h"
 #include "../base_util.h"
-#include "../core_functions.h"
 
 struct Value if_block(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
     if (max_depth <= 0) {
