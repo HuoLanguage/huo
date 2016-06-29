@@ -35,10 +35,8 @@ extern struct String switch_const;
 extern struct String default_const;
 extern struct String while_const;
 extern struct String eval_const;
+extern struct String read_line_const;
 
-extern const char bool_true;
-extern const char bool_false;
-extern const char bool_undefined;
 extern const char open_parens_const;
 extern const char close_parens_const;
 extern const char root_type_const;

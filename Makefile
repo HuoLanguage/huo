@@ -35,6 +35,7 @@ objs = \
   execution_functions/switch.o\
   execution_functions/while_loop.o\
   execution_functions/evaluate.o\
+  execution_functions/read_line.o\
   build_array.o \
   tokenizer.o \
   process_defs.o \

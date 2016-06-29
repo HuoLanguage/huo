@@ -1,0 +1,11 @@
+(let huo_repl_input "")
+
+(while (! huo_repl_input "exit")
+    (do
+        (let huo_repl_input (readline ":huo:> "))
+        (if (! huo_repl_input "exit")
+            (print (eval huo_repl_input))
+            (print "exiting...")
+        )
+    )
+)

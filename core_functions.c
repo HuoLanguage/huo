@@ -7,8 +7,11 @@
 #include "core_functions.h"
 
 void print(struct Value a){
-    if(a.type == STRING || a.type == KEYWORD){
+    if(a.type == STRING){
         printf("\"%s\"", string_to_chars(&a.data.str));
+    }
+    else if(a.type == KEYWORD){
+        printf("%s", string_to_chars(&a.data.str));
     }
     else if(a.type == LONG) {
         printf("%ld", a.data.ln);
@@ -136,28 +139,29 @@ struct Value not(struct Value a, struct Value b){
     if(a.type == FLOAT && b.type == FLOAT){
         a.type = BOOL;
         if(a.data.fl == b.data.fl){
-            a.data.bl = bool_false;
+            a.data.bl = false;
         } else {
-            a.data.bl = bool_true;
+            a.data.bl = true;
         }
     }
     else if(a.type == LONG && b.type == LONG){
         a.type = BOOL;
         if(a.data.ln == b.data.ln){
-            a.data.bl = bool_false;
+            a.data.bl = false;
         } else {
-            a.data.bl = bool_true;
+            a.data.bl = true;
         }
     }
     else if(a.type == STRING && b.type == STRING){
         a.type = BOOL;
         if(string_matches(&a.data.str, &b.data.str)){
-            a.data.bl = bool_false;
+            a.data.bl = false;
+            printf("%c\n", false);
         } else {
-            a.data.bl = bool_true;
+            a.data.bl = true;
         }
     } else {
-        ERROR("Mismatched types: %c != %c", a.type, b.type);
+        ERROR("Mismatched types: %d != %d", a.type, b.type);
     }
     return a;
 }
@@ -166,25 +170,25 @@ struct Value equals(struct Value a, struct Value b){
     if(a.type == FLOAT && b.type == FLOAT){
         a.type = BOOL;
         if(a.data.fl == b.data.fl){
-            a.data.bl = bool_true;
+            a.data.bl = true;
         } else {
-            a.data.bl = bool_false;
+            a.data.bl = false;
         }
     }
     else if(a.type == LONG && b.type == LONG){
         a.type = BOOL;
         if(a.data.ln == b.data.ln){
-            a.data.bl = bool_true;
+            a.data.bl = true;
         } else {
-            a.data.bl = bool_false;
+            a.data.bl = false;
         }
     }
     else if(a.type == STRING && b.type == STRING){
         a.type = BOOL;
         if(string_matches(&a.data.str, &b.data.str)){
-            a.data.bl = bool_true;
+            a.data.bl = true;
         } else {
-            a.data.bl = bool_false;
+            a.data.bl = false;
         }
     } else {
         ERROR("Mismatched types: %c != %c", a.type, b.type);
@@ -196,17 +200,17 @@ struct Value greater_than(struct Value a, struct Value b){
     if(a.type == FLOAT && b.type == FLOAT){
         a.type = BOOL;
         if(a.data.fl > b.data.fl){
-            a.data.bl = bool_true;
+            a.data.bl = true;
         } else {
-            a.data.bl = bool_false;
+            a.data.bl = false;
         }
     }
     else if(a.type == LONG && b.type == LONG){
         a.type = BOOL;
         if(a.data.ln > b.data.ln){
-            a.data.bl = bool_true;
+            a.data.bl = true;
         } else {
-            a.data.bl = bool_false;
+            a.data.bl = false;
         }
     }
     else {
@@ -214,8 +218,6 @@ struct Value greater_than(struct Value a, struct Value b){
     }
     return a;
 }
-
-
 
 struct Value array_set(struct Value index, struct Value item, struct Value array){
     if (index.type != LONG) {

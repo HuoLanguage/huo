@@ -3,6 +3,6 @@
 
 #include "../structures/structures.h"
 
-void eval(struct Value * string, struct Tree_map * defined, struct Scopes * scopes, int max_depth);
+struct Value eval(struct Value * string, struct Tree_map * defined, struct Scopes * scopes, int max_depth);
 
 #endif

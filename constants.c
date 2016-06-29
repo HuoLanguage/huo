@@ -58,9 +58,7 @@ struct String while_const = STR_NEW("while");
 
 struct String eval_const = STR_NEW("eval");
 
-const char bool_true = 't';
-const char bool_false = 'f';
-const char bool_undefined = 'u';
+struct String read_line_const = STR_NEW("readline");
 
 const char open_parens_const = '(';
 const char close_parens_const = ')';

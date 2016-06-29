@@ -17,6 +17,7 @@
 #include "execution_functions/switch.h"
 #include "execution_functions/parallel_execution.h"
 #include "execution_functions/while_loop.h"
+#include "execution_functions/read_line.h"
 #include "execution_functions/evaluate.h"
 #include "apply_core_function.h"
 
@@ -139,7 +140,10 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scope
                     result = a;
                 }
                 else if(string_matches(&ast->content.data.str, &eval_const)){
-                    eval(&a, defined, scopes, max_depth - 1);
+                    result = eval(&a, defined, scopes, max_depth - 1);
+                }
+                else if(string_matches(&ast->content.data.str, &read_line_const)){
+                    result = read_line(&a);
                 }
             }
         }

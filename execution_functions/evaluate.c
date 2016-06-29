@@ -4,8 +4,10 @@
 #include "../parser.h"
 #include "../store_defs.h"
 #include "../execute.h"
+#include "../core_functions.h"
 
-void eval(struct Value * string, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+struct Value eval(struct Value * string, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+    struct Value result;
     if(string->type != STRING){
         ERROR("Error passing non-string value to eval ('%c' != 's')", string->type);
     }
@@ -21,6 +23,7 @@ void eval(struct Value * string, struct Tree_map * defined, struct Scopes * scop
     parse(&root, tokens);
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){
-        execute(root.children[i], defined, scopes, max_depth - 1);
+        result = execute(root.children[i], defined, scopes, max_depth - 1);
     }
+    return result;
 }
