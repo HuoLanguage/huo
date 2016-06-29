@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "../structures/structures.h"
 #include "../structures/string.h"
 #include "../structures/value.h"
@@ -31,6 +32,11 @@ struct Value read_line(struct Value * string){
             input.length++;
         }
     }
+    RESIZE(input.body, input.length + 1);
+    input.body[input.length] = 0;
+
+    assert(string_is_sane(&input));
+
     result.data.str = input;
     return result;
 }

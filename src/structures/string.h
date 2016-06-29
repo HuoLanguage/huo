@@ -17,7 +17,7 @@ struct String {
 }
 
 struct String string_from_char(char c);
-struct String string_from_chars(char *str);
+struct String string_from_chars(const char *str);
 bool string_is_sane(struct String *s);
 struct String string_copy_stack(struct String *from);
 struct String *copy_string_heap(struct String *from);

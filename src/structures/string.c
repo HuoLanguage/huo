@@ -25,7 +25,7 @@ struct String string_from_char(char c) {
     return s;
 }
 
-struct String string_from_chars(char *str) {
+struct String string_from_chars(const char *str) {
     struct String s;
     if (str == NULL) {
         s.length = 0;
