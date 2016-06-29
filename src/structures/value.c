@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "structures.h"
 #include "value.h"
+#include "../core_functions.h"
 
 #include "../base_util.h"
 
@@ -27,6 +28,8 @@ struct Value value_copy_stack(struct Value * b){
         copy_array(&a, b->data.array);
     } else if (b->type == UNDEF){
         //a.type == UNDEF;
+    } else if (b->type == AST){
+        a.data.ast = b->data.ast;
     } else {
         ERROR("Unknown type: %c", a.type);
     }
@@ -53,8 +56,10 @@ struct Value *value_copy_heap(struct Value * b){
         copy_array(a, b->data.array);
     } else if (b->type == UNDEF){
         //a->type == UNDEF;
+    } else if (b->type == AST){
+        a->data.ast = b->data.ast;
     } else {
-        ERROR("Unknown type: %c", a->type);
+        ERROR("Unknown type: %d", a->type);
     }
     return a;
 }
@@ -106,9 +111,6 @@ struct String value_as_keyword(struct Value *v) {
     CHECK_TYPE(v, KEYWORD);
     return v->data.str;
 }
-
-long length(struct Value a);
-struct Value iterator_index(long index, struct Value arr);
 
 struct Value value_from_float(float f) {
     struct Value v = {

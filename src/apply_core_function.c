@@ -9,7 +9,7 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
             a = concat(a, b);
         }
         else if(string_matches(&index_const, &ast->content.data.str)){
-            a =iterator_index(value_as_long(&a), b);
+            a = iterator_index(value_as_long(&a), b);
         }
         else if(string_matches(&push_const, &ast->content.data.str)){
             a = array_push(a, b);

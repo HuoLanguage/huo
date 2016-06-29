@@ -1,0 +1,11 @@
+(def filter array fn
+    (do
+        (let result [])
+        (each array item idx
+            (if (fn item)(push item result)(return 0))
+        )
+        (return result)
+    )
+)
+(let x [1,2,3,4,5,6])
+(print (filter x (func item (> item 3))))
