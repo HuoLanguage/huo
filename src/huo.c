@@ -15,7 +15,7 @@
 #include "base_util.h"
 #include "huo.h"
 
-#if defined(_POSIX_VERSION) || defined(__linux__)
+#if defined(_POSIX_VERSION) || defined(__linux__) || defined(__APPLE__)
 
 #include <libgen.h>
 char *get_exe_path(const char *called_name) {
@@ -140,16 +140,16 @@ int main(int argc, char const *argv[]) {
         error_flag = true;
     }
 
-    if (!command_flag && !file_flag) {
+    if (!command_flag && !file_flag && !help_flag) {
         assert (argc >= 1);
 
         char *path_to_exe = get_exe_path(argv[0]);
 
         char *path_to_exe_dir = get_path_dir(path_to_exe);
 
-        char *path_to_repl = path_merge(path_to_exe, "repl.huo");
+        char *path_to_repl = path_merge(path_to_exe_dir, "repl.huo");
 
-        printf("%s \n", path_to_repl);
+        // printf("%s \n", path_to_exe_dir);
 
         file_flag = true;
 
@@ -163,7 +163,7 @@ int main(int argc, char const *argv[]) {
     }
 
     if (help_flag || error_flag) {
-        fprintf(stderr, 
+        fprintf(stderr,
 "usage: huo [FILE | -c cmd | -h | --help]\n"
 "Arguments:\n"
 "-c cmd     program passed in as string\n"
