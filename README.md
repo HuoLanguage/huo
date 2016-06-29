@@ -3,6 +3,21 @@ Huo is an interpreted language which I started as a hobby project. The original 
 
 If you would like to contribute to Huo open an issue describing the work you would like to do. If the change is accepted then you can make a pull request with your changes and it will be merged in after review.
 
+##compile
+make   
+
+##run
+Create a file containing Huo code and run it with the interpreter:
+```shell
+$ ./huo test.huo
+```
+Or you can run the included REPL which is written in Huo. To exit the REPL simply type "exit".
+```shell
+./huo repl.huo
+:huo:> (print "Hello, world!")
+"Hello, world!"
+```
+
 ##features
 It has lisp-like syntax for now because it's easy to parse into a tree.
 ```lisp
@@ -197,19 +212,4 @@ return
 (def pair x y (return [x, y]))
 (let x (pair 0 "start"))
 (print x) ; -> [ 0, "start" ]
-```
-##compile
-make   
-make clean   
-
-##run
-create a huo file:   
-test.huo
-```code
-(print (+ 1 3 ( * 2 3 ) ( / 6 2 )))
-```
-
-run the file:
-```shell
-$ ./huo test.huo
 ```
