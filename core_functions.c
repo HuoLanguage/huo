@@ -156,7 +156,6 @@ struct Value not(struct Value a, struct Value b){
         a.type = BOOL;
         if(string_matches(&a.data.str, &b.data.str)){
             a.data.bl = false;
-            printf("%c\n", false);
         } else {
             a.data.bl = true;
         }
