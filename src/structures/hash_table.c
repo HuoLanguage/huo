@@ -193,11 +193,11 @@ void hash_table_maybe_resize(hash_table *table) {
         new_size = size * HASH_TABLE_SHRINK_NUM / HASH_TABLE_SHRINK_DENOM;
         if (new_size >= size)
             new_size = size - 1;
-        if (new_size < HASH_TABLE_MIN_SIZE)
-            new_size = HASH_TABLE_MIN_SIZE;
     } else {
         return;
     }
+    if (new_size < HASH_TABLE_MIN_SIZE)
+        new_size = HASH_TABLE_MIN_SIZE;
     hash_table_resize(table, new_size);
     assert (!hash_table_needs_resize(table));
 }
