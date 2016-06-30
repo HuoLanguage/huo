@@ -225,11 +225,13 @@ void *hash_table_put_int(hash_table *table, void *key, void *val, unsigned long 
             if (hash_table_slot_is_free(entry) || (entry->hash_code == hash_code && table->equality_test(entry->key, key))) {
                 // Right entry, now kick it out.
                 void *old_val = entry->val;
-                if (hash_table_slot_is_free(entry))
-                    table->table_size += 1;
                 entry->hash_code = hash_code;
                 entry->key = key;
                 entry->val = val;
+                if (hash_table_slot_is_free(entry)) {
+                    hash_table_maybe_resize(table);
+                    table->table_size += 1;
+                }
                 assert(hash_table_is_sane(table));
                 return old_val;
             }
