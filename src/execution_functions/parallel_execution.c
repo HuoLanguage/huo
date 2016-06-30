@@ -13,7 +13,7 @@ void * parallel_routine(void * bundle_ptr){
     return 0;
 }
 
-void parallel_execution(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+void parallel_execution(struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth){
     int num_children = ast->size;
     pthread_t tid[num_children];
     struct Execution_bundle * bundle[num_children];

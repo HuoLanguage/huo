@@ -28,4 +28,9 @@ char *string_to_chars(struct String *s);
 long string_length(struct String *s);
 char string_index(struct String *s, long i);
 
+unsigned long string_hash_code(struct String *s);
+unsigned long string_hash_code_vv(void *s);
+
+bool string_matches_vv(void *base, void *compare);
+
 #endif

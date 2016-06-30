@@ -6,7 +6,7 @@
 #include "../execute.h"
 #include "../core_functions.h"
 
-struct Value eval(struct Value * string, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+struct Value eval(struct Value * string, hash_table * defined, struct Scopes * scopes, int max_depth){
     struct Value result;
     if(string->type != STRING){
         ERROR("Error passing non-string value to eval ('%c' != 's')", string->type);

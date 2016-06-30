@@ -3,6 +3,7 @@
 
 #include "string.h"
 #include "value.h"
+#include "hash_table.h"
 
 struct Token {
     char type;
@@ -23,12 +24,6 @@ struct Value_array {
 struct Keyval {
     struct Value * key;
     struct Value * val;
-};
-
-struct Tree_map {
-    struct String * names [250];
-    struct Tree * trees [250];
-    int size;
 };
 
 struct Map {
@@ -52,7 +47,7 @@ struct Tree {
 
 struct Execution_bundle {
     struct Tree * ast;
-    struct Tree_map * defined;
+    hash_table *defined;
     struct Scopes * scopes;
     int max_depth;
 };

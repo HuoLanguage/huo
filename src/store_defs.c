@@ -7,8 +7,9 @@
 #include "tokenizer.h"
 #include "parser.h"
 #include "execution_functions/read_file.h"
+#include "structures/hash_table.h"
 
-int store_defs(struct Tree * ast, struct Tree_map * defined){
+int store_defs(struct Tree * ast, hash_table * defined){
     int num_defs = 0;
     for(int i = 0; i < ast->size; i++){
         if (ast->children[i]->type != 'k') {
@@ -25,9 +26,7 @@ int store_defs(struct Tree * ast, struct Tree_map * defined){
             if (c != KEYWORD) {
                 ERROR("Invalid type: '%c'", c);
             }
-            defined->names[defined->size] = &ast->children[i]->children[0]->content.data.str;
-            defined->trees[defined->size] = ast->children[i];
-            defined->size++;
+            hash_table_put(defined, &ast->children[i]->children[0]->content.data.str, ast->children[i]);
             num_defs++;
         }
         else if(string_matches(&ast->children[i]->content.data.str, &import_const)){

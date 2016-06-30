@@ -5,7 +5,7 @@
 #include "let_binding.h"
 #include "for_each.h"
 
-struct Value for_each(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * scopes, int max_depth){
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
@@ -35,7 +35,7 @@ struct Value for_each(struct Tree * ast, struct Tree_map * defined, struct Scope
     }
 }
 
-struct Value for_each_string(struct Value string, struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+struct Value for_each_string(struct Value string, struct Tree * ast, hash_table * defined, struct Scopes * scopes, int max_depth){
     for(int i = 0; i < string.data.str.length; i++){
         struct Value item = substring(i, i+1, string);
         struct Value index = {

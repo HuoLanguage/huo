@@ -6,6 +6,16 @@
 #include <stdbool.h>
 #include "structures/structures.h"
 
+#ifdef _Static_assert
+#define STATIC_ASSERT(cond,msg) CTA2(cond, msg)
+#define CTA2(cond, msg) _Static_assert(cond,msg)
+#else
+#define CTASTR2(pre,post) pre ## post
+#define CTASTR(pre,post) CTASTR2(pre,post)
+#define STATIC_ASSERT(cond,msg) \
+    typedef struct { int CTASTR(static_assertion_failed_,msg) : !!(cond); } \
+        CTASTR(static_assertion_failed_,__COUNTER__)
+#endif
 /* Macro because it makes printf errors easier to detect at compile time */
 /* Minor hack because c99 doesn't allow zero-length varargs for macros */
 #define ERROR(...) do {\

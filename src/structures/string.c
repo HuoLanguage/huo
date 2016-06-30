@@ -142,3 +142,24 @@ char string_index(struct String *s, long i) {
     }
     return s->body[i];
 }
+
+unsigned long string_hash_code(struct String *s) {
+    // djb2
+    unsigned long hash = 5381;
+    if (s->length == 0)
+        return hash;
+
+    char *pos = s->body;
+
+    while (*pos != 0)
+        hash = hash * 33 + *(pos++);
+
+    return hash;
+}
+unsigned long string_hash_code_vv(void *s) {
+    return string_hash_code((struct String *) s);
+}
+
+bool string_matches_vv(void *base, void *compare) {
+    return string_matches((struct String *) base, (struct String *) compare);
+}

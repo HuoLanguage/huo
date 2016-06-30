@@ -3,6 +3,6 @@
 
 #include "../structures/structures.h"
 
-struct Value map_array(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth);
+struct Value map_array(struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth);
 
 #endif

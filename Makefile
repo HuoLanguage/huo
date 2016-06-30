@@ -19,6 +19,7 @@ CPPFLAGS += -MD -MF $(patsubst src/structures/%.o,.%.mk,$@) -MP
 objs = \
   src/structures/string.o \
   src/structures/value.o \
+  src/structures/hash_table.o \
   src/constants.o \
   src/base_util.o \
   src/core_functions.o \
@@ -49,7 +50,7 @@ all: huo
 huo: $(objs)
 	cc -o huo $(objs) $(LIBS)
 
-clean: ; rm -f -- .*.mk *.o & rm -f & rm -f ./execution_functions/*.o & rm -f ./structures/*.o
+clean: ; rm -f -- ./src/*.mk  ./src/*.o & rm -f ./src/execution_functions/*.o & rm -f ./src/structures/*.o
 
 .PHONY: all clean
 .DELETE_ON_ERROR:
