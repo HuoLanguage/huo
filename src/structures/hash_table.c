@@ -222,15 +222,16 @@ void *hash_table_put_int(hash_table *table, void *key, void *val, unsigned long 
         for (unsigned long i = 0; i < table->table_alloc_size; i++) {
             unsigned long table_pos = (init_hash_code + i) % table->table_alloc_size;
             struct hash_table_entry_t *entry = &table->table[table_pos];
-            if (hash_table_slot_is_free(entry) || (entry->hash_code == hash_code && table->equality_test(entry->key, key))) {
+            bool was_free = hash_table_slot_is_free(entry);
+            if (was_free || (entry->hash_code == hash_code && table->equality_test(entry->key, key))) {
                 // Right entry, now kick it out.
                 void *old_val = entry->val;
                 entry->hash_code = hash_code;
                 entry->key = key;
                 entry->val = val;
-                if (hash_table_slot_is_free(entry)) {
-                    hash_table_maybe_resize(table);
+                if (was_free) {
                     table->table_size += 1;
+                    hash_table_maybe_resize(table);
                 }
                 assert(hash_table_is_sane(table));
                 return old_val;
