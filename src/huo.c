@@ -190,8 +190,7 @@ int main(int argc, char const *argv[]) {
     // this prints the AST for reference
     // printTree(&root);
     // printf("\n");
-    struct Tree_map * defined = malloc(sizeof(struct Tree_map));
-    defined->size = 0;
+    hash_table *defined = hash_table_new(&string_hash_code_vv, &string_matches_vv);
     struct Scopes * scopes = malloc(sizeof(struct Scopes));
     scopes->size = 1;
     scopes->current = 0;

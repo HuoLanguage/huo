@@ -4,7 +4,7 @@
 #include "../base_util.h"
 #include "../core_functions.h"
 
-struct Value switch_case(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+struct Value switch_case(struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth){
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }

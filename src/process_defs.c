@@ -6,12 +6,13 @@
 #include "process_defs.h"
 #include "execute.h"
 #include "execution_functions/let_binding.h"
+#include "structures/hash_table.h"
 
-void make_args_map(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int idx, int max_depth){
+void make_args_map(struct Tree * ast, hash_table *defined, struct Scopes * scopes, struct Tree *function, int max_depth) {
     // we want to evaluate the values passed into the function
     // but store the result in the next scope, not the current one
-    if (defined->trees[idx]->size <= ast->size) {
-        ERROR("Not enough arguments!: %i < %i", defined->trees[idx]->size - 1, ast->size);
+    if (function->size <= ast->size) {
+        ERROR("Not enough arguments!: %i < %i", function->size - 1, ast->size);
     }
     struct Value vals[ast->size];
     for(int i = 0; i < ast->size; i++){
@@ -19,11 +20,11 @@ void make_args_map(struct Tree * ast, struct Tree_map * defined, struct Scopes *
     }
     make_scope(scopes);
     for(int l = 0; l < ast->size; l++){
-    	char t = defined->trees[idx]->children[l+1]->content.type;
+        char t = function->children[l+1]->content.type;
         if (t != KEYWORD) {
             ERROR("Invalid type for argument: '%c' != KEYWORD", t);
         }
-        store_let_value(&defined->trees[idx]->children[l+1]->content, &vals[l], scopes);
+        store_let_value(&function->children[l+1]->content, &vals[l], scopes);
     }
 }
 
@@ -45,12 +46,7 @@ struct Tree * get_defined_body(struct Tree * function){
     return function;
 }
 
-int is_defined_func(struct Tree_map * defined, struct String key){
+struct Tree *get_defined_func(hash_table *defined, struct String key) {
     assert(string_is_sane(&key));
-    for(int i = 0; i < defined->size; i++){
-        if(string_matches(defined->names[i], &key)){
-            return i;
-        }
-    }
-    return -1;
+    return (struct Tree *) hash_table_get(defined, &key);
 }

@@ -21,7 +21,7 @@
 #include "execution_functions/evaluate.h"
 #include "apply_core_function.h"
 
-struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth){
     struct Value result;
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
@@ -114,15 +114,15 @@ struct Value execute (struct Tree * ast, struct Tree_map * defined, struct Scope
         result.type = UNDEF;
     } else {
         // no special execution types found, check for more basic conditions
-        int idx;
+        struct Tree *func;
         if(!ast->size){
             // ast with no children is either a value or a variable
             result = value_copy_stack(&ast->content);
             sub_vars(&result, scopes, max_depth - 1);
         }
-        else if(ast->type == 'k' && ast->content.type == KEYWORD && (idx = is_defined_func(defined, ast->content.data.str)) > -1){
-            make_args_map(ast, defined, scopes, idx, max_depth-1);
-            result = execute(duplicate_tree(get_defined_body(defined->trees[idx])), defined, scopes, max_depth-1);
+        else if(ast->type == 'k' && ast->content.type == KEYWORD && (func = get_defined_func(defined, ast->content.data.str)) != NULL){
+            make_args_map(ast, defined, scopes, func, max_depth-1);
+            result = execute(duplicate_tree(get_defined_body(func)), defined, scopes, max_depth-1);
             scopes->current--;
         }
         else if(ast->size == 1){

@@ -2,7 +2,7 @@
 #include "../execute.h"
 #include "../base_util.h"
 
-void for_loop(struct Tree * ast, struct Tree_map * defined, struct Scopes * scopes, int max_depth){
+void for_loop(struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth){
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
