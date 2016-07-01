@@ -27,11 +27,11 @@
 
 // Would be a function, but then So. Much. Casting.
 #define RESIZE(ptr_to_arr, new_len) do {\
-    if (new_len == 0) {\
+    if ((new_len) == 0) {\
         free(ptr_to_arr);\
         (ptr_to_arr) = NULL;\
     } else {\
-        (ptr_to_arr) = realloc((ptr_to_arr), new_len * sizeof((ptr_to_arr)[0]));\
+        (ptr_to_arr) = realloc((ptr_to_arr), (new_len) * sizeof((ptr_to_arr)[0]));\
         if ((ptr_to_arr) == NULL) {\
             ERROR("Malloc failure!");\
         }\

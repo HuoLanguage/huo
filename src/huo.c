@@ -173,6 +173,7 @@ int main(int argc, char const *argv[]) {
     }
 
     struct Tokens t = {
+        .tokens = NULL,
         .length = 0,
         .counter = 0
     };

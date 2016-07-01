@@ -11,7 +11,7 @@ struct Token {
 };
 
 struct Tokens {
-    struct Token tokens[10000];
+    struct Token *tokens;
     int length;
     int counter;
 };
