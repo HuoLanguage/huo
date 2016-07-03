@@ -1,21 +1,25 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "structures/structures.h"
 #include "constants.h"
 #include "base_util.h"
 
 struct Value_array *build_array(struct Tokens * tokens){
+
     struct Value_array * array = malloc(sizeof(struct Value_array));
     array->size = 0;
     array->values = NULL;
-
-    char c;
-    while ((c = tokens->tokens[++tokens->counter].type) != 'e'){
+    while (true) {
+        tokens->counter += 1;
         if (tokens->counter >= tokens->length) {
             ERROR("Unbalanced array");
         }
+        char c = tokens->tokens[tokens->counter].type;
         if (c == 0)
             continue;
+        else if (c == 'e')
+            break;
 
         struct Value * val = malloc(sizeof(struct Value));
 
