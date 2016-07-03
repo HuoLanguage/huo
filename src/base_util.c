@@ -2,13 +2,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdint.h>
+#include <limits.h>
 #include "structures/structures.h"
 #include "base_util.h"
 #include "core_functions.h"
+#include "config.h"
+
+bool __size_t_mul_overflow(size_t a, size_t b, size_t *res) {
+#if defined(MUL_OVERFLOW)
+    return MUL_OVERFLOW(a, b, res);
+#elif SIZE_MAX <= (UINTMAX_MAX / SIZE_MAX)
+    uintmax_t res_long = (uintmax_t) a * (uintmax_t) b;
+    if (res_long > SIZE_MAX)
+        return true;
+    *res = (size_t) res_long;
+    return false;
+#elif defined(__UINT128__)
+    if (sizeof(__UINT128__) >= sizeof(size_t) * 2) {
+        __UINT128__ res_long = (__UINT128__) a * (__UINT128__) b;
+        if (res_long > SIZE_MAX)
+            return true;
+        *res = (size_t) res_long;
+        return false;
+    } else {
+        WARN_ONCE("size_t is HOW long?");
+        WARN_ONCE("Using slow but portable overflow test")
+    }
+#else
+#pragma message ("Using slow but portable overflow test")
+#endif
+    //Slow but portable
+    size_t res_short = a * b;
+    if ((a != 0) && ((res_short / a) != b))
+        return true;
+    *res = res_short;
+    return false;
+}
+
+size_t arr_malloc_size(size_t num, size_t size) {
+    size_t res;
+    if (__size_t_mul_overflow(num, size, &res)) {
+        ERROR("Overflow in array allocation!");
+    }
+    return res;
+}
 
 char *strdup(const char *str) {
     size_t len = strlen(str);
-    char *dup = malloc(sizeof(char) * (len + 1));
+    char *dup = ARR_MALLOC(len + 1, char);
     strcpy(dup, str);
     return dup;
 }
@@ -16,6 +58,7 @@ char *strdup(const char *str) {
 void copy_array(struct Value * a, struct Value_array * b){
     struct Value_array * array = malloc(sizeof(struct Value_array));
     array->size = b->size;
+    array->values = ARR_MALLOC(array->size, array->values[0]);
     for(int i = 0; i < b->size; i++){
         array->values[i] = value_copy_heap(b->values[i]);
     }
@@ -25,18 +68,19 @@ void copy_array(struct Value * a, struct Value_array * b){
 struct Tree * duplicate_tree(struct Tree * a){
     struct Tree * root = malloc(sizeof(struct Tree));
     root->type = a->type;
-    root->size = 0;
     root->content = value_copy_stack(&a->content);
+    root->children = NULL;
+    root->size = a->size;
+    RESIZE(root->children, root->size);
     for(int i = 0; i < a->size; i++){
         root->children[i] = duplicate_tree(a->children[i]);
-        root->size++;
     }
     return root;
 }
 
 void make_scope(struct Scopes * scopes){
-    scopes->scopes[scopes->size] = malloc(sizeof(struct Map));
-    scopes->scopes[scopes->size]->size = 0;
+    RESIZE(scopes->scopes, scopes->size + 1);
+    scopes->scopes[scopes->size] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
     scopes->size++;
     scopes->current++;
 }
@@ -50,16 +94,10 @@ void sub_vars(struct Value *v, struct Scopes *scopes, int max_depth) {
             sub_vars(v->data.array->values[i], scopes, max_depth);
         }
     } else if (v->type == KEYWORD) {
-        int found = 0;
-        struct Map * current_scope = scopes->scopes[scopes->current];
-        for(int i = 0; i < current_scope->size; i++){
-            if(string_matches(&current_scope->members[i]->key->data.str, &v->data.str)){
-                *v = *current_scope->members[i]->val;
-                found = 1;
-                break;
-            }
-        }
-        if(!found){
+        hash_table *current_scope = scopes->scopes[scopes->current];
+        if (hash_table_contains(current_scope, v)) {
+            *v = * (struct Value *) hash_table_get(current_scope, v);
+        } else {
             ERROR("Undefined variable: %s", v->data.str.body);
         }
     }

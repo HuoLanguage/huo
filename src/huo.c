@@ -42,7 +42,7 @@ char *get_path_dir(char *path) {
 
 char *path_merge(const char *dir, const char *rest) {
     // Bleh
-    char *path = malloc(sizeof(char) * (strlen(dir) + 1 + strlen(rest) + 1)); // sizeof(char) is defined as 1, I know.
+    char *path = ARR_MALLOC(strlen(dir) + 1 + strlen(rest) + 1, char); // sizeof(char) is defined as 1, I know.
     if (path == NULL) {
         ERROR("Malloc failure");
     }
@@ -81,7 +81,7 @@ char *get_path_dir(char *path) {
 }
 
 char *path_merge(const char *dir, const char *rest) {
-    char *path = malloc(sizeof(char) * (strlen(dir) + 1 + strlen(rest) + 1)); // sizeof(char) is defined as 1, I know.
+    char *path = ARR_MALLOC(strlen(dir) + 1 + strlen(rest) + 1, char);
     if (path == NULL) {
         ERROR("Malloc failure");
     }
@@ -173,6 +173,7 @@ int main(int argc, char const *argv[]) {
     }
 
     struct Tokens t = {
+        .tokens = NULL,
         .length = 0,
         .counter = 0
     };
@@ -185,6 +186,7 @@ int main(int argc, char const *argv[]) {
     struct Tree root;
     root.type = 'r';
     root.size = 0;
+    root.children = NULL;
 
     parse(&root, tokens);
     // this prints the AST for reference
@@ -192,12 +194,12 @@ int main(int argc, char const *argv[]) {
     // printf("\n");
     hash_table *defined = hash_table_new(&string_hash_code_vv, &string_matches_vv);
     struct Scopes * scopes = malloc(sizeof(struct Scopes));
+    scopes->scopes = NULL;
+    RESIZE(scopes->scopes, 1);
     scopes->size = 1;
     scopes->current = 0;
 
-    struct Map * root_scope = malloc(sizeof(struct Map));
-    root_scope->size = 0;
-    scopes->scopes[0] = root_scope;
+    scopes->scopes[0] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
 
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){

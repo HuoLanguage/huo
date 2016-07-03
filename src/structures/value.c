@@ -197,3 +197,13 @@ struct Value iterator_index(long i, struct Value list) {
         ERROR("Index takes a string or array, but got '%c' != [ARRAY|STRING]).", list.type);
     }
 }
+
+unsigned long value_keyword_hash_code(void *value) {
+    struct String word = value_as_keyword((struct Value *) value);
+    return string_hash_code(&word);
+}
+bool value_keyword_equality(void *a, void *b) {
+    struct String aword = value_as_keyword((struct Value *) a);
+    struct String bword = value_as_keyword((struct Value *) b);
+    return string_matches(&aword, &bword);
+}

@@ -15,9 +15,11 @@ void parse(struct Tree * root, struct Tokens *tokens){
             struct Tree * tree = malloc(sizeof(struct Tree));
             tree->type = 'f';
             tree->size = 0;
+            tree->children = NULL;
 
             tokens->counter++;
             parse(tree, tokens);
+            RESIZE(root->children, root->size+1);
             root->children[root->size] = tree;
             root->size++;
         }
@@ -36,14 +38,14 @@ void parse(struct Tree * root, struct Tokens *tokens){
             struct Tree * value = malloc(sizeof(struct Tree));
             value->type = 'a'; // a for array
             value->size = 0;
+            value->children = NULL;
             struct Value content = {
                 .type=ARRAY,
             };
-            content.data.array = malloc(sizeof(struct Value_array));
-            content.data.array->size = 0;
-            build_array(content.data.array, tokens);
+            content.data.array = build_array(tokens);
 
             value->content = content;
+            RESIZE(root->children, root->size+1);
             root->children[root->size] = value;
             root->size++;
         }
@@ -54,6 +56,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
                 struct Tree * value = malloc(sizeof(struct Tree));
                 value->type = token.type;
                 value->size = 0;
+                value->children = NULL;
                 struct String content = string_copy_stack(&token.data);
                 struct Value val = {
                     .type=KEYWORD,
@@ -63,6 +66,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
                 };
                 value->content = val;
 
+                RESIZE(root->children, root->size+1);
                 root->children[root->size] = value;
                 root->size++;
             } else {
@@ -81,6 +85,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             struct Tree * value = malloc(sizeof(struct Tree));
             value->type = token.type;
             value->size = 0;
+            value->children = NULL;
             struct String content =  string_copy_stack(&token.data);
             struct Value val = {
                 .type=STRING,
@@ -90,6 +95,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             };
             value->content = val;
 
+            RESIZE(root->children, root->size+1);
             root->children[root->size] = value;
             root->size++;
         }
@@ -97,6 +103,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             struct Tree * value = malloc(sizeof(struct Tree));
             value->type = token.type;
             value->size = 0;
+            value->children = NULL;
             struct Value val;
             if(string_contains(dot_const, &token.data)){
                 float content = atof(token.data.body);
@@ -109,6 +116,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             }
             value->content = val;
 
+            RESIZE(root->children, root->size+1);
             root->children[root->size] = value;
             root->size++;
         }

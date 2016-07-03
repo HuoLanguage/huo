@@ -254,6 +254,7 @@ struct Value array_push(struct Value a, struct Value arr){
     if (arr.type != ARRAY) {
         ERROR("Push takes an item and an array, but got ('%c' != ARRAY).", arr.type);
     }
+    RESIZE(arr.data.array->values, arr.data.array->size + 1);
     arr.data.array->values[arr.data.array->size] = value_copy_heap(&a);
     arr.data.array->size++;
     return arr;
@@ -271,7 +272,7 @@ struct Value substring(int start, int end, struct Value str){
     } else {
         if (end > start) {
             result.data.str.length = (end - start);
-            result.data.str.body = malloc(sizeof(char) * (result.data.str.length + 1));
+            result.data.str.body = ARR_MALLOC(result.data.str.length + 1, char);
             if (result.data.str.body == NULL) {
                 ERROR("Malloc failure");
             }

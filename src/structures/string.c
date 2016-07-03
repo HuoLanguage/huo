@@ -17,7 +17,7 @@ bool string_is_sane(struct String *s) {
 struct String string_from_char(char c) {
     struct String s = {
         .length = 1,
-        .body = malloc(sizeof(char) * 2)
+        .body = ARR_MALLOC(2, char)
     };
     s.body[0] = c;
     s.body[1] = 0;
@@ -33,7 +33,7 @@ struct String string_from_chars(const char *str) {
     } else {
         int l = strlen(str);
         s.length = l;
-        s.body = malloc(sizeof(char) * (l + 1));
+        s.body = ARR_MALLOC(l + 1, char);
         strcpy(s.body, str);
         s.body[s.length] = 0;
     }

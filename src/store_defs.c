@@ -49,11 +49,13 @@ struct Tree * read_import(struct String file_name){
     assert(string_is_sane(&file_name));
     struct Value file_contents = read_file(file_name);
     struct Tokens * tokens = malloc(sizeof(struct Tokens));
+    tokens->tokens = NULL;
     tokens->length = 0;
     tokens->counter = 0;
     struct Tree * root = malloc(sizeof(struct Tree));
     root->type = 'r';
     root->size = 0;
+    root->children = NULL;
 
     tokenize(file_contents.data.str, tokens);
     parse(root, tokens);

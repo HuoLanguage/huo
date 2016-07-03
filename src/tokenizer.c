@@ -90,6 +90,7 @@ struct Tokens * tokenize(struct String file, struct Tokens *content){
                 assert(string_is_sane(&t.data));
                 counter--;
             }
+            RESIZE(content->tokens, content->length + 1);
             content->tokens[content->length] = t;
             content->length++;
         }

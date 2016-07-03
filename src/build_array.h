@@ -3,6 +3,6 @@
 
 #include "structures/structures.h"
 
-void build_array(struct Value_array * array, struct Tokens * tokens);
+struct Value_array *build_array(struct Tokens * tokens);
 
 #endif

@@ -1,4 +1,4 @@
-CFLAGS   += -g
+CFLAGS   += -g3
 LIBS = -lpthread
 
 # Be super strict about everything
@@ -48,7 +48,7 @@ objs = \
 all: huo
 
 huo: $(objs)
-	cc -o huo $(objs) $(LIBS)
+	$(CC) $(LDFLAGS) -o huo $(objs) $(LIBS)
 
 clean: ; rm -f -- ./src/*.mk  ./src/*.o & rm -f ./src/execution_functions/*.o & rm -f ./src/structures/*.o
 

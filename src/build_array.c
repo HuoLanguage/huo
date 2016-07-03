@@ -1,24 +1,33 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "structures/structures.h"
 #include "constants.h"
 #include "base_util.h"
 
-void build_array(struct Value_array * array, struct Tokens * tokens){
-    char c;
-    while ((c = tokens->tokens[++tokens->counter].type) != 'e'){
+struct Value_array *build_array(struct Tokens * tokens){
+
+    struct Value_array * array = malloc(sizeof(struct Value_array));
+    array->size = 0;
+    array->values = NULL;
+    while (true) {
+        tokens->counter += 1;
         if (tokens->counter >= tokens->length) {
             ERROR("Unbalanced array");
         }
+        char c = tokens->tokens[tokens->counter].type;
+        if (c == 0)
+            continue;
+        else if (c == 'e')
+            break;
+
+        struct Value * val = malloc(sizeof(struct Value));
+
         if(c == 's'){
-            struct Value * val = malloc(sizeof(struct Value));
             val->type = STRING;
             val->data.str = string_copy_stack(&tokens->tokens[tokens->counter].data);
-            array->values[array->size] = val;
-            array->size++;
         }
         else if(c == 'n'){
-            struct Value * val = malloc(sizeof(struct Value));
             if(string_contains(dot_const, &tokens->tokens[tokens->counter].data)){
                 float f = atof(tokens->tokens[tokens->counter].data.body);
                 *val = value_from_float(f);
@@ -26,35 +35,20 @@ void build_array(struct Value_array * array, struct Tokens * tokens){
                 long l = atol(tokens->tokens[tokens->counter].data.body);
                 *val = value_from_long(l);
             }
-            array->values[array->size] = val;
-            array->size++;
         }
         else if(c == 'k'){
-            struct Value * val = malloc(sizeof(struct Value));
             val->type = KEYWORD;
-
             val->data.str = string_copy_stack(&tokens->tokens[tokens->counter].data);
-            array->values[array->size] = val;
-            array->size++;
         }
         else if(c == 'b'){
-            struct Value * val = malloc(sizeof(struct Value));
             val->type = ARRAY;
-            val->data.array = malloc(sizeof(struct Value_array));
-            val->data.array->size = 0;
-            build_array(val->data.array, tokens);
-            array->values[array->size] = val;
-            array->size++;
-        } else if (c == 0) {
-            //pass
+            val->data.array = build_array(tokens);
         } else {
-            for (int i = 0; i <= tokens->counter; i++) {
-                // struct String s = tokens->tokens[i].data;
-                // printf("%i \"", i);
-                // printf(s.length == 0 ? "" : s.body);
-                // printf("\" '%c' '%i'\n", tokens->tokens[i].type, (int) tokens->tokens[i].type);
-            }
             ERROR("Invalid token type in array: '%c'", c);
         }
+        RESIZE(array->values, array->size+1);
+        array->values[array->size] = val;
+        array->size++;
     }
+    return array;
 }
