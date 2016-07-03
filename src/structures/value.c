@@ -5,7 +5,6 @@
 #include "../base_util.h"
 
 #define CHECK_TYPE(v, tp) do {\
-    assert ((v)->type == (tp));\
     if ((v)->type != (tp))\
         ERROR("Invalid type: '%i' != '%i'", (v)->type, (tp));\
     } while (0)
