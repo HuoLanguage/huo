@@ -6,8 +6,15 @@
 #include <stdbool.h>
 #include "structures/structures.h"
 
-#define WARN_ONCE(...) _WARN_ONCE(v##__COUNTER__, __VA_ARGS__)
-#define _WARN_ONCE(UNIQ, ...) do {static bool UNIQ = false; if (!UNIQ) {UNIQ = true; fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n");}} while (0)
+#define WARN_ONCE(...) _WARN_ONCE(warn_once_##__COUNTER__, __VA_ARGS__)
+#define _WARN_ONCE(UNIQ, ...) do {\
+    static bool UNIQ = false;\
+    if (!UNIQ) {\
+        UNIQ = true;\
+        fprintf(stderr, __VA_ARGS__);\
+        fprintf(stderr, "\n");\
+    }\
+} while (0)
 
 #ifdef _Static_assert
 #define STATIC_ASSERT(cond,msg) CTA2(cond, msg)
@@ -19,6 +26,7 @@
     typedef struct { int CTASTR(static_assertion_failed_,msg) : !!(cond); } \
         CTASTR(static_assertion_failed_,__COUNTER__)
 #endif
+
 /* Macro because it makes printf errors easier to detect at compile time */
 /* Minor hack because c99 doesn't allow zero-length varargs for macros */
 #define ERROR(...) do {\
