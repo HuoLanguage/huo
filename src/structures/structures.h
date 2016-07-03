@@ -18,17 +18,7 @@ struct Tokens {
 
 struct Value_array {
     int size;
-    struct Value * values[10000];
-};
-
-struct Keyval {
-    struct Value * key;
-    struct Value * val;
-};
-
-struct Map {
-    int size;
-    struct Keyval * members[200];
+    struct Value **values;
 };
 
 struct Scopes {
@@ -41,7 +31,7 @@ struct Tree {
     char type; // [o]pen, [f]unction [k]eyword [c]lose [s]tring [n]umber [b]racket [e]nd bracket
     int size;
     struct Value content;
-    struct Tree * children[200];
+    struct Tree ** children;
     struct Tree * parent;
 };
 

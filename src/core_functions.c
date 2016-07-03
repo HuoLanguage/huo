@@ -254,6 +254,7 @@ struct Value array_push(struct Value a, struct Value arr){
     if (arr.type != ARRAY) {
         ERROR("Push takes an item and an array, but got ('%c' != ARRAY).", arr.type);
     }
+    RESIZE(arr.data.array->values, arr.data.array->size + 1);
     arr.data.array->values[arr.data.array->size] = value_copy_heap(&a);
     arr.data.array->size++;
     return arr;

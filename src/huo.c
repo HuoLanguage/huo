@@ -186,6 +186,7 @@ int main(int argc, char const *argv[]) {
     struct Tree root;
     root.type = 'r';
     root.size = 0;
+    root.children = NULL;
 
     parse(&root, tokens);
     // this prints the AST for reference
@@ -193,6 +194,8 @@ int main(int argc, char const *argv[]) {
     // printf("\n");
     hash_table *defined = hash_table_new(&string_hash_code_vv, &string_matches_vv);
     struct Scopes * scopes = malloc(sizeof(struct Scopes));
+    scopes->scopes = NULL;
+    RESIZE(scopes->scopes, 1);
     scopes->size = 1;
     scopes->current = 0;
 

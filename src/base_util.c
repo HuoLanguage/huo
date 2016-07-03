@@ -58,6 +58,7 @@ char *strdup(const char *str) {
 void copy_array(struct Value * a, struct Value_array * b){
     struct Value_array * array = malloc(sizeof(struct Value_array));
     array->size = b->size;
+    array->values = ARR_MALLOC(array->size, array->values[0]);
     for(int i = 0; i < b->size; i++){
         array->values[i] = value_copy_heap(b->values[i]);
     }
@@ -78,6 +79,7 @@ struct Tree * duplicate_tree(struct Tree * a){
 }
 
 void make_scope(struct Scopes * scopes){
+    RESIZE(scopes->scopes, scopes->size + 1);
     scopes->scopes[scopes->size] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
     scopes->size++;
     scopes->current++;

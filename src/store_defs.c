@@ -55,6 +55,7 @@ struct Tree * read_import(struct String file_name){
     struct Tree * root = malloc(sizeof(struct Tree));
     root->type = 'r';
     root->size = 0;
+    root->children = NULL;
 
     tokenize(file_contents.data.str, tokens);
     parse(root, tokens);
