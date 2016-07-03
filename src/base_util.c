@@ -2,13 +2,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdint.h>
+#include <limits.h>
 #include "structures/structures.h"
 #include "base_util.h"
 #include "core_functions.h"
+#include "config.h"
+
+bool __size_t_mul_overflow(size_t a, size_t b, size_t *res) {
+#if defined(MUL_OVERFLOW)
+    return MUL_OVERFLOW(a, b, res);
+#elif SIZE_MAX <= (UINTMAX_MAX / SIZE_MAX)
+    uintmax_t res_long = (uintmax_t) a * (uintmax_t) b;
+    if (res_long > SIZE_MAX)
+        return true;
+    *res = (size_t) res_long;
+    return false;
+#elif defined(__UINT128__)
+    if (sizeof(__UINT128__) >= sizeof(size_t) * 2) {
+        __UINT128__ res_long = (__UINT128__) a * (__UINT128__) b;
+        if (res_long > SIZE_MAX)
+            return true;
+        *res = (size_t) res_long;
+        return false;
+    } else {
+        WARN_ONCE("size_t is HOW long?");
+        WARN_ONCE("Using slow but portable overflow test")
+    }
+#else
+#pragma message ("Using slow but portable overflow test")
+#endif
+    //Slow but portable
+    size_t res_short = a * b;
+    if ((a != 0) && ((res_short / a) != b))
+        return true;
+    *res = res_short;
+    return false;
+}
+
+size_t arr_malloc_size(size_t num, size_t size) {
+    size_t res;
+    if (__size_t_mul_overflow(num, size, &res)) {
+        ERROR("Overflow in array allocation!");
+    }
+    return res;
+}
 
 char *strdup(const char *str) {
     size_t len = strlen(str);
-    char *dup = malloc(sizeof(char) * (len + 1));
+    char *dup = ARR_MALLOC(len + 1, char);
     strcpy(dup, str);
     return dup;
 }

@@ -6,6 +6,9 @@
 #include <stdbool.h>
 #include "structures/structures.h"
 
+#define WARN_ONCE(...) _WARN_ONCE(v##__COUNTER__, __VA_ARGS__)
+#define _WARN_ONCE(UNIQ, ...) do {static bool UNIQ = false; if (!UNIQ) {UNIQ = true; fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n");}} while (0)
+
 #ifdef _Static_assert
 #define STATIC_ASSERT(cond,msg) CTA2(cond, msg)
 #define CTA2(cond, msg) _Static_assert(cond,msg)
@@ -25,6 +28,8 @@
     exit(1);\
 } while (0);
 
+#define ARR_MALLOC(num_elem, elem_val) malloc(arr_malloc_size((num_elem), sizeof(elem_val)))
+
 // Would be a function, but then So. Much. Casting.
 #define RESIZE(ptr_to_arr, new_len) do {\
     if ((new_len) == 0) {\
@@ -38,6 +43,7 @@
     }\
 } while (0)
 
+size_t arr_malloc_size(size_t num, size_t size);
 char *strdup(const char *str);
 int string_contains(char ch, struct String* string);
 void printTree(struct Tree *tree);

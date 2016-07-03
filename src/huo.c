@@ -42,7 +42,7 @@ char *get_path_dir(char *path) {
 
 char *path_merge(const char *dir, const char *rest) {
     // Bleh
-    char *path = malloc(sizeof(char) * (strlen(dir) + 1 + strlen(rest) + 1)); // sizeof(char) is defined as 1, I know.
+    char *path = ARR_MALLOC(strlen(dir) + 1 + strlen(rest) + 1, char); // sizeof(char) is defined as 1, I know.
     if (path == NULL) {
         ERROR("Malloc failure");
     }
@@ -81,7 +81,7 @@ char *get_path_dir(char *path) {
 }
 
 char *path_merge(const char *dir, const char *rest) {
-    char *path = malloc(sizeof(char) * (strlen(dir) + 1 + strlen(rest) + 1)); // sizeof(char) is defined as 1, I know.
+    char *path = ARR_MALLOC(strlen(dir) + 1 + strlen(rest) + 1, char);
     if (path == NULL) {
         ERROR("Malloc failure");
     }

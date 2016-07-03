@@ -158,7 +158,7 @@ void hash_table_resize(hash_table *table, unsigned long new_size) {
     unsigned long num_ele = table->table_size;
     table->table_size = 0;
     table->table_alloc_size = new_size;
-    table->table = malloc(sizeof(struct hash_table_entry_t) * new_size);
+    table->table = ARR_MALLOC(new_size, struct hash_table_entry_t);
 
     // Set elements to uninitialized
     for (unsigned long i = 0; i < new_size; i++) {

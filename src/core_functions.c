@@ -271,7 +271,7 @@ struct Value substring(int start, int end, struct Value str){
     } else {
         if (end > start) {
             result.data.str.length = (end - start);
-            result.data.str.body = malloc(sizeof(char) * (result.data.str.length + 1));
+            result.data.str.body = ARR_MALLOC(result.data.str.length + 1, char);
             if (result.data.str.body == NULL) {
                 ERROR("Malloc failure");
             }
