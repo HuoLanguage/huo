@@ -44,7 +44,7 @@
         free(ptr_to_arr);\
         (ptr_to_arr) = NULL;\
     } else {\
-        (ptr_to_arr) = realloc((ptr_to_arr), (new_len) * sizeof((ptr_to_arr)[0]));\
+        (ptr_to_arr) = realloc((ptr_to_arr), arr_malloc_size((new_len), sizeof((ptr_to_arr)[0])));\
         if ((ptr_to_arr) == NULL) {\
             ERROR("Malloc failure!");\
         }\
