@@ -49,4 +49,7 @@ long length(struct Value a);
 /*long name to avoid conflict with string.h index()*/
 struct Value iterator_index(long index, struct Value arr);
 
+unsigned long value_keyword_hash_code(void *value);
+bool value_keyword_equality(void *a, void *b);
+
 #endif

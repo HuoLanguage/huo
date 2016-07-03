@@ -196,9 +196,7 @@ int main(int argc, char const *argv[]) {
     scopes->size = 1;
     scopes->current = 0;
 
-    struct Map * root_scope = malloc(sizeof(struct Map));
-    root_scope->size = 0;
-    scopes->scopes[0] = root_scope;
+    scopes->scopes[0] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
 
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){

@@ -25,18 +25,18 @@ void copy_array(struct Value * a, struct Value_array * b){
 struct Tree * duplicate_tree(struct Tree * a){
     struct Tree * root = malloc(sizeof(struct Tree));
     root->type = a->type;
-    root->size = 0;
     root->content = value_copy_stack(&a->content);
+    root->children = NULL;
+    root->size = a->size;
+    RESIZE(root->children, root->size);
     for(int i = 0; i < a->size; i++){
         root->children[i] = duplicate_tree(a->children[i]);
-        root->size++;
     }
     return root;
 }
 
 void make_scope(struct Scopes * scopes){
-    scopes->scopes[scopes->size] = malloc(sizeof(struct Map));
-    scopes->scopes[scopes->size]->size = 0;
+    scopes->scopes[scopes->size] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
     scopes->size++;
     scopes->current++;
 }
@@ -50,16 +50,10 @@ void sub_vars(struct Value *v, struct Scopes *scopes, int max_depth) {
             sub_vars(v->data.array->values[i], scopes, max_depth);
         }
     } else if (v->type == KEYWORD) {
-        int found = 0;
-        struct Map * current_scope = scopes->scopes[scopes->current];
-        for(int i = 0; i < current_scope->size; i++){
-            if(string_matches(&current_scope->members[i]->key->data.str, &v->data.str)){
-                *v = *current_scope->members[i]->val;
-                found = 1;
-                break;
-            }
-        }
-        if(!found){
+        hash_table *current_scope = scopes->scopes[scopes->current];
+        if (hash_table_contains(current_scope, v)) {
+            *v = * (struct Value *) hash_table_get(current_scope, v);
+        } else {
             ERROR("Undefined variable: %s", v->data.str.body);
         }
     }

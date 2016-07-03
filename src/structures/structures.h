@@ -32,7 +32,7 @@ struct Map {
 };
 
 struct Scopes {
-    struct Map * scopes[250];
+    hash_table ** scopes;
     int size;
     int current;
 };

@@ -4,25 +4,14 @@
 #include "../core_functions.h"
 
 void store_let_value(struct Value * key, struct Value * value, struct Scopes * scopes){
-    struct Map * let_store = scopes->scopes[scopes->current];
-    struct Keyval * let_binding = malloc(sizeof(struct Keyval));
+    hash_table *let_store = scopes->scopes[scopes->current];
     if (key->type != KEYWORD) {
         ERROR("Invalid type for let keyword: '%c'", key->type);
     }
-    let_binding->key = value_copy_heap(key);
-    let_binding->val = value_copy_heap(value);
-    int index = -1;
-    for(int i = 0; i < let_store->size; i++){
-        if(string_matches(&let_binding->key->data.str, &let_store->members[i]->key->data.str)){
-            index = i;
-            break;
-        }
-    }
-    if(index > -1){
-        let_store->members[index] = let_binding;
+    if (hash_table_put(let_store, value_copy_heap(key), value_copy_heap(value))) {
+        // Overriding
     } else {
-        let_store->members[let_store->size] = let_binding;
-        let_store->size++;
+        // New addition
     }
 }
 
