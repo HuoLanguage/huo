@@ -296,21 +296,31 @@ struct Value split_string(struct Value a, struct Value str){
     }
     assert(string_is_sane(&a.data.str));
     assert(string_is_sane(&str.data.str));
-    int indexes[1000];
-    int counter = 0;
+
+    int c = 0;
     for(int i = 0; i < str.data.str.length; i++){
         if(a.data.str.length == 0 || a.data.str.body[0] == str.data.str.body[i]){
-            indexes[counter] = i;
-            counter++;
+            c += 1;
         }
     }
+    int *indexes = NULL;
+    RESIZE(indexes, c);
+    int d = 0;
+    for(int i = 0; i < str.data.str.length; i++){
+        if(a.data.str.length == 0 || a.data.str.body[0] == str.data.str.body[i]){
+            indexes[d++] = i;
+        }
+    }
+    assert (c == d);
     struct Value result;
     result.type = ARRAY;
-    struct Value_array * array = malloc(sizeof(struct Value_array));
+    struct Value_array * array = malloc_or_die(sizeof(struct Value_array));
+    array->values = NULL;
+    RESIZE(array->values, c);
     array->size = 0;
-    for(int l = 0; l <= counter; l++){
+    for(int l = 0; l <= c; l++){
         int start = !l ? l : indexes[l-1] + 1;
-        int end = (l < counter) ? indexes[l] : str.data.str.length;
+        int end = (l < c) ? indexes[l] : str.data.str.length;
 
         struct Value item = substring(start, end, str);
 
