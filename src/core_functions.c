@@ -141,7 +141,7 @@ struct Value array_concat(struct Value_array *a, struct Value_array *b) {
     return value_from_array(array_concat_heap(a, b));
 }
 struct Value string_concat(struct String a, struct String b) {
-    return value_from_string(string_concat_heap(&a, &b));
+    return value_from_string(string_concat_stack(&a, &b));
 }
 
 struct Value not(struct Value a, struct Value b){
@@ -209,7 +209,7 @@ struct Value set(struct Value index_val, struct Value item, struct Value to_set)
         return value_from_array(array_set(index, item, value_as_array(&to_set)));
     } else if (to_set.type == STRING) {
         struct String set = string_set(index, value_as_string(&item), value_as_string(&to_set));
-        return value_from_string(string_copy_heap(&set));
+        return value_from_string(string_copy_stack(&set));
     } else {
         ERROR("Set type invalid:  ('%c' != [ARRAY, STRING])", to_set.type);
     }
@@ -269,11 +269,11 @@ struct Value_array *array_push(struct Value a, struct Value_array *array){
     return array;
 }
 
-struct String *string_push(struct String a, struct String str){
+struct String string_push(struct String a, struct String str){
     if (string_length(&a) != 1) {
         ERROR("Character does not have length 1");
     }
-    return string_concat_heap(&str, &a);
+    return string_concat_stack(&str, &a);
 }
 
 struct Value substring(struct Value start, struct Value end, struct Value what) {
@@ -293,7 +293,7 @@ struct Value substring_ll(long start_i, long end_i, struct Value what) {
     }
 }
 
-struct String *string_substring(long start, long end, struct String str){
+struct String string_substring(long start, long end, struct String str){
     assert(string_is_sane(&str));
     if(start < 0 || start > string_length(&str)) {
         ERROR("String start index out of range for substring: should be 0 <= %li < %li", start, string_length(&str));
@@ -302,18 +302,18 @@ struct String *string_substring(long start, long end, struct String str){
         ERROR("String end index out of range for substring: should be 0 <= %li < %li", end, string_length(&str));
     } else {
         if (end > start) {
-            struct String *result = malloc_or_die(sizeof(struct String));
-            result->length = (end - start),
-            result->body = ARR_MALLOC(string_length(&str) + 1, char);
-            for(int i = 0; i < result->length; i++){
-                result->body[i] = str.body[i + start];
+            struct String result = {
+                .length = (end - start),
+                .body = ARR_MALLOC(string_length(&str) + 1, char)
+            };
+            for(int i = 0; i < result.length; i++){
+                result.body[i] = str.body[i + start];
             }
-            result->body[result->length] = 0;
-            assert(string_is_sane(result));
+            result.body[result.length] = 0;
+            assert(string_is_sane(&result));
             return result;
         } else {
-            struct String null_str = string_from_chars(NULL);
-            return string_copy_heap(&null_str);
+            return string_from_chars(NULL);
         }
     }
 }
@@ -375,7 +375,7 @@ struct Value index(struct Value index, struct Value list) {
     else if(list.type == STRING){
         struct String s = value_as_string(&list);
         struct String indexed_char = string_from_char(string_index(&s, i));
-        return value_from_string(string_copy_heap(&indexed_char));
+        return value_from_string(string_copy_stack(&indexed_char));
     } else {
         ERROR("Index takes a string or array, but got '%c' != [ARRAY|STRING]).", list.type);
     }

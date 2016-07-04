@@ -42,6 +42,12 @@ struct String string_from_chars(const char *str) {
     return s;
 }
 
+struct String string_concat_stack(struct String *a, struct String *b) {
+    struct String temp = string_copy_stack(a);
+    string_concat_to(&temp, b);
+    return temp;
+}
+
 struct String *string_concat_heap(struct String *a, struct String *b) {
     struct String *temp = string_copy_heap(a);
     string_concat_to(temp, b);

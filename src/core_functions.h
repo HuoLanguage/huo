@@ -30,12 +30,12 @@ struct String string_set(long index, struct String item, struct String string);
 
 struct Value push(struct Value what, struct Value where);
 struct Value_array *array_push(struct Value a, struct Value_array *arr);
-struct String *string_push(struct String a, struct String str);
+struct String string_push(struct String a, struct String str);
 
 struct Value substring(struct Value start, struct Value end, struct Value what);
 struct Value substring_ll(long start_i, long end_i, struct Value what);
 //struct Value array_slice(long start, long end, struct Value_array what);
-struct String *string_substring(long start, long end, struct String what);
+struct String string_substring(long start, long end, struct String what);
 
 struct Value split(struct Value sep, struct Value what);
 struct Value string_split(struct String sep, struct String what);

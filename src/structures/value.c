@@ -142,10 +142,10 @@ struct Value value_from_long(long l) {
     return v;
 }
 
-struct Value value_from_string(struct String *str) {
+struct Value value_from_string(struct String str) {
     struct Value v = {
           .type = STRING,
-          .data.str = *str
+          .data.str = str
     };
     return v;
 }

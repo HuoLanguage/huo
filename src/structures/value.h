@@ -37,7 +37,7 @@ struct String value_as_keyword(struct Value *v);
 struct Value value_from_float(float f);
 struct Value value_from_bool(bool b);
 struct Value value_from_long(long l);
-struct Value value_from_string(struct String *str);
+struct Value value_from_string(struct String str);
 struct Value value_from_array(struct Value_array *arr);
 struct Value value_from_keyword(struct String *str);
 struct Value value_from_undef();

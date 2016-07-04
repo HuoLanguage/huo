@@ -25,7 +25,7 @@ struct Value_array *build_array(struct Tokens * tokens){
         struct Value val;
 
         if(c == 's'){
-            val = value_from_string(&tokens->tokens[tokens->counter].data);
+            val = value_from_string(tokens->tokens[tokens->counter].data);
         }
         else if(c == 'n'){
             if(string_contains(dot_const, &tokens->tokens[tokens->counter].data)){

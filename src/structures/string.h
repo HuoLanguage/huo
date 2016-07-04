@@ -22,6 +22,7 @@ bool string_is_sane(struct String *s);
 struct String string_copy_stack(struct String *from);
 struct String *string_copy_heap(struct String *from);
 void string_copy_to(struct String *to, struct String *from);
+struct String string_concat_stack(struct String *a, struct String *b);
 struct String *string_concat_heap(struct String *a, struct String *b);
 void string_concat_to(struct String *to, struct String *from);
 bool string_matches_heap(struct String *base, struct String *compare);
