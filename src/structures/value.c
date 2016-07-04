@@ -67,11 +67,11 @@ void value_copy_to(struct Value * a, struct Value * b){
         struct String b_str = value_as_string_or_kwd(b);
         string_copy_to(&a->data.str, &b_str);
     } else if(b->type == FLOAT){
-        a->data.fl = b->data.fl;
+        a->data.fl = value_as_float(b);
     } else if(b->type == LONG){
-        a->data.ln = b->data.ln;
+        a->data.ln = value_as_long(b);
     } else if (b->type == BOOL){
-        a->data.bl = b->data.bl;
+        a->data.bl = value_as_bool(b);
     } else if (b->type == ARRAY){
         array_copy_to(value_as_array(a), value_as_array(b));
     } else if (b->type == UNDEF){
