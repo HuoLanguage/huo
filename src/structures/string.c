@@ -98,9 +98,9 @@ void string_copy_to(struct String *to, struct String *from) {
     } else {
         if (to->length != from->length) {
             RESIZE(to->body, from->length + 1); // 0 byte at end
-            strcpy(to->body, from->body);
             to->length = from->length;
         }
+        strcpy(to->body, from->body);
     }
     assert(string_is_sane(from));
     assert(string_is_sane(to));
