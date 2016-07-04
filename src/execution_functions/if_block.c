@@ -7,15 +7,17 @@ struct Value if_block(struct Tree * ast, hash_table *defined, struct Scopes * sc
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    if (ast->size < 3) {
-        ERROR("Not enough arguments for if_block: %i < 3\n", ast->size);
+    if (ast->size != 2 && ast->size != 3) {
+        ERROR("Wrong number of arguments for if_block: %i != [2,3]\n", ast->size);
     }
     struct Value result = execute(ast->children[0], defined, scopes, max_depth - 1);
     if(value_as_bool(&result)){ // result is boolean true
         result = execute(ast->children[1], defined, scopes, max_depth - 1);
     }
-    else { // result is boolean false
+    else if (ast->size == 3) { // result is boolean false
         result = execute(ast->children[2], defined, scopes, max_depth - 1);
+    } else {
+        result = value_from_undef();
     }
     return result;
 }

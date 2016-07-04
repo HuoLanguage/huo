@@ -7,8 +7,8 @@ void for_loop(struct Tree * ast, hash_table *defined, struct Scopes * scopes, in
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    if (ast->size < 3) {
-        ERROR("Not enough arguments for for_loop: %i < 3\n", ast->size);
+    if (ast->size != 3) {
+        ERROR("Wrong number of arguments for for_loop: %i != 3\n", ast->size);
     }
     struct Value start = execute(ast->children[0], defined, scopes, max_depth - 1);
     struct Value end = execute(ast->children[1], defined, scopes, max_depth - 1);
