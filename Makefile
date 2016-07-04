@@ -43,6 +43,7 @@ objs = \
   src/store_defs.o \
   src/parser.o \
   src/execute.o \
+  src/config.o \
   src/huo.o
 
 all: huo

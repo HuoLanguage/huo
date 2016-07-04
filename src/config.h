@@ -1,6 +1,12 @@
 #ifndef HUO_CONFIG_H
 #define HUO_CONFIG_H 1
 
+#include <stddef.h>
+
+#if 0
+#define malloc(x) _check_malloc(x)
+#endif
+
 #if defined(__clang__)
 // Clang defines __gnuc__ ???
 #define __UINT128__ unsigned __int128
@@ -23,7 +29,7 @@
 
 #define MUL_OVERFLOW(a, b, res) __builtin_mul_overflow((a), (b), (res))
 
-#define HAS_STATIC_ASSERT defined(_Static_assert)
+#define HAS_STATIC_ASSERT 1
 
 #endif
 
@@ -45,5 +51,7 @@
         CTASTR(static_assertion_failed_,__COUNTER__)
 
 #endif
+
+void *_check_malloc(size_t s);
 
 #endif
