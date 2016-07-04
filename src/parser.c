@@ -7,19 +7,17 @@
 #include "build_array.h"
 #include "config.h"
 
-void parse(struct Tree * root, struct Tokens *tokens){
-    int p_nest = 0;
+void parse(struct Tree * root, struct Tokens *tokens, bool top_level){
     while(tokens->counter < tokens->length){
         struct Token token = tokens->tokens[tokens->counter];
         if(token.type == 'o'){
-            p_nest += 1;
             struct Tree * tree = malloc_or_die(sizeof(struct Tree));
             tree->type = 'f';
             tree->size = 0;
             tree->children = NULL;
 
             tokens->counter++;
-            parse(tree, tokens);
+            parse(tree, tokens, false);
             RESIZE(root->children, root->size+1);
             root->children[root->size] = tree;
             root->size++;
@@ -122,17 +120,18 @@ void parse(struct Tree * root, struct Tokens *tokens){
             root->size++;
         }
         else if(token.type == 'c'){
-            //if (p_nest == 0)
-            //    return;
-            //p_nest -= 1;
-           // if (p_nest < 0) {
-            //    ERROR("Invalid nesting");
-            //}
+            if (top_level) {
+                ERROR("Invalid nesting");
+            }
             return;
         } else if(token.type == 'e'){
             ERROR("Invalid nesting");
+        } else {
+            ERROR("Invalid token: '%c'", token.type);
         }
         tokens->counter++;
     }
-    return;
+    if (!top_level) {
+        ERROR("Invalid nesting");
+    }
 }

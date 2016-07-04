@@ -10,6 +10,7 @@
 #include "tokenizer.h"
 #include "parser.h"
 #include "structures/structures.h"
+#include "execution_functions/read_file.h"
 #include "execute.h"
 #include "store_defs.h"
 #include "base_util.h"
@@ -177,16 +178,16 @@ int main(int argc, char const *argv[]) {
     };
 
     struct Tokens * tokens = tokenize(to_execute, &t);
-    // for(int i = 0; i < tokens->length; i++){
+    //for(int i = 0; i < tokens->length; i++){
     //     printf("%c", tokens->tokens[i].type);
-    // }
+    //}
 
     struct Tree root;
     root.type = 'r';
     root.size = 0;
     root.children = NULL;
 
-    parse(&root, tokens);
+    parse(&root, tokens, true);
     // this prints the AST for reference
     // printTree(&root);
     // printf("\n");
@@ -204,30 +205,4 @@ int main(int argc, char const *argv[]) {
         execute(root.children[i], defined, scopes, RECURSE_MAX);
     }
     return 0;
-}
-
-bool read_file_to(struct String *file_contents, const char *filename) {
-    FILE *fp;
-    fp = fopen(filename, "r");
-    if(fp == NULL){
-        return false;
-    }
-    char c;
-    while ((c = fgetc(fp)) != EOF){
-        if (c == 0) {
-            ERROR("Null byte in input file");
-        } else if(c != '\n'){
-            RESIZE(file_contents->body, file_contents->length + 1);
-            file_contents->body[file_contents->length] = c;
-            file_contents->length++;
-        }
-    }
-    fclose(fp);
-
-    // Null character at end
-    RESIZE(file_contents->body, file_contents->length + 1);
-    file_contents->body[file_contents->length] = 0;
-
-    assert(string_is_sane(file_contents));
-    return true;
 }

@@ -16,15 +16,16 @@ struct Value_array *build_array(struct Tokens * tokens){
         if (tokens->counter >= tokens->length) {
             ERROR("Unbalanced array");
         }
-        char c = tokens->tokens[tokens->counter].type;
-        if (c == 0)
-            continue;
-        else if (c == 'e')
-            break;
 
         struct Value val;
-
-        if(c == 's'){
+        char c = tokens->tokens[tokens->counter].type;
+        if (c == 0) {
+            continue;
+        }
+        else if (c == 'e') {
+            break;
+        }
+        else if (c == 's'){
             val = value_from_string(tokens->tokens[tokens->counter].data);
         }
         else if(c == 'n'){

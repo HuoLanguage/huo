@@ -18,7 +18,7 @@ struct Value eval(struct Value * string, hash_table * defined, struct Scopes * s
         .size = 0
     };
     struct Tokens * tokens = tokenize(value_as_string(string), &t);
-    parse(&root, tokens);
+    parse(&root, tokens, true);
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){
         result = execute(root.children[i], defined, scopes, max_depth - 1);

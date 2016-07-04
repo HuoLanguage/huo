@@ -12,8 +12,8 @@
 void make_args_map(struct Tree * ast, hash_table *defined, struct Scopes * scopes, struct Tree *function, int max_depth) {
     // we want to evaluate the values passed into the function
     // but store the result in the next scope, not the current one
-    if (function->size <= ast->size) {
-        ERROR("Not enough arguments!: %i < %i", function->size - 1, ast->size);
+    if (function->size - 2 != ast->size) {
+        ERROR("Wrong number of arguments!: %i != %i", function->size - 2, ast->size);
     }
     struct Value vals[ast->size];
     for(int i = 0; i < ast->size; i++){
@@ -31,20 +31,14 @@ void make_args_map(struct Tree * ast, hash_table *defined, struct Scopes * scope
 
 struct Tree * get_defined_body(struct Tree * function){
     // just pulls the function body out of a (def...)
-    int check = 1;
-    int index = 1;
-    while(check){
-        if (function->size <= index) {
-            ERROR("No function body!");
-        }
-        if(!function->children[index]->size){
-            index++;
-        } else {
-            check = 0;
-            function = function->children[index];
-        }
+    if (function->size <= 1) {
+        ERROR("No function body!");
     }
-    return function;
+    int index = function->size - 1;
+    if (function->children[index]->size == 0) {
+        ERROR("No function body!");
+    }
+    return function->children[index];
 }
 
 struct Tree *get_defined_func(hash_table *defined, struct String key) {

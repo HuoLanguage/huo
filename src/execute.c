@@ -32,8 +32,8 @@ struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * sc
         result = if_block(ast, defined, scopes, max_depth-1);
     }
     else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&let_const, &ast->content.data.str)){
-        if (ast->size < 2) {
-            ERROR("Not enough arguments for store_let_binding: %i < 2\n", ast->size);
+        if (ast->size != 2) {
+            ERROR("Wrong number of arguments for store_let_binding: %i != 2\n", ast->size);
         }
         store_let_binding(ast->children[0],ast->children[1], defined, scopes, max_depth-1);
         result.type = UNDEF;
@@ -53,8 +53,8 @@ struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * sc
         result = reduce_array(ast, defined, scopes, max_depth - 1);
     }
     else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&set_const, &ast->content.data.str)) {
-        if (ast->size < 3) {
-            ERROR("Not enough arguments for set: %i < 3", ast->size);
+        if (ast->size != 3) {
+            ERROR("Wrong number of arguments for set: %i != 3", ast->size);
         }
         struct Value index = execute(ast->children[0], defined, scopes, max_depth-1);
         struct Value item = execute(ast->children[1], defined, scopes, max_depth-1);
@@ -76,8 +76,8 @@ struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * sc
         }
     }
     else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&read_const, &ast->content.data.str)){
-        if (ast->size < 1) {
-            ERROR("Not enough arguments for read: %i < 1", ast->size);
+        if (ast->size != 1) {
+            ERROR("Wrong number of arguments for read: %i != 1", ast->size);
         }
         char t = ast->children[0]->content.type;
         if (t != STRING && t != KEYWORD) {
@@ -86,8 +86,8 @@ struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * sc
         result = value_from_string(read_file(ast->children[0]->content.data.str));
     }
     else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&substring_const, &ast->content.data.str)){
-        if (ast->size < 3) {
-            ERROR("Not enough arguments for substring: %i < 3", ast->size);
+        if (ast->size != 3) {
+            ERROR("Wrong number of arguments for substring: %i != 3", ast->size);
         }
         struct Value string = execute(ast->children[2], defined, scopes, max_depth-1);
         struct Value start = execute(ast->children[0], defined, scopes, max_depth-1);

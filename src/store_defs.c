@@ -19,7 +19,8 @@ int store_defs(struct Tree * ast, hash_table * defined){
         if (ast->children[i]->content.type != KEYWORD) {
             continue;
         }
-        if(string_matches_heap(&ast->children[i]->content.data.str, &def_const)){
+        struct String *kwd = &ast->children[i]->content.data.str;
+        if(string_matches_heap(kwd, &def_const)){
             if (ast->children[i]->size == 0) {
                 ERROR("No function definition found");
             }
@@ -30,9 +31,9 @@ int store_defs(struct Tree * ast, hash_table * defined){
             hash_table_put(defined, &ast->children[i]->children[0]->content.data.str, ast->children[i]);
             num_defs++;
         }
-        else if(string_matches_heap(&ast->children[i]->content.data.str, &import_const)){
-            if (ast->children[i]->size == 0) {
-                ERROR("No import definition found");
+        else if(string_matches_heap(kwd, &import_const)){
+            if (ast->children[i]->size != 1) {
+                ERROR("Wrong number of arguments for import");
             }
             char c = ast->children[i]->children[0]->content.type;
             if (c != KEYWORD && c != STRING) {
@@ -59,7 +60,7 @@ struct Tree * read_import(struct String file_name){
     root->children = NULL;
 
     tokenize(file_contents, tokens);
-    parse(root, tokens);
+    parse(root, tokens, true);
 
     free(tokens);
     return root;

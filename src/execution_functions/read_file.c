@@ -4,37 +4,37 @@
 #include "../base_util.h"
 #include "../config.h"
 
-struct String read_file(struct String file_name){
-    assert(string_is_sane(&file_name));
+bool read_file_to(struct String *file_contents, const char *filename) {
     FILE *fp;
-    char *s = "";
-    if (file_name.length != 0) {
-        s = file_name.body;
-    }
-    fp = fopen(s, "r");
+    fp = fopen(filename, "r");
     if(fp == NULL){
-        ERROR("Cannot find file: \"%s\"", s);
-        /*result.type = UNDEF;
-        return result; */
+        return false;
     }
-    struct String file = {
-        .length = 0,
-        .body = NULL
-    };
-
     char c;
     while ((c = fgetc(fp)) != EOF){
-        if(c != '\n'){
-            RESIZE(file.body, file.length + 1);
-            file.body[file.length] = c;
-            file.length++;
+        if (c == 0) {
+            ERROR("Null byte in input file");
+        } else {
+            RESIZE(file_contents->body, file_contents->length + 1);
+            file_contents->body[file_contents->length] = c;
+            file_contents->length++;
         }
     }
     fclose(fp);
-    
+
     // Null character at end
-    RESIZE(file.body, file.length + 1);
-    file.body[file.length] = 0;
-    assert(string_is_sane(&file));
+    RESIZE(file_contents->body, file_contents->length + 1);
+    file_contents->body[file_contents->length] = 0;
+
+    assert(string_is_sane(file_contents));
+    return true;
+}
+
+struct String read_file(struct String file_name){
+    struct String file = string_from_chars(NULL);
+    char *s = string_to_chars(&file_name);
+    if (!read_file_to(&file, s)) {
+        ERROR("Cannot find file: \"%s\"", s);
+    }
     return file;
 }

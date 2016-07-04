@@ -9,8 +9,8 @@ struct Value reduce_array(struct Tree * ast, hash_table *defined, struct Scopes 
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    if (ast->size < 4) {
-        ERROR("Not enough arguments for reduce_array: %i < 4\n", ast->size);
+    if (ast->size < 4 || ast->size > 5) {
+        ERROR("Wrong number of arguments for reduce_array: %i != [4, 5]\n", ast->size);
     }
     if (ast->children[1]->type != 'k') {
         ERROR("Invalid type for reduce_array: '%c' != 'k'\n", ast->children[1]->type);
