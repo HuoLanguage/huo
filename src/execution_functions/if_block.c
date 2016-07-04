@@ -14,7 +14,7 @@ struct Value if_block(struct Tree * ast, hash_table *defined, struct Scopes * sc
     if(result.type != BOOL){
         ERROR("Invalid result type for if statement conditional: %c", result.type);
     }
-    else if(result.data.bl){ // result is boolean true
+    if(value_as_bool(&result)){ // result is boolean true
         result = execute(ast->children[1], defined, scopes, max_depth - 1);
     }
     else { // result is boolean false
