@@ -133,7 +133,8 @@ struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * sc
                     result = eval(&a, defined, scopes, max_depth - 1);
                 }
                 else if(string_matches_heap(&ast->content.data.str, &read_line_const)){
-                    result = read_line(&a);
+                    struct String line = read_line(&a);
+                    result = value_from_string(&line);
                 }
             }
         }

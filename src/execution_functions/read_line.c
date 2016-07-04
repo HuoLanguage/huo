@@ -7,7 +7,7 @@
 #include "../core_functions.h"
 #include "../config.h"
 
-struct Value read_line(struct Value * string){
+struct String read_line(struct Value * string){
     // read line takes a string to display as prompt
     // but displays it without quotes
     string->type = KEYWORD;
@@ -17,10 +17,6 @@ struct Value read_line(struct Value * string){
     struct String input = {
         .length = 0,
         .body = NULL
-    };
-
-    struct Value result = {
-        .type = STRING
     };
 
     char c;
@@ -41,6 +37,5 @@ struct Value read_line(struct Value * string){
 
     assert(string_is_sane(&input));
 
-    result.data.str = input;
-    return result;
+    return input;
 }

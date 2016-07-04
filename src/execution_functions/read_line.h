@@ -3,6 +3,6 @@
 
 #include "../structures/structures.h"
 
-struct Value read_line(struct Value * string);
+struct String read_line(struct Value * string);
 
 #endif
