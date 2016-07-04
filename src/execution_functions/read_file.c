@@ -4,9 +4,8 @@
 #include "../base_util.h"
 #include "../config.h"
 
-struct Value read_file(struct String file_name){
+struct String read_file(struct String file_name){
     assert(string_is_sane(&file_name));
-    struct Value result;
     FILE *fp;
     char *s = "";
     if (file_name.length != 0) {
@@ -37,7 +36,5 @@ struct Value read_file(struct String file_name){
     RESIZE(file.body, file.length + 1);
     file.body[file.length] = 0;
     assert(string_is_sane(&file));
-    result.type = STRING;
-    result.data.str = file;
-    return result;
+    return file;
 }

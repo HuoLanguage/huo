@@ -48,7 +48,7 @@ int store_defs(struct Tree * ast, hash_table * defined){
 
 struct Tree * read_import(struct String file_name){
     assert(string_is_sane(&file_name));
-    struct Value file_contents = read_file(file_name);
+    struct String file_contents = read_file(file_name);
     struct Tokens * tokens = malloc_or_die(sizeof(struct Tokens));
     tokens->tokens = NULL;
     tokens->length = 0;
@@ -58,7 +58,7 @@ struct Tree * read_import(struct String file_name){
     root->size = 0;
     root->children = NULL;
 
-    tokenize(file_contents.data.str, tokens);
+    tokenize(file_contents, tokens);
     parse(root, tokens);
 
     free(tokens);

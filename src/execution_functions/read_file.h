@@ -3,6 +3,6 @@
 
 #include "../structures/structures.h"
 
-struct Value read_file(struct String);
+struct String read_file(struct String);
 
 #endif

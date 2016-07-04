@@ -83,7 +83,8 @@ struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * sc
         if (t != STRING && t != KEYWORD) {
             ERROR("Invalid type for read: '%c' != [STRING, KEYWORD]", t);
         }
-        result = read_file(ast->children[0]->content.data.str);
+        struct String file_contents = read_file(ast->children[0]->content.data.str);
+        result = value_from_string(&file_contents);
     }
     else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&substring_const, &ast->content.data.str)){
         if (ast->size < 3) {
