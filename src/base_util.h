@@ -17,17 +17,6 @@
     }\
 } while (0)
 
-#ifdef _Static_assert
-#define STATIC_ASSERT(cond,msg) CTA2(cond, msg)
-#define CTA2(cond, msg) _Static_assert(cond,msg)
-#else
-#define CTASTR2(pre,post) pre ## post
-#define CTASTR(pre,post) CTASTR2(pre,post)
-#define STATIC_ASSERT(cond,msg) \
-    typedef struct { int CTASTR(static_assertion_failed_,msg) : !!(cond); } \
-        CTASTR(static_assertion_failed_,__COUNTER__)
-#endif
-
 /* Macro because it makes printf errors easier to detect at compile time */
 #define ERROR(...) ERROR_AT(__FILE__, __func__, __LINE__, __VA_ARGS__)
 #define ERROR_AT(FILE, FUNC, LINE, ...) do {\
