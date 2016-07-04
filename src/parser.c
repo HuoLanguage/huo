@@ -13,7 +13,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
         struct Token token = tokens->tokens[tokens->counter];
         if(token.type == 'o'){
             p_nest += 1;
-            struct Tree * tree = malloc(sizeof(struct Tree));
+            struct Tree * tree = malloc_or_die(sizeof(struct Tree));
             tree->type = 'f';
             tree->size = 0;
             tree->children = NULL;
@@ -36,7 +36,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             root->content = val;
         }
         else if(token.type == 'b'){ //open bracket
-            struct Tree * value = malloc(sizeof(struct Tree));
+            struct Tree * value = malloc_or_die(sizeof(struct Tree));
             value->type = 'a'; // a for array
             value->size = 0;
             value->children = NULL;
@@ -54,7 +54,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             // if we are inside a def call this could be name or args
             if(root->type != 'f'){
                 // != 'f' means we already set this root node as some kind of function
-                struct Tree * value = malloc(sizeof(struct Tree));
+                struct Tree * value = malloc_or_die(sizeof(struct Tree));
                 value->type = token.type;
                 value->size = 0;
                 value->children = NULL;
@@ -83,7 +83,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             }
         }
         else if(token.type == 's'){
-            struct Tree * value = malloc(sizeof(struct Tree));
+            struct Tree * value = malloc_or_die(sizeof(struct Tree));
             value->type = token.type;
             value->size = 0;
             value->children = NULL;
@@ -101,7 +101,7 @@ void parse(struct Tree * root, struct Tokens *tokens){
             root->size++;
         }
         else if(token.type == 'n'){
-            struct Tree * value = malloc(sizeof(struct Tree));
+            struct Tree * value = malloc_or_die(sizeof(struct Tree));
             value->type = token.type;
             value->size = 0;
             value->children = NULL;

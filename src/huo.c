@@ -58,10 +58,7 @@ char *path_merge(const char *dir, const char *rest) {
 #include <Windows.h>
 
 char *get_exe_path(const char *called_name) {
-    char *buffer = malloc(MAX_PATH);
-    if (buffer == NULL) {
-        ERROR("Malloc failure");
-    }
+    char *buffer = malloc_or_die(MAX_PATH);
     GetModuleFileName(NULL, buffer, MAX_PATH) ;
 
     return buffer;
@@ -194,7 +191,7 @@ int main(int argc, char const *argv[]) {
     // printTree(&root);
     // printf("\n");
     hash_table *defined = hash_table_new(&string_hash_code_vv, &string_matches_vv);
-    struct Scopes * scopes = malloc(sizeof(struct Scopes));
+    struct Scopes * scopes = malloc_or_die(sizeof(struct Scopes));
     scopes->scopes = NULL;
     RESIZE(scopes->scopes, 1);
     scopes->size = 1;

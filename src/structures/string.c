@@ -82,7 +82,7 @@ struct String string_copy_stack(struct String *from) {
 
 struct String *copy_string_heap(struct String *from) {
     assert(string_is_sane(from));
-    struct String *s = malloc(sizeof(struct String));
+    struct String *s = malloc_or_die(sizeof(struct String));
     s->length = 0;
     string_copy_to(s, from);
     assert(string_is_sane(s));

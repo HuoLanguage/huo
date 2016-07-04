@@ -83,7 +83,7 @@ struct hash_table_iter_t {
 };
 
 hash_table *hash_table_new(hash_code_func *hash_gen, equals_func *equality_test) {
-    hash_table *h = malloc(sizeof(hash_table));
+    hash_table *h = malloc_or_die(sizeof(hash_table));
     if (h == NULL) {
         ERROR("Malloc failure");
     }
@@ -335,7 +335,7 @@ unsigned long hash_table_size(hash_table *table) {
 
 hash_table_iter *hash_table_iter_new(hash_table *table) {
     assert(hash_table_is_sane(table));
-    hash_table_iter *to_ret = malloc(sizeof(hash_table_iter));
+    hash_table_iter *to_ret = malloc_or_die(sizeof(hash_table_iter));
     to_ret->table = table;
     to_ret->pos = 0;
     return to_ret;

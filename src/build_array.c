@@ -8,7 +8,7 @@
 
 struct Value_array *build_array(struct Tokens * tokens){
 
-    struct Value_array * array = malloc(sizeof(struct Value_array));
+    struct Value_array * array = malloc_or_die(sizeof(struct Value_array));
     array->size = 0;
     array->values = NULL;
     while (true) {
@@ -22,7 +22,7 @@ struct Value_array *build_array(struct Tokens * tokens){
         else if (c == 'e')
             break;
 
-        struct Value * val = malloc(sizeof(struct Value));
+        struct Value * val = malloc_or_die(sizeof(struct Value));
 
         if(c == 's'){
             val->type = STRING;

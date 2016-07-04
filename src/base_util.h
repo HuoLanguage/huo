@@ -29,15 +29,15 @@
 #endif
 
 /* Macro because it makes printf errors easier to detect at compile time */
-/* Minor hack because c99 doesn't allow zero-length varargs for macros */
-#define ERROR(...) do {\
-    fprintf(stderr, "Error at %s:%s:%i: ", __FILE__, __func__, __LINE__);\
+#define ERROR(...) ERROR_AT(__FILE__, __func__, __LINE__, __VA_ARGS__)
+#define ERROR_AT(FILE, FUNC, LINE, ...) do {\
+    fprintf(stderr, "Error at %s:%s:%i: ", FILE, FUNC, LINE);\
     fprintf(stderr, __VA_ARGS__);\
     fprintf(stderr, "\n");\
     exit(1);\
 } while (0);
 
-#define ARR_MALLOC(num_elem, elem_val) malloc(arr_malloc_size((num_elem), sizeof(elem_val)))
+#define ARR_MALLOC(num_elem, elem_val) malloc_or_die(arr_malloc_size((num_elem), sizeof(elem_val)))
 
 // Would be a function, but then So. Much. Casting.
 #define RESIZE(ptr_to_arr, new_len) do {\
@@ -52,6 +52,7 @@
     }\
 } while (0)
 
+void *malloc_or_die(size_t size);
 size_t arr_malloc_size(size_t num, size_t size);
 char *strdup(const char *str);
 int string_contains(char ch, struct String* string);

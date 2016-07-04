@@ -35,10 +35,7 @@ struct Value value_copy_stack(struct Value * b){
 }
 
 struct Value *value_copy_heap(struct Value * b){
-    struct Value *a = malloc(sizeof(struct Value));
-    if (a == NULL) {
-        ERROR("Malloc failure");
-    }
+    struct Value *a = malloc_or_die(sizeof(struct Value));
     a->type = b->type;
     if(b->type == STRING || b->type == KEYWORD){
         assert(string_is_sane(&b->data.str));

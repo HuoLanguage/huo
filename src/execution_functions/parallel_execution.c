@@ -19,7 +19,7 @@ void parallel_execution(struct Tree * ast, hash_table *defined, struct Scopes * 
     pthread_t tid[num_children];
     struct Execution_bundle * bundle[num_children];
     for(int i = 0; i < num_children; i++){
-        bundle[i] = malloc(sizeof(struct Execution_bundle));
+        bundle[i] = malloc_or_die(sizeof(struct Execution_bundle));
         bundle[i]->ast=ast->children[i];
         bundle[i]->defined=defined;
         bundle[i]->scopes=scopes;

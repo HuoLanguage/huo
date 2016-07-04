@@ -41,6 +41,13 @@ bool __size_t_mul_overflow(size_t a, size_t b, size_t *res) {
     return false;
 }
 
+void *malloc_or_die(size_t size) {
+    void *ptr = malloc(size);
+    if (ptr == NULL)
+        ERROR("Malloc error");
+    return ptr;
+}
+
 size_t arr_malloc_size(size_t num, size_t size) {
     size_t res;
     if (__size_t_mul_overflow(num, size, &res)) {
@@ -57,7 +64,7 @@ char *strdup(const char *str) {
 }
 
 void copy_array(struct Value * a, struct Value_array * b){
-    struct Value_array * array = malloc(sizeof(struct Value_array));
+    struct Value_array * array = malloc_or_die(sizeof(struct Value_array));
     array->size = b->size;
     array->values = ARR_MALLOC(array->size, array->values[0]);
     for(int i = 0; i < b->size; i++){
@@ -67,7 +74,7 @@ void copy_array(struct Value * a, struct Value_array * b){
 }
 
 struct Tree * duplicate_tree(struct Tree * a){
-    struct Tree * root = malloc(sizeof(struct Tree));
+    struct Tree * root = malloc_or_die(sizeof(struct Tree));
     root->type = a->type;
     root->content = value_copy_stack(&a->content);
     root->children = NULL;
