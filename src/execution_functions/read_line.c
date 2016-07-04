@@ -24,7 +24,7 @@ struct Value read_line(struct Value * string){
     };
 
     char c;
-    while ((c = getchar()) != '\n'){
+    while ((c = getchar()) != '\n' && c != EOF){
         if (c == 0) {
             ERROR("Null byte in input file");
         } else if(c != '\n'){
@@ -32,6 +32,9 @@ struct Value read_line(struct Value * string){
             input.body[input.length] = c;
             input.length++;
         }
+    }
+    if (input.length == 0) {
+        ERROR("Input closed");
     }
     RESIZE(input.body, input.length + 1);
     input.body[input.length] = 0;
