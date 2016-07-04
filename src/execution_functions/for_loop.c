@@ -14,7 +14,7 @@ void for_loop(struct Tree * ast, hash_table *defined, struct Scopes * scopes, in
     struct Value end = execute(ast->children[1], defined, scopes, max_depth - 1);
     long start_i = value_as_long(&start);
     long end_i = value_as_long(&end);
-    if(start_i > end.data.ln){
+    if(start_i > end_i){
         for(long i = start_i; i > end_i; i--){
             execute(ast->children[2], defined, scopes, max_depth - 1);
         }
