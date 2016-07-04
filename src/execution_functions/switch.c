@@ -22,10 +22,9 @@ struct Value switch_case(struct Tree * ast, hash_table *defined, struct Scopes *
         struct Value result = execute(routine, defined, scopes, max_depth - 1);
         if(result.type != BOOL){
             ERROR("Switch test return non-boolean value (%c != BOOL)", result.type);
-        } else {
-            if(result.data.bl){
-                return execute(return_value, defined, scopes, max_depth - 1);
-            }
+        }
+        if(value_as_bool(&result)){
+            return execute(return_value, defined, scopes, max_depth - 1);
         }
     }
     struct Value result;
