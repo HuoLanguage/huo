@@ -35,12 +35,7 @@ struct Value for_each_string(struct String string, struct Tree * ast, hash_table
     for(int i = 0; i < string.length; i++){
         struct String item = string_copy_stack(string_substring(i, i+1, string));
         struct Value item_val = value_from_string(&item);
-        struct Value index = {
-            .type = LONG,
-            .data = {
-                .ln=(long)i
-            }
-        };
+        struct Value index = value_from_long(i);
         struct Tree * function = duplicate_tree(ast->children[3]);
         store_let_value(&ast->children[1]->content, &item_val, scopes);
         store_let_value(&ast->children[2]->content, &index, scopes);
