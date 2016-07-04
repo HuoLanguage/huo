@@ -316,7 +316,7 @@ struct Value split_string(struct Value a, struct Value str){
     result.type = ARRAY;
     struct Value_array * array = malloc_or_die(sizeof(struct Value_array));
     array->values = NULL;
-    RESIZE(array->values, c);
+    RESIZE(array->values, c + 1);
     array->size = 0;
     for(int l = 0; l <= c; l++){
         int start = !l ? l : indexes[l-1] + 1;
