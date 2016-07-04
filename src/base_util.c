@@ -96,7 +96,8 @@ void sub_vars(struct Value *v, struct Scopes *scopes, int max_depth) {
         if (hash_table_contains(current_scope, v)) {
             *v = * (struct Value *) hash_table_get(current_scope, v);
         } else {
-            ERROR("Undefined variable: %s", v->data.str.body);
+            struct String kwd = value_as_string(v);
+            ERROR("Undefined variable: %s", string_to_chars(&kwd));
         }
     }
 }
