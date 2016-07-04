@@ -102,16 +102,32 @@ struct Value sub(struct Value a, struct Value b){
 
 struct Value divide(struct Value a, struct Value b) {
     if(a.type == LONG && b.type == LONG){
-        return long_divide(value_as_long(&a), value_as_long(&b));
+        long bl = value_as_long(&b);
+        if (bl == 0) {
+            ERROR("Division by 0");
+        }
+        return long_divide(value_as_long(&a), bl);
     }
     else if(a.type == FLOAT && b.type == FLOAT){
-        return value_from_float(value_as_float(&a) / value_as_float(&b));
+        long bf = value_as_float(&b);
+        if (bf == 0) {
+            ERROR("Division by 0");
+        }
+        return value_from_float(value_as_float(&a) / bf);
     }
     else if(a.type == FLOAT && b.type == LONG){
-        return value_from_float(value_as_float(&a) / (float) value_as_long(&b));
+        long bl = value_as_long(&b);
+        if (bl == 0) {
+            ERROR("Division by 0");
+        }
+        return value_from_float(value_as_float(&a) / (float) bl);
     }
     else if(a.type == LONG && b.type == FLOAT){
-        return value_from_float((float) value_as_long(&a) / value_as_float(&b));
+        long bf = value_as_float(&b);
+        if (bf == 0) {
+            ERROR("Division by 0");
+        }
+        return value_from_float((float) value_as_long(&a) / bf);
     }
     else {
         ERROR("Mismatched types for divide: %d != %d", a.type, b.type);
