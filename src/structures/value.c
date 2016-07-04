@@ -37,15 +37,15 @@ struct Value *value_copy_heap(struct Value * b){
     if (b->type == STRING || b->type == KEYWORD) {
         a->data.str = value_as_string_or_kwd(b);
     } else if(b->type == FLOAT){
-        a->data.fl = b->data.fl;
+        a->data.fl = value_as_float(b);
     } else if(b->type == LONG){
-        a->data.ln = b->data.ln;
+        a->data.ln = value_as_long(b);
     } else if (b->type == BOOL){
-        a->data.bl = b->data.bl;
+        a->data.bl = value_as_bool(b);
     } else if (b->type == ARRAY){
         a->data.array = array_copy_heap(value_as_array(b));
     } else if (b->type == UNDEF){
-        //a->type == UNDEF;
+        a->type = UNDEF;
     } else {
         ERROR("Unknown type: %c", a->type);
     }
