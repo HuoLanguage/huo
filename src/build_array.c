@@ -22,33 +22,30 @@ struct Value_array *build_array(struct Tokens * tokens){
         else if (c == 'e')
             break;
 
-        struct Value * val = malloc_or_die(sizeof(struct Value));
+        struct Value val;
 
         if(c == 's'){
-            val->type = STRING;
-            val->data.str = string_copy_stack(&tokens->tokens[tokens->counter].data);
+            val = value_from_string(&tokens->tokens[tokens->counter].data);
         }
         else if(c == 'n'){
             if(string_contains(dot_const, &tokens->tokens[tokens->counter].data)){
                 float f = atof(tokens->tokens[tokens->counter].data.body);
-                *val = value_from_float(f);
+                val = value_from_float(f);
             } else {
                 long l = atol(tokens->tokens[tokens->counter].data.body);
-                *val = value_from_long(l);
+                val = value_from_long(l);
             }
         }
         else if(c == 'k'){
-            val->type = KEYWORD;
-            val->data.str = string_copy_stack(&tokens->tokens[tokens->counter].data);
+            val = value_from_keyword(&tokens->tokens[tokens->counter].data);
         }
         else if(c == 'b'){
-            val->type = ARRAY;
-            val->data.array = build_array(tokens);
+            val = value_from_array(build_array(tokens));
         } else {
             ERROR("Invalid token type in array: '%c'", c);
         }
         RESIZE(array->values, array->size+1);
-        array->values[array->size] = val;
+        array->values[array->size] = value_copy_heap(&val);
         array->size++;
     }
     return array;
