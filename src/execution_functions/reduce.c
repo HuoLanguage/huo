@@ -3,6 +3,7 @@
 #include "../base_util.h"
 #include "let_binding.h"
 #include "../core_functions.h"
+#include "../config.h"
 
 struct Value reduce_array(struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth){
     if (max_depth <= 0) {

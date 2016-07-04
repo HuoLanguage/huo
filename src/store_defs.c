@@ -8,6 +8,7 @@
 #include "parser.h"
 #include "execution_functions/read_file.h"
 #include "structures/hash_table.h"
+#include "config.h"
 
 int store_defs(struct Tree * ast, hash_table * defined){
     int num_defs = 0;

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "structures/structures.h"
+#include "config.h"
 
 #define WARN_ONCE(...) _WARN_ONCE(warn_once_##__COUNTER__, __VA_ARGS__)
 #define _WARN_ONCE(UNIQ, ...) do {\

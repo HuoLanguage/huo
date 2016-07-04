@@ -4,6 +4,7 @@
 #include "../core_functions.h"
 #include "let_binding.h"
 #include "for_each.h"
+#include "../config.h"
 
 struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * scopes, int max_depth){
     if (max_depth <= 0) {

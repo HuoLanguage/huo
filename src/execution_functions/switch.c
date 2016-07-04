@@ -3,6 +3,7 @@
 #include "../execute.h"
 #include "../base_util.h"
 #include "../core_functions.h"
+#include "../config.h"
 
 struct Value switch_case(struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth){
     if (max_depth <= 0) {

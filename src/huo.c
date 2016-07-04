@@ -14,6 +14,7 @@
 #include "store_defs.h"
 #include "base_util.h"
 #include "huo.h"
+#include "config.h"
 
 #if defined(_POSIX_VERSION) || defined(__linux__) || defined(__APPLE__)
 

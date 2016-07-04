@@ -5,6 +5,7 @@
 #include "constants.h"
 #include "base_util.h"
 #include "core_functions.h"
+#include "config.h"
 
 void print(struct Value a){
     if(a.type == STRING){

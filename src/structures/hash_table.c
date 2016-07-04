@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "hash_table.h"
 #include "../base_util.h"
+#include "../config.h"
 
 void *hash_table_put_int(hash_table *table, void *key, void *val, unsigned long hash_code);
 unsigned long get_distance(hash_table *table, unsigned long cur_pos);

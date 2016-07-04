@@ -3,6 +3,7 @@
 #include "value.h"
 
 #include "../base_util.h"
+#include "../config.h"
 
 #define CHECK_TYPE(v, tp) do {\
     if ((v)->type != (tp))\

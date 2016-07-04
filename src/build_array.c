@@ -4,6 +4,7 @@
 #include "structures/structures.h"
 #include "constants.h"
 #include "base_util.h"
+#include "config.h"
 
 struct Value_array *build_array(struct Tokens * tokens){
 

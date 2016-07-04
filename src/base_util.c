@@ -8,6 +8,7 @@
 #include "base_util.h"
 #include "core_functions.h"
 #include "config.h"
+#include "config.h"
 
 bool __size_t_mul_overflow(size_t a, size_t b, size_t *res) {
 #if defined(MUL_OVERFLOW)

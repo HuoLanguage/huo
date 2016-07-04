@@ -1,5 +1,6 @@
 #include "constants.h"
 #include "base_util.h"
+#include "config.h"
 
 const int RECURSE_MAX = 250;
 const int LOOP_MAX = 10000;

@@ -1,6 +1,7 @@
 #include "../structures/structures.h"
 #include "../execute.h"
 #include "../base_util.h"
+#include "../config.h"
 
 void for_loop(struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth){
     if (max_depth <= 0) {

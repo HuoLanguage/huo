@@ -5,6 +5,7 @@
 #include "../constants.h"
 #include "../execute.h"
 #include "../core_functions.h"
+#include "../config.h"
 
 struct Value read_line(struct Value * string){
     // read line takes a string to display as prompt

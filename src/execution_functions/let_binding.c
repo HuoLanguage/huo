@@ -2,6 +2,7 @@
 #include "../execute.h"
 #include "../base_util.h"
 #include "../core_functions.h"
+#include "../config.h"
 
 void store_let_value(struct Value * key, struct Value * value, struct Scopes * scopes){
     hash_table *let_store = scopes->scopes[scopes->current];

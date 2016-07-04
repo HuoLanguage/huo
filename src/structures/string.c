@@ -5,6 +5,7 @@
 #include "../base_util.h"
 #include <stdbool.h>
 #include "string.h"
+#include "../config.h"
 
 
 bool string_is_sane(struct String *s) {

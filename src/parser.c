@@ -5,6 +5,7 @@
 #include "constants.h"
 #include "core_functions.h"
 #include "build_array.h"
+#include "config.h"
 
 void parse(struct Tree * root, struct Tokens *tokens){
     int p_nest = 0;

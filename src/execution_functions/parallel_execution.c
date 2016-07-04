@@ -3,6 +3,7 @@
 #include "../structures/structures.h"
 #include "../execute.h"
 #include "../base_util.h"
+#include "../config.h"
 
 void * parallel_routine(void * bundle_ptr){
     struct Execution_bundle * bundle = (struct Execution_bundle *) bundle_ptr;

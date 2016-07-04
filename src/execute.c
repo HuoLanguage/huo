@@ -20,6 +20,7 @@
 #include "execution_functions/read_line.h"
 #include "execution_functions/evaluate.h"
 #include "apply_core_function.h"
+#include "config.h"
 
 struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth){
     struct Value result;

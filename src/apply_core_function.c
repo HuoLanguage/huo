@@ -2,6 +2,7 @@
 #include "structures/structures.h"
 #include "core_functions.h"
 #include "base_util.h"
+#include "config.h"
 
 struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value b){
     if(ast->type == 'k'){

@@ -5,6 +5,7 @@
 #include "../store_defs.h"
 #include "../execute.h"
 #include "../core_functions.h"
+#include "../config.h"
 
 struct Value eval(struct Value * string, hash_table * defined, struct Scopes * scopes, int max_depth){
     struct Value result;

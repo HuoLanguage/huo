@@ -2,6 +2,7 @@
 #include "../structures/structures.h"
 #include "../execute.h"
 #include "../base_util.h"
+#include "../config.h"
 
 struct Value read_file(struct String file_name){
     assert(string_is_sane(&file_name));

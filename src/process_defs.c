@@ -7,6 +7,7 @@
 #include "execute.h"
 #include "execution_functions/let_binding.h"
 #include "structures/hash_table.h"
+#include "config.h"
 
 void make_args_map(struct Tree * ast, hash_table *defined, struct Scopes * scopes, struct Tree *function, int max_depth) {
     // we want to evaluate the values passed into the function
