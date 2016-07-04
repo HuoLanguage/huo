@@ -20,9 +20,6 @@ struct Value switch_case(struct Tree * ast, hash_table *defined, struct Scopes *
         struct Tree * return_value = routine->children[1];
         routine->children[1] = ast->children[0];
         struct Value result = execute(routine, defined, scopes, max_depth - 1);
-        if(result.type != BOOL){
-            ERROR("Switch test return non-boolean value (%c != BOOL)", result.type);
-        }
         if(value_as_bool(&result)){
             return execute(return_value, defined, scopes, max_depth - 1);
         }
