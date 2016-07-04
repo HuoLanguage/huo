@@ -17,6 +17,7 @@ CPPFLAGS += -MD -MF $(patsubst src/structures/%.o,.%.mk,$@) -MP
 
 
 objs = \
+  src/structures/array.o \
   src/structures/string.o \
   src/structures/value.o \
   src/structures/hash_table.o \

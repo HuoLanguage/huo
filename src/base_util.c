@@ -63,16 +63,6 @@ char *strdup(const char *str) {
     return dup;
 }
 
-void copy_array(struct Value * a, struct Value_array * b){
-    struct Value_array * array = malloc_or_die(sizeof(struct Value_array));
-    array->size = b->size;
-    array->values = ARR_MALLOC(array->size, array->values[0]);
-    for(int i = 0; i < b->size; i++){
-        array->values[i] = value_copy_heap(b->values[i]);
-    }
-    a->data.array = array;
-}
-
 struct Tree * duplicate_tree(struct Tree * a){
     struct Tree * root = malloc_or_die(sizeof(struct Tree));
     root->type = a->type;

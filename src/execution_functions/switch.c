@@ -11,7 +11,7 @@ struct Value switch_case(struct Tree * ast, hash_table *defined, struct Scopes *
     }
     for(int i = 1; i < ast->size; i++){
         struct Tree * routine = ast->children[i];
-        if(routine->type == 'k' && string_matches(&default_const, &routine->content.data.str)){
+        if(routine->type == 'k' && string_matches_heap(&default_const, &routine->content.data.str)){
             return execute(routine->children[0], defined, scopes, max_depth - 1);
         }
         if (routine->size < 2) {

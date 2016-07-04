@@ -28,52 +28,45 @@ struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * sc
         ERROR("Max depth exceeded in computation");
     }
     // first check for special kinds of execution
-    if(ast->type == 'k'  && ast->content.type == KEYWORD && string_matches(&ast->content.data.str, &if_const)){
+    if(ast->type == 'k'  && ast->content.type == KEYWORD && string_matches_heap(&ast->content.data.str, &if_const)){
         result = if_block(ast, defined, scopes, max_depth-1);
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&let_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&let_const, &ast->content.data.str)){
         if (ast->size < 2) {
             ERROR("Not enough arguments for store_let_binding: %i < 2\n", ast->size);
         }
         store_let_binding(ast->children[0],ast->children[1], defined, scopes, max_depth-1);
         result.type = UNDEF;
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&each_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&each_const, &ast->content.data.str)){
         for_each(ast, defined, scopes, max_depth-1);
         result.type = UNDEF;
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&map_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&map_const, &ast->content.data.str)){
         result = map_array(ast, defined, scopes, max_depth-1);
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&while_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&while_const, &ast->content.data.str)){
         while_loop(ast, defined, scopes, max_depth - 1);
         result.type = UNDEF;
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&reduce_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&reduce_const, &ast->content.data.str)){
         result = reduce_array(ast, defined, scopes, max_depth - 1);
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&set_const, &ast->content.data.str)) {
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&set_const, &ast->content.data.str)) {
         if (ast->size < 3) {
             ERROR("Not enough arguments for set: %i < 3", ast->size);
         }
         struct Value index = execute(ast->children[0], defined, scopes, max_depth-1);
         struct Value item = execute(ast->children[1], defined, scopes, max_depth-1);
         struct Value array = execute(ast->children[2], defined, scopes, max_depth-1);
-        if(array.type == STRING){
-            result = string_set(index, item, array);
-        }
-        else if(array.type == ARRAY){
-            result = array_set(index, item, array);
-        } else {
-            ERROR("Error using set with wrong type ('%c' !== ['a'|'s'])", array.type);
-        }
+        result = set(index, item, array);
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&for_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&for_const, &ast->content.data.str)){
 
         for_loop(ast, defined, scopes, max_depth - 1);
         result.type = UNDEF; //result = undefined
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&do_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&do_const, &ast->content.data.str)){
         for(int i = 0; i < ast->size; i++){
             if(i == ast->size-1){
                 result = execute(ast->children[i], defined, scopes, max_depth-1);
@@ -82,7 +75,7 @@ struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * sc
             }
         }
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&read_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&read_const, &ast->content.data.str)){
         if (ast->size < 1) {
             ERROR("Not enough arguments for read: %i < 1", ast->size);
         }
@@ -92,25 +85,20 @@ struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * sc
         }
         result = read_file(ast->children[0]->content.data.str);
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&substring_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&substring_const, &ast->content.data.str)){
         if (ast->size < 3) {
             ERROR("Not enough arguments for substring: %i < 3", ast->size);
         }
         struct Value string = execute(ast->children[2], defined, scopes, max_depth-1);
         struct Value start = execute(ast->children[0], defined, scopes, max_depth-1);
         struct Value end = execute(ast->children[1], defined, scopes, max_depth-1);
-        if(string.type != STRING){
-            ERROR("Non-string value passed into substring: %c.", string.type);
-            result.type = UNDEF;
-            ;
-        } else {
-            result = substring(start.data.ln, end.data.ln, string);
-        }
+
+        result = substring(start, end, string);
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&switch_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&switch_const, &ast->content.data.str)){
         result = switch_case(ast, defined, scopes, max_depth-1);
     }
-    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches(&parallel_const, &ast->content.data.str)){
+    else if(ast->type == 'k' && ast->content.type == KEYWORD && string_matches_heap(&parallel_const, &ast->content.data.str)){
         parallel_execution(ast, defined, scopes, max_depth-1);
         result.type = UNDEF;
     } else {
@@ -129,21 +117,21 @@ struct Value execute (struct Tree * ast, hash_table *defined, struct Scopes * sc
         else if(ast->size == 1){
             struct Value a = execute(ast->children[0], defined, scopes, max_depth - 1);
             if(ast->type == 'k' && ast->content.type == KEYWORD){
-                if(string_matches(&ast->content.data.str, &print_const)){
+                if(string_matches_heap(&ast->content.data.str, &print_const)){
                     print(a);
                     printf("\n");
                     result.type = UNDEF;
                 }
-                else if(string_matches(&ast->content.data.str, &length_const)){
+                else if(string_matches_heap(&ast->content.data.str, &length_const)){
                     result = value_from_long(length(a));
                 }
-                else if(string_matches(&ast->content.data.str, &return_const)){
+                else if(string_matches_heap(&ast->content.data.str, &return_const)){
                     result = a;
                 }
-                else if(string_matches(&ast->content.data.str, &eval_const)){
+                else if(string_matches_heap(&ast->content.data.str, &eval_const)){
                     result = eval(&a, defined, scopes, max_depth - 1);
                 }
-                else if(string_matches(&ast->content.data.str, &read_line_const)){
+                else if(string_matches_heap(&ast->content.data.str, &read_line_const)){
                     result = read_line(&a);
                 }
             }

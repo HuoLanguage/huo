@@ -1,6 +1,7 @@
 #ifndef _STRUCTURES_H
 #define _STRUCTURES_H
 
+#include "array.h"
 #include "string.h"
 #include "value.h"
 #include "hash_table.h"
@@ -14,11 +15,6 @@ struct Tokens {
     struct Token *tokens;
     int length;
     int counter;
-};
-
-struct Value_array {
-    int size;
-    struct Value **values;
 };
 
 struct Scopes {

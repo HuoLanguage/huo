@@ -9,19 +9,21 @@
 
 void print(struct Value a){
     if(a.type == STRING){
-        printf("\"%s\"", string_to_chars(&a.data.str));
+        struct String str = value_as_string(&a);
+        printf("\"%s\"", string_to_chars(&str));
     }
     else if(a.type == KEYWORD){
-        printf("%s", string_to_chars(&a.data.str));
+        struct String kwd = value_as_keyword(&a);
+        printf("%s", string_to_chars(&kwd));
     }
     else if(a.type == LONG) {
-        printf("%ld", a.data.ln);
+        printf("%ld", value_as_long(&a));
     }
     else if(a.type == FLOAT) {
-        printf("%f", a.data.fl);
+        printf("%f", value_as_float(&a));
     }
     else if(a.type == BOOL) {
-        if (a.data.bl){
+        if (value_as_bool(&a)){
             printf("True");
         }
         else{
@@ -30,9 +32,10 @@ void print(struct Value a){
     }
     else if(a.type == ARRAY) {
         printf("[ ");
-        for(int i = 0; i < a.data.array->size; i++){
-            print(*a.data.array->values[i]);
-            if(i < a.data.array->size-1){
+        struct Value_array *arr = value_as_array(&a);
+        for(int i = 0; i < arr->size; i++){
+            print(*arr->values[i]);
+            if(i < arr->size-1){
               printf(", ");
             }
         }
@@ -45,288 +48,335 @@ void print(struct Value a){
 
 struct Value add(struct Value a, struct Value b){
     if(a.type == LONG && b.type == LONG){
-        a.data.ln = a.data.ln + b.data.ln;
+        return value_from_long(value_as_long(&a) + value_as_long(&b));
     }
     else if(a.type == FLOAT && b.type == FLOAT){
-        a.data.fl = a.data.fl + b.data.fl;
+        return value_from_float(value_as_float(&a) + value_as_float(&b));
     }
     else if(a.type == FLOAT && b.type == LONG){
-        a.data.fl = a.data.fl + (float)b.data.ln;
+        return value_from_float(value_as_float(&a) + (float)value_as_long(&b));
     }
     else if(a.type == LONG && b.type == FLOAT){
-        a.data.fl = (float)a.data.ln + b.data.fl;
-        a.type = FLOAT;
+        return value_from_float((float)value_as_long(&a) + value_as_float(&b));
     }
-    else if(a.type == ARRAY && b.type == ARRAY){
-        return array_add(a, b);
+    else {
+        ERROR("Mismatched types for add: %d != %d", a.type, b.type);
     }
-    return a;
-}
-
-struct Value array_add(struct Value a, struct Value b){
-    if(a.data.array->size != b.data.array->size){
-        ERROR("Tried to add arrays of different sizes: %i != %i", a.data.array->size, b.data.array->size);
-    } else {
-        for(int i = 0; i < a.data.array->size; i++){
-            struct Value result = add(*a.data.array->values[i], *b.data.array->values[i]);
-            value_copy_to(a.data.array->values[i], &result);
-        }
-    }
-    return a;
 }
 
 struct Value mul(struct Value a, struct Value b){
     if(a.type == LONG && b.type == LONG){
-        a.data.ln = a.data.ln * b.data.ln;
+        return value_from_long(value_as_long(&a) * value_as_long(&b));
     }
     else if(a.type == FLOAT && b.type == FLOAT){
-        a.data.fl = a.data.fl * b.data.fl;
+        return value_from_float(value_as_float(&a) * value_as_float(&b));
     }
     else if(a.type == FLOAT && b.type == LONG){
-        a.data.fl = a.data.fl * (float)b.data.ln;
+        return value_from_float(value_as_float(&a) * (float)value_as_long(&b));
     }
     else if(a.type == LONG && b.type == FLOAT){
-        a.data.fl = (float)a.data.ln * b.data.fl;
-        a.type = FLOAT;
+        return value_from_float((float)value_as_long(&a) * value_as_float(&b));
     }
-    return a;
+    else {
+        ERROR("Mismatched types for add: %d != %d", a.type, b.type);
+    }
 }
 
 struct Value sub(struct Value a, struct Value b){
     if(a.type == LONG && b.type == LONG){
-        a.data.ln = a.data.ln - b.data.ln;
+        return value_from_long(value_as_long(&a) - value_as_long(&b));
     }
     else if(a.type == FLOAT && b.type == FLOAT){
-        a.data.fl = a.data.fl - b.data.fl;
+        return value_from_float(value_as_float(&a) - value_as_float(&b));
     }
     else if(a.type == FLOAT && b.type == LONG){
-        a.data.fl = a.data.fl - (float)b.data.ln;
+        return value_from_float(value_as_float(&a) - (float)value_as_long(&b));
     }
     else if(a.type == LONG && b.type == FLOAT){
-        a.data.fl = (float)a.data.ln - b.data.fl;
-        a.type = FLOAT;
+        return value_from_float((float)value_as_long(&a) - value_as_float(&b));
     }
-    return a;
+    else {
+        ERROR("Mismatched types for sub: %d != %d", a.type, b.type);
+    }
 }
 
-struct Value divide(struct Value a, struct Value b){
+struct Value divide(struct Value a, struct Value b) {
     if(a.type == LONG && b.type == LONG){
-        a.data.fl = (float)a.data.ln/(float)b.data.ln;
-        a.type = FLOAT;
+        return long_divide(value_as_long(&a), value_as_long(&b));
     }
     else if(a.type == FLOAT && b.type == FLOAT){
-        a.data.fl = a.data.fl/b.data.fl;
+        return value_from_float(value_as_float(&a) / value_as_float(&b));
     }
     else if(a.type == FLOAT && b.type == LONG){
-        a.data.fl = a.data.fl/(float)b.data.ln;
+        return value_from_float(value_as_float(&a) / (float) value_as_long(&b));
     }
     else if(a.type == LONG && b.type == FLOAT){
-        a.data.fl = (float)a.data.ln/b.data.fl;
-        a.type = FLOAT;
+        return value_from_float((float) value_as_long(&a) / value_as_float(&b));
     }
-    a.type = FLOAT;
-    return a;
+    else {
+        ERROR("Mismatched types for divide: %d != %d", a.type, b.type);
+    }
+}
+
+//
+struct Value long_divide(long a, long b) {
+    if (a % b == 0) {
+        return value_from_long(a / b);
+    } else {
+        return value_from_float((float) a /  (float) b);
+    }
 }
 
 struct Value concat(struct Value a, struct Value b){
-    if (a.type != STRING || b.type != STRING) {
+    if (a.type == STRING && b.type == STRING) {
+        return string_concat(value_as_string(&a), value_as_string(&b));
+    } else if (a.type == ARRAY && b.type == ARRAY) {
+        return array_concat(value_as_array(&a), value_as_array(&b));
+    } else {
         ERROR("Tried to concat %c and %c", a.type, b.type);
     }
-    string_concat_to(&a.data.str, &b.data.str);
-    return a;
+}
+
+struct Value array_concat(struct Value_array *a, struct Value_array *b) {
+    return value_from_array(array_concat_heap(a, b));
+}
+struct Value string_concat(struct String a, struct String b) {
+    return value_from_string(string_concat_heap(&a, &b));
 }
 
 struct Value not(struct Value a, struct Value b){
-    if(a.type == FLOAT && b.type == FLOAT){
-        a.type = BOOL;
-        if(a.data.fl == b.data.fl){
-            a.data.bl = false;
-        } else {
-            a.data.bl = true;
-        }
+    if(a.type == BOOL && b.type == BOOL){
+        return value_from_bool(value_as_bool(&a) != value_as_bool(&b));
+    }
+    else if(a.type == FLOAT && b.type == FLOAT){
+        return value_from_bool(value_as_float(&a) != value_as_float(&b));
     }
     else if(a.type == LONG && b.type == LONG){
-        a.type = BOOL;
-        if(a.data.ln == b.data.ln){
-            a.data.bl = false;
-        } else {
-            a.data.bl = true;
-        }
+        return value_from_bool(value_as_long(&a) != value_as_long(&b));
     }
     else if(a.type == STRING && b.type == STRING){
-        a.type = BOOL;
-        if(string_matches(&a.data.str, &b.data.str)){
-            a.data.bl = false;
-        } else {
-            a.data.bl = true;
-        }
-    } else {
+        return value_from_bool(!string_matches_stack(value_as_string(&a), value_as_string(&b)));
+    }
+    else if(a.type == ARRAY && b.type == ARRAY){
+        return value_from_bool(!array_matches(value_as_array(&a), value_as_array(&b)));
+    }
+    else {
         ERROR("Mismatched types: %d != %d", a.type, b.type);
     }
-    return a;
 }
 
 struct Value equals(struct Value a, struct Value b){
-    if(a.type == FLOAT && b.type == FLOAT){
-        a.type = BOOL;
-        if(a.data.fl == b.data.fl){
-            a.data.bl = true;
-        } else {
-            a.data.bl = false;
-        }
+    if(a.type == BOOL && b.type == BOOL){
+        return value_from_bool(value_as_bool(&a) == value_as_bool(&b));
+    }
+    else if(a.type == FLOAT && b.type == FLOAT){
+        return value_from_bool(value_as_float(&a) == value_as_float(&b));
     }
     else if(a.type == LONG && b.type == LONG){
-        a.type = BOOL;
-        if(a.data.ln == b.data.ln){
-            a.data.bl = true;
-        } else {
-            a.data.bl = false;
-        }
+        return value_from_bool(value_as_long(&a) == value_as_long(&b));
     }
     else if(a.type == STRING && b.type == STRING){
-        a.type = BOOL;
-        if(string_matches(&a.data.str, &b.data.str)){
-            a.data.bl = true;
-        } else {
-            a.data.bl = false;
-        }
-    } else {
-        ERROR("Mismatched types: %c != %c", a.type, b.type);
+        return value_from_bool(string_matches_stack(value_as_string(&a), value_as_string(&b)));
     }
-    return a;
+    else if(a.type == ARRAY && b.type == ARRAY){
+        return value_from_bool(array_matches(value_as_array(&a), value_as_array(&b)));
+    }
+    else {
+        ERROR("Mismatched types: %d != %d", a.type, b.type);
+    }
 }
 
 struct Value greater_than(struct Value a, struct Value b){
-    if(a.type == FLOAT && b.type == FLOAT){
-        a.type = BOOL;
-        if(a.data.fl > b.data.fl){
-            a.data.bl = true;
-        } else {
-            a.data.bl = false;
-        }
+    if(a.type == BOOL && b.type == BOOL){
+        return value_from_bool(value_as_bool(&a) > value_as_bool(&b));
+    }
+    else if(a.type == FLOAT && b.type == FLOAT){
+        return value_from_bool(value_as_float(&a) > value_as_float(&b));
     }
     else if(a.type == LONG && b.type == LONG){
-        a.type = BOOL;
-        if(a.data.ln > b.data.ln){
-            a.data.bl = true;
-        } else {
-            a.data.bl = false;
-        }
+        return value_from_bool(value_as_long(&a) > value_as_long(&b));
     }
     else {
-        ERROR("Mismatched types: %c != %c", a.type, b.type);
+        ERROR("Mismatched types: %d != %d", a.type, b.type);
     }
-    return a;
 }
 
-struct Value array_set(struct Value index, struct Value item, struct Value array){
-    if (index.type != LONG) {
-        ERROR("Set index type invalid:  ('%c' != LONG)", index.type);
+
+struct Value set(struct Value index_val, struct Value item, struct Value to_set) {
+    long index = value_as_long(&index_val);
+
+    if (to_set.type == ARRAY) {
+        return value_from_array(array_set(index, item, value_as_array(&to_set)));
+    } else if (to_set.type == STRING) {
+        struct String set = string_set(index, value_as_string(&item), value_as_string(&to_set));
+        return value_from_string(string_copy_heap(&set));
+    } else {
+        ERROR("Set type invalid:  ('%c' != [ARRAY, STRING])", to_set.type);
     }
-    if (array.type != ARRAY) {
-        ERROR("Set array type invalid:  ('%c' != ARRAY)", array.type);
+}
+
+struct Value_array *array_set(long index, struct Value item, struct Value_array *array) {
+
+    if (index < 0) {
+        ERROR("Invalid array index: %li", index);
     }
     // Have to copy before incrementing size or else
     // recursive copies segfault
     struct Value *val = value_copy_heap(&item);
-    int idx = (int) index.data.ln;
-    if (idx < 0) {
-        ERROR("Invalid array index: %i", idx);
-    }
-    if (idx >= array.data.array->size) {
-        while (array.data.array->size < idx) {
-            struct Value undef = {.type=UNDEF};
-            array_push(undef, array);
+
+    if (index >= array->size) {
+        RESIZE(array->values, index + 1);
+        struct Value undef = {.type=UNDEF};
+        for (long i = array->size; i < index; i++) {
+            array->values[i] = value_copy_heap(&undef);
         }
-        array_push(*val, array); // double-copy, but oh well.
-    } else {
-        array.data.array->values[idx] = val;
+        array->size = index + 1;
     }
+    array->values[index] = val;
     return array;
 }
 
-struct Value string_set(struct Value index, struct Value item, struct Value string){
-    long idx = index.data.ln;
-    string.data.str.body[idx] = item.data.str.body[0];
+struct String string_set(long index, struct String item, struct String string){
+    if (index < 0) {
+        ERROR("Invalid string index: %li", index);
+    }
+    char c = string_index(&item, 0);
+    if (index == string_length(&string)) {
+        struct String char_str = string_from_char(c);
+        string_concat_to(&string, &char_str);
+    } else if (index < string_length(&string)) {
+        string.body[index] = c;
+    } else {
+        ERROR("Invalid index: %li > %li", index, string_length(&string));
+    }
     return string;
 }
 
-struct Value array_push(struct Value a, struct Value arr){
-    if (arr.type != ARRAY) {
-        ERROR("Push takes an item and an array, but got ('%c' != ARRAY).", arr.type);
+struct Value push(struct Value what, struct Value where) {
+    if (where.type == ARRAY) {
+        return value_from_array(array_push(what, value_as_array(&where)));
+    } else if (where.type == STRING) {
+        return value_from_string(string_push(value_as_string(&what), value_as_string(&where)));
+    } else {
+        ERROR("Push type invalid:  ('%c' != [ARRAY, STRING])", where.type);
     }
-    RESIZE(arr.data.array->values, arr.data.array->size + 1);
-    arr.data.array->values[arr.data.array->size] = value_copy_heap(&a);
-    arr.data.array->size++;
-    return arr;
 }
 
-struct Value substring(int start, int end, struct Value str){
-    assert(string_is_sane(&str.data.str));
-    struct Value result;
-    result.type = STRING;
-    if(start < 0 || start > str.data.str.length) {
-        ERROR("String start index out of range for substring: should be 0 <= %i < %i", start, str.data.str.length);
+struct Value_array *array_push(struct Value a, struct Value_array *array){
+    RESIZE(array->values, array->size + 1);
+    array->values[array->size] = value_copy_heap(&a);
+    array->size++;
+    return array;
+}
+
+struct String *string_push(struct String a, struct String str){
+    if (string_length(&a) != 1) {
+        ERROR("Character does not have length 1");
     }
-    else if (end < 0 || end > str.data.str.length){
-        ERROR("String end index out of range for substring: should be 0 <= %i < %i", end, str.data.str.length);
+    return string_concat_heap(&str, &a);
+}
+
+struct Value substring(struct Value start, struct Value end, struct Value what) {
+    long start_i = value_as_long(&start);
+    long end_i = value_as_long(&end);
+    return substring_ll(start_i, end_i, what);
+}
+
+struct Value substring_ll(long start_i, long end_i, struct Value what) {
+    //if (what.type == ARRAY) {
+    //    return value_from_array(array_slice(start_i, end_i, value_as_array(&what)));
+    //} else
+    if (what.type == STRING) {
+        return value_from_string(string_substring(start_i, end_i, value_as_string(&what)));
+    } else {
+        ERROR("Substring type invalid:  ('%c' != [ARRAY, STRING])", what.type);
+    }
+}
+
+struct String *string_substring(long start, long end, struct String str){
+    assert(string_is_sane(&str));
+    if(start < 0 || start > string_length(&str)) {
+        ERROR("String start index out of range for substring: should be 0 <= %li < %li", start, string_length(&str));
+    }
+    else if (end < 0 || end > string_length(&str)){
+        ERROR("String end index out of range for substring: should be 0 <= %li < %li", end, string_length(&str));
     } else {
         if (end > start) {
-            result.data.str.length = (end - start);
-            result.data.str.body = ARR_MALLOC(result.data.str.length + 1, char);
-            if (result.data.str.body == NULL) {
-                ERROR("Malloc failure");
+            struct String *result = malloc_or_die(sizeof(struct String));
+            result->length = (end - start),
+            result->body = ARR_MALLOC(string_length(&str) + 1, char);
+            for(int i = 0; i < result->length; i++){
+                result->body[i] = str.body[i + start];
             }
-            for(int i = 0; i < result.data.str.length; i++){
-                result.data.str.body[i] = str.data.str.body[i + start];
-            }
-            result.data.str.body[result.data.str.length] = 0;
+            result->body[result->length] = 0;
+            assert(string_is_sane(result));
+            return result;
         } else {
-            result.data.str.length = 0;
-            result.data.str.body = NULL;
+            struct String null_str = string_from_chars(NULL);
+            return string_copy_heap(&null_str);
         }
-        assert(string_is_sane(&result.data.str));
-        return result;
     }
 }
 
-struct Value split_string(struct Value a, struct Value str){
-    if (a.type != STRING || str.type != STRING) {
-        ERROR("Split takes two strings, but got ('%c' != STRING, '%c' != STRING).", a.type, str.type);
-    }
-    assert(string_is_sane(&a.data.str));
-    assert(string_is_sane(&str.data.str));
+struct Value split(struct Value sep, struct Value what) {
+    return string_split(value_as_string(&sep), value_as_string(&what));
+}
+
+struct Value string_split(struct String sep, struct String what) {
+
+    assert(string_is_sane(&sep));
+    assert(string_is_sane(&what));
 
     int c = 0;
-    for(int i = 0; i < str.data.str.length; i++){
-        if(a.data.str.length == 0 || a.data.str.body[0] == str.data.str.body[i]){
+    for(int i = 0; i < what.length; i++){
+        if(sep.length == 0 || sep.body[0] == what.body[i]){
             c += 1;
         }
     }
     int *indexes = NULL;
     RESIZE(indexes, c);
     int d = 0;
-    for(int i = 0; i < str.data.str.length; i++){
-        if(a.data.str.length == 0 || a.data.str.body[0] == str.data.str.body[i]){
+    for(int i = 0; i < what.length; i++){
+        if(sep.length == 0 || sep.body[0] == what.body[i]){
             indexes[d++] = i;
         }
     }
     assert (c == d);
-    struct Value result;
-    result.type = ARRAY;
     struct Value_array * array = malloc_or_die(sizeof(struct Value_array));
     array->values = NULL;
     RESIZE(array->values, c + 1);
     array->size = 0;
     for(int l = 0; l <= c; l++){
         int start = !l ? l : indexes[l-1] + 1;
-        int end = (l < c) ? indexes[l] : str.data.str.length;
+        int end = (l < c) ? indexes[l] : what.length;
 
-        struct Value item = substring(start, end, str);
+        struct Value item = value_from_string(string_substring(start, end, what));
 
         array->values[array->size] = value_copy_heap(&item);
         array->size++;
     }
-    result.data.array = array;
-    return result;
+    return value_from_array(array);
+}
+
+
+struct Value index(struct Value index, struct Value list) {
+    long i = value_as_long(&index);
+    if(list.type == ARRAY){
+        struct Value_array *a = value_as_array(&list);
+        if (i < 0) {
+            ERROR("Negative index: %li", i);
+        }
+        long len = a->size;
+        if (i >= len) {
+            ERROR("Invalid index: %li (len %li)", i, len);
+        }
+        return *a->values[i];
+    }
+    else if(list.type == STRING){
+        struct String s = value_as_string(&list);
+        struct String indexed_char = string_from_char(string_index(&s, i));
+        return value_from_string(string_copy_heap(&indexed_char));
+    } else {
+        ERROR("Index takes a string or array, but got '%c' != [ARRAY|STRING]).", list.type);
+    }
 }

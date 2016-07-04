@@ -12,12 +12,14 @@ void for_loop(struct Tree * ast, hash_table *defined, struct Scopes * scopes, in
     }
     struct Value start = execute(ast->children[0], defined, scopes, max_depth - 1);
     struct Value end = execute(ast->children[1], defined, scopes, max_depth - 1);
-    if(start.data.ln > end.data.ln){
-        for(long i = start.data.ln; i > end.data.ln; i--){
+    long start_i = value_as_long(&start);
+    long end_i = value_as_long(&end);
+    if(start_i > end.data.ln){
+        for(long i = start_i; i > end_i; i--){
             execute(ast->children[2], defined, scopes, max_depth - 1);
         }
     } else {
-        for(long i = start.data.ln; i < end.data.ln; i++){
+        for(long i = start_i; i < end_i; i++){
             execute(ast->children[2], defined, scopes, max_depth - 1);
         }
     }

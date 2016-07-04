@@ -16,7 +16,7 @@ struct Value map_array(struct Tree * ast, hash_table *defined, struct Scopes * s
         ERROR("Wrong type for map: '%c' != ARRAY", array.type);
     }
     for(int i = 0; i < array.data.array->size; i++){
-        struct Value *item = array.data.array->values[i];
+        struct Value *item = value_copy_heap(array.data.array->values[i]);
         struct Value index = {
             .type = LONG,
             .data = {

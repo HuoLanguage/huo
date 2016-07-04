@@ -13,11 +13,8 @@
 
 struct Value value_copy_stack(struct Value * b){
     struct Value a;
-    a.type = b->type;
-    if(b->type == STRING || b->type == KEYWORD){
-        assert(string_is_sane(&b->data.str));
-        a.data.str = string_copy_stack(&b->data.str);
-        assert(string_is_sane(&a.data.str));
+    if (b->type == STRING || b->type == KEYWORD) {
+        a.data.str = value_as_string_or_kwd(b);
     } else if(b->type == FLOAT){
         a.data.fl = b->data.fl;
     } else if(b->type == LONG){
@@ -25,22 +22,20 @@ struct Value value_copy_stack(struct Value * b){
     } else if (b->type == BOOL){
         a.data.bl = b->data.bl;
     } else if (b->type == ARRAY){
-        copy_array(&a, b->data.array);
+        a.data.array = array_copy_heap(value_as_array(b));
     } else if (b->type == UNDEF){
         //a.type == UNDEF;
     } else {
         ERROR("Unknown type: %c", a.type);
     }
+    a.type = b->type;
     return a;
 }
 
 struct Value *value_copy_heap(struct Value * b){
     struct Value *a = malloc_or_die(sizeof(struct Value));
-    a->type = b->type;
-    if(b->type == STRING || b->type == KEYWORD){
-        assert(string_is_sane(&b->data.str));
-        a->data.str = string_copy_stack(&b->data.str);
-        assert(string_is_sane(&a->data.str));
+    if (b->type == STRING || b->type == KEYWORD) {
+        a->data.str = value_as_string_or_kwd(b);
     } else if(b->type == FLOAT){
         a->data.fl = b->data.fl;
     } else if(b->type == LONG){
@@ -48,36 +43,43 @@ struct Value *value_copy_heap(struct Value * b){
     } else if (b->type == BOOL){
         a->data.bl = b->data.bl;
     } else if (b->type == ARRAY){
-        copy_array(a, b->data.array);
+        a->data.array = array_copy_heap(value_as_array(b));
     } else if (b->type == UNDEF){
         //a->type == UNDEF;
     } else {
         ERROR("Unknown type: %c", a->type);
     }
+    a->type = b->type;
     return a;
 }
 
 void value_copy_to(struct Value * a, struct Value * b){
-    a->type = b->type;
-    if(a->type == STRING || a->type == KEYWORD){
-        assert(string_is_sane(&a->data.str));
-        assert(string_is_sane(&b->data.str));
-        string_copy_to(&a->data.str, &b->data.str);
-        assert(string_is_sane(&a->data.str));
-        assert(string_is_sane(&b->data.str));
-    } else if(a->type == FLOAT){
+#if 0
+    if (a->type == STRING) {
+        string_free(value_as_string(a));
+    } else if (a->type == KEYWORD) {
+        string_free(value_as_keyword(a));
+    }else if (a->type == ARRAY) {
+        array_free(value_as_array(a));
+    }
+#endif
+    if(b->type == STRING || b->type == KEYWORD){
+        struct String b_str = value_as_string_or_kwd(b);
+        string_copy_to(&a->data.str, &b_str);
+    } else if(b->type == FLOAT){
         a->data.fl = b->data.fl;
-    } else if(a->type == LONG){
+    } else if(b->type == LONG){
         a->data.ln = b->data.ln;
-    } else if (a->type == BOOL){
+    } else if (b->type == BOOL){
         a->data.bl = b->data.bl;
-    } else if (a->type == ARRAY){
-        copy_array(a, b->data.array);
+    } else if (b->type == ARRAY){
+        array_copy_to(value_as_array(a), value_as_array(b));
     } else if (b->type == UNDEF){
        // a->type == UNDEF;
     } else {
         ERROR("Unknown type: %c", a->type);
     }
+    a->type = b->type;
 }
 
 float value_as_float(struct Value *v) {
@@ -91,6 +93,15 @@ bool value_as_bool(struct Value *v) {
 long value_as_long(struct Value *v) {
     CHECK_TYPE(v, LONG);
     return v->data.ln;
+}
+struct String value_as_string_or_kwd(struct Value *v) {
+    if (v->type == STRING) {
+        return value_as_string(v);
+    } else if (v->type == KEYWORD) {
+        return value_as_keyword(v);
+    } else {
+        ERROR("Unknown type: %c", v->type);
+    }
 }
 struct String value_as_string(struct Value *v) {
     CHECK_TYPE(v, STRING);
@@ -106,7 +117,6 @@ struct String value_as_keyword(struct Value *v) {
 }
 
 long length(struct Value a);
-struct Value iterator_index(long index, struct Value arr);
 
 struct Value value_from_float(float f) {
     struct Value v = {
@@ -172,30 +182,6 @@ long length(struct Value a) {
     }
 }
 
-struct Value iterator_index(long i, struct Value list) {
-    if(list.type == ARRAY){
-        if (i < 0) {
-            ERROR("Negative index: %li", i);
-        }
-        long len = length(list);
-        if (i >= len) {
-            ERROR("Invalid index: %li (len %li)", i, len);
-        }
-        return *list.data.array->values[i];
-    }
-    else if(list.type == STRING){
-        struct Value result = {
-            .type=STRING,
-            .data={
-                .str=string_from_char(string_index(&list.data.str, i))
-            }
-        };
-        return result;
-    } else {
-        ERROR("Index takes a string or array, but got '%c' != [ARRAY|STRING]).", list.type);
-    }
-}
-
 unsigned long value_keyword_hash_code(void *value) {
     struct String word = value_as_keyword((struct Value *) value);
     return string_hash_code(&word);
@@ -203,5 +189,27 @@ unsigned long value_keyword_hash_code(void *value) {
 bool value_keyword_equality(void *a, void *b) {
     struct String aword = value_as_keyword((struct Value *) a);
     struct String bword = value_as_keyword((struct Value *) b);
-    return string_matches(&aword, &bword);
+    return string_matches_heap(&aword, &bword);
+}
+
+
+bool value_equals_shallow(struct Value *a, struct Value *b) {
+    if (a->type != b->type)
+        return false;
+    switch (a->type) {
+        case ARRAY:
+            return value_as_array(a) == value_as_array(b);
+        case STRING:
+            return string_matches_stack(value_as_string(a), value_as_string(b));
+        case LONG:
+            return value_as_long(a) == value_as_long(b);
+        case FLOAT:
+            return value_as_float(a) == value_as_float(b);
+        case BOOL:
+            return value_as_bool(a) == value_as_bool(b);
+        case KEYWORD:
+            return string_matches_stack(value_as_keyword(a), value_as_keyword(b));
+        default:
+            ERROR("Unknown type %i", a->type);
+    }
 }

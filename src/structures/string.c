@@ -42,6 +42,12 @@ struct String string_from_chars(const char *str) {
     return s;
 }
 
+struct String *string_concat_heap(struct String *a, struct String *b) {
+    struct String *temp = string_copy_heap(a);
+    string_concat_to(temp, b);
+    return temp;
+}
+
 void string_concat_to(struct String *to, struct String *from) {
     assert(string_is_sane(from));
     assert(string_is_sane(to));
@@ -80,10 +86,11 @@ struct String string_copy_stack(struct String *from) {
     return s;
 }
 
-struct String *copy_string_heap(struct String *from) {
+struct String *string_copy_heap(struct String *from) {
     assert(string_is_sane(from));
     struct String *s = malloc_or_die(sizeof(struct String));
     s->length = 0;
+    s->body = NULL;
     string_copy_to(s, from);
     assert(string_is_sane(s));
     return s;
@@ -106,7 +113,11 @@ void string_copy_to(struct String *to, struct String *from) {
     assert(string_is_sane(to));
 }
 
-bool string_matches(struct String *base, struct String *compare){
+bool string_matches_stack(struct String base, struct String compare) {
+    return string_matches_heap(&base, &compare);
+}
+
+bool string_matches_heap(struct String *base, struct String *compare){
     assert(string_is_sane(base));
     assert(string_is_sane(compare));
     if(base->length != compare->length){
@@ -162,5 +173,5 @@ unsigned long string_hash_code_vv(void *s) {
 }
 
 bool string_matches_vv(void *base, void *compare) {
-    return string_matches((struct String *) base, (struct String *) compare);
+    return string_matches_heap((struct String *) base, (struct String *) compare);
 }

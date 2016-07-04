@@ -29,6 +29,7 @@ struct Value {
 float value_as_float(struct Value *v);
 bool value_as_bool(struct Value *v);
 long value_as_long(struct Value *v);
+struct String value_as_string_or_kwd(struct Value *v);
 struct String value_as_string(struct Value *v);
 struct Value_array *value_as_array(struct Value *v);
 struct String value_as_keyword(struct Value *v);
@@ -46,10 +47,10 @@ struct Value *value_copy_heap(struct Value * b);
 void value_copy_to(struct Value * a, struct Value * b);
 
 long length(struct Value a);
-/*long name to avoid conflict with string.h index()*/
-struct Value iterator_index(long index, struct Value arr);
 
 unsigned long value_keyword_hash_code(void *value);
 bool value_keyword_equality(void *a, void *b);
+
+bool value_equals_shallow(struct Value *a, struct Value *b);
 
 #endif
