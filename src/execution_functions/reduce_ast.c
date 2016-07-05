@@ -3,16 +3,16 @@
 #include "../base_util.h"
 #include "../config.h"
 
-struct Value reduce_ast(struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth){
+struct Value reduce_ast(struct Tree * ast, hash_table *defined, struct Scopes * scopes, huo_depth_t max_depth){
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
     if (ast->size < 1) {
-        ERROR("Not enough arguments for reduce_ast: %i < 2\n", ast->size);
+        ERROR("Not enough arguments for reduce_ast: %zu < 2\n", ast->size);
     }
     struct Value result = execute(ast->children[0], defined, scopes, max_depth - 1);
 
-    for(int i = 1; i < ast->size; i++){
+    for(size_t i = 1; i < ast->size; i++){
         if(ast->children[i]->type == 'f'){
             struct Value newResult = execute(ast->children[i], defined, scopes, max_depth - 1);
             result = apply_core_function(ast, result, newResult);

@@ -1,9 +1,10 @@
+#include "structures/structures.h"
 #include "constants.h"
 #include "base_util.h"
 #include "config.h"
 
-const int RECURSE_MAX = 250;
-const int LOOP_MAX = -1;
+const huo_depth_t RECURSE_MAX = 250;
+const huo_int_t LOOP_MAX = -1;
 
 struct String functions = STR_NEW("*+-/!=<>");
 

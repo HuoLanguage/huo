@@ -5,6 +5,8 @@
 #include "../config.h"
 
 bool read_file_to(struct String *file_contents, const char *filename) {
+    //TODO: make robust if file is longer than size_t characters.
+
     FILE *fp;
     fp = fopen(filename, "r");
     if(fp == NULL){

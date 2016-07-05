@@ -2,9 +2,10 @@
 #define HUO_ARRAY_H 1
 
 #include <stdbool.h>
+#include <stddef.h>
 
 struct Value_array {
-    int size;
+    size_t size;
     struct Value **values;
 };
 

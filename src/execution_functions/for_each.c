@@ -7,12 +7,12 @@
 #include "for_each.h"
 #include "../config.h"
 
-struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * scopes, int max_depth){
+struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * scopes, huo_depth_t max_depth){
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
     bool use_index;
-    int func_index;
+    size_t func_index;
     if (ast->size == 4) {
         use_index = true;
         func_index = 3;
@@ -20,13 +20,13 @@ struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * s
         use_index = false;
         func_index = 2;
     } else {
-        ERROR("Wrong number of arguments for for_each: %i != [3,4]\n", ast->size);
+        ERROR("Wrong number of arguments for for_each: %zu != [3,4]\n", ast->size);
     }
     struct Value array = execute(ast->children[0], defined, scopes, max_depth - 1);
     if(array.type == STRING){
         return for_each_string(value_as_string(&array), ast, defined, scopes, max_depth);
     } else if (array.type == ARRAY) {
-        for(int i = 0; i < array.data.array->size; i++){
+        for(size_t i = 0; i < array.data.array->size; i++){
             struct Value *item = value_copy_heap(array.data.array->values[i]);
             struct Tree * function = duplicate_tree(ast->children[func_index]);
             store_let_value(&ast->children[1]->content, item, scopes);
@@ -42,9 +42,9 @@ struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * s
     }
 }
 
-struct Value for_each_string(struct String string, struct Tree * ast, hash_table * defined, struct Scopes * scopes, int max_depth){
+struct Value for_each_string(struct String string, struct Tree * ast, hash_table * defined, struct Scopes * scopes, huo_depth_t max_depth){
     bool use_index;
-    int func_index;
+    size_t func_index;
     if (ast->size == 4) {
         use_index = true;
         func_index = 3;
@@ -52,9 +52,9 @@ struct Value for_each_string(struct String string, struct Tree * ast, hash_table
         use_index = false;
         func_index = 2;
     } else {
-        ERROR("Wrong number of arguments for for_each: %i != [3,4]\n", ast->size);
+        ERROR("Wrong number of arguments for for_each: %zu != [3,4]\n", ast->size);
     }
-    for(int i = 0; i < string.length; i++){
+    for(size_t i = 0; i < string.length; i++){
         struct String item = string_substring(i, i+1, string);
         struct Value item_val = value_from_string(string_copy_stack(&item));
         struct Tree * function = duplicate_tree(ast->children[func_index]);

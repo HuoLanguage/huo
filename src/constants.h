@@ -5,8 +5,8 @@
 #include "structures/string.h"
 #include "base_util.h"
 
-extern const int RECURSE_MAX;
-extern const int LOOP_MAX;
+extern const huo_depth_t RECURSE_MAX;
+extern const huo_int_t LOOP_MAX;
 
 extern struct String functions;
 extern struct String numbers;

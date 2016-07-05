@@ -11,7 +11,7 @@ void array_copy_to(struct Value_array *to, struct Value_array *from) {
             RESIZE(to->values, from->size);
             to->size = from->size;
         }
-        for(int i = 0; i < from->size; i++){
+        for(size_t i = 0; i < from->size; i++){
             to->values[i] = value_copy_heap(from->values[i]);
         }
     }
@@ -21,7 +21,7 @@ struct Value_array array_copy_stack(struct Value_array * from){
     struct Value_array array;
     array.size = from->size;
     array.values = ARR_MALLOC(array.size, array.values[0]);
-    for(int i = 0; i < from->size; i++){
+    for(size_t i = 0; i < from->size; i++){
         array.values[i] = value_copy_heap(from->values[i]);
     }
     return array;
@@ -31,7 +31,7 @@ struct Value_array *array_copy_heap(struct Value_array * from){
     struct Value_array * array = malloc_or_die(sizeof(struct Value_array));
     array->size = from->size;
     array->values = ARR_MALLOC(array->size, array->values[0]);
-    for(int i = 0; i < from->size; i++){
+    for(size_t i = 0; i < from->size; i++){
         array->values[i] = value_copy_heap(from->values[i]);
     }
     return array;
@@ -44,10 +44,10 @@ struct Value_array *array_concat_heap(struct Value_array *a, struct Value_array 
 }
 
 void array_concat_to(struct Value_array *to, struct Value_array *from) {
-    int len = to->size;
+    size_t len = to->size;
     to->size += from->size;
     RESIZE(to->values, to->size);
-    for(int l = 0; l < from->size; l++){
+    for(size_t l = 0; l < from->size; l++){
         to->values[l+len] = value_copy_heap(from->values[l]);
     }
 }
@@ -56,7 +56,7 @@ bool array_matches(struct Value_array *base, struct Value_array *compare){
     if(base->size != compare->size){
         return false;
     }
-    for (int i = 0; i < base->size; i++) {
+    for (size_t i = 0; i < base->size; i++) {
         if (!value_equals_shallow(base->values[i], compare->values[i]))
             return false;
     }

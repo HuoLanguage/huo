@@ -4,12 +4,12 @@
 #include "let_binding.h"
 #include "../config.h"
 
-struct Value map_array(struct Tree * ast, hash_table *defined, struct Scopes * scopes, int max_depth){
+struct Value map_array(struct Tree * ast, hash_table *defined, struct Scopes * scopes, huo_depth_t max_depth){
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
     bool use_index;
-    int func_index;
+    size_t func_index;
     if (ast->size == 4) {
         use_index = true;
         func_index = 3;
@@ -17,13 +17,13 @@ struct Value map_array(struct Tree * ast, hash_table *defined, struct Scopes * s
         use_index = false;
         func_index = 2;
     } else {
-        ERROR("Wrong number of arguments for map__array: %i != [3,4]\n", ast->size);
+        ERROR("Wrong number of arguments for map__array: %zu != [3,4]\n", ast->size);
     }
     struct Value array = execute(ast->children[0], defined, scopes, max_depth - 1);
     if (array.type != ARRAY) {
         ERROR("Wrong type for map: '%c' != ARRAY", array.type);
     }
-    for(int i = 0; i < array.data.array->size; i++){
+    for(size_t i = 0; i < array.data.array->size; i++){
         struct Value *item = value_copy_heap(array.data.array->values[i]);
         struct Tree * function = duplicate_tree(ast->children[func_index]);
         store_let_value(&ast->children[1]->content, item, scopes);

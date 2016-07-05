@@ -1,6 +1,7 @@
 #ifndef _VALUE_H
 #define _VALUE_H
 
+#include <inttypes.h>
 #include "structures.h"
 
 enum Value_type {
@@ -13,9 +14,15 @@ enum Value_type {
     UNDEF
 };
 
+#define PRIhi PRId64
+#define PRIuhi PRIu64
+
+typedef int64_t huo_int_t;
+typedef uint64_t huo_uint_t;
+
 union Data {
     bool bl;
-    long ln;
+    huo_int_t ln;
     float fl;
     struct String str;
     struct Value_array * array;
@@ -28,7 +35,7 @@ struct Value {
 
 float value_as_float(struct Value *v);
 bool value_as_bool(struct Value *v);
-long value_as_long(struct Value *v);
+huo_int_t value_as_long(struct Value *v);
 struct String value_as_string_or_kwd(struct Value *v);
 struct String value_as_string(struct Value *v);
 struct Value_array *value_as_array(struct Value *v);
@@ -36,7 +43,7 @@ struct String value_as_keyword(struct Value *v);
 
 struct Value value_from_float(float f);
 struct Value value_from_bool(bool b);
-struct Value value_from_long(long l);
+struct Value value_from_long(huo_int_t l);
 struct Value value_from_string(struct String str);
 struct Value value_from_array(struct Value_array *arr);
 struct Value value_from_keyword(struct String *str);
@@ -46,7 +53,7 @@ struct Value value_copy_stack(struct Value * b);
 struct Value *value_copy_heap(struct Value * b);
 void value_copy_to(struct Value * a, struct Value * b);
 
-long length(struct Value a);
+size_t length(struct Value a);
 
 unsigned long value_keyword_hash_code(void *value);
 bool value_keyword_equality(void *a, void *b);
