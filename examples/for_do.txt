@@ -3,7 +3,7 @@
     (let x (+ x x))
 )
 (print x)
-(let y [ ])
+(let y [ 1 ])
 (for 0 25
     (do
         (print (length y))
@@ -13,5 +13,5 @@
 (print y)
 (print (reduce y acc cur (do
         (let x (* acc 98))
-        (/ x curr)
+        (/ x cur)
     ) 1 ))
