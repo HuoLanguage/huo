@@ -69,21 +69,21 @@ const char bracket_const = '[';
 const char end_bracket_const = ']';
 const char dot_const = '.';
 
-int is_a_open_parens(char ch){ return ch == open_parens_const; }
-int is_a_close_parens(char ch){ return ch == close_parens_const; }
-int is_a_root_type(char ch){ return ch == root_type_const; }
-int is_a_quote(char ch){ return ch == quote_const; }
-int is_a_bracket(char ch){ return ch == bracket_const; }
-int is_a_end_bracket(char ch){ return ch == end_bracket_const; }
+bool is_a_open_parens(char ch){ return ch == open_parens_const; }
+bool is_a_close_parens(char ch){ return ch == close_parens_const; }
+bool is_a_root_type(char ch){ return ch == root_type_const; }
+bool is_a_quote(char ch){ return ch == quote_const; }
+bool is_a_bracket(char ch){ return ch == bracket_const; }
+bool is_a_end_bracket(char ch){ return ch == end_bracket_const; }
 
-int is_a_letter(char ch){
+bool is_a_letter(char ch){
     return string_contains(ch, &letters);
 }
 
-int is_a_number(char ch){
+bool is_a_number(char ch){
     return string_contains(ch, &numbers);
 }
 
-int is_a_function(char ch){
+bool is_a_function(char ch){
   return string_contains(ch, &functions);
 }
