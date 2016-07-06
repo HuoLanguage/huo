@@ -16,10 +16,10 @@ void store_let_value(struct Value * key, struct Value * value, struct Scopes * s
     }
 }
 
-void store_let_binding(struct Tree * key, struct Tree * value, hash_table *defined, struct Scopes * scopes, int max_depth){
+void store_let_binding(struct Tree * key, struct Tree * value, hash_table *defined, struct Scopes * scopes, struct Value_array * function_names, int max_depth){
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    struct Value val = execute(value, defined, scopes, max_depth - 1);
+    struct Value val = execute(value, defined, scopes, function_names, max_depth - 1);
     store_let_value(&key->content, &val, scopes);
 }

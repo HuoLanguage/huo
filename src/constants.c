@@ -61,6 +61,8 @@ struct String eval_const = STR_NEW("eval");
 
 struct String read_line_const = STR_NEW("readline");
 
+struct String function_names = STR_NEW("[if, read, let, set, each, for, do, switch, parallel, import, map, reduce, substring, while]");
+
 const char open_parens_const = '(';
 const char close_parens_const = ')';
 const char root_type_const = 'r';

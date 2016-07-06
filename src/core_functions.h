@@ -42,6 +42,6 @@ struct Value string_split(struct String sep, struct String what);
 
 struct Value greater_than(struct Value a, struct Value b);
 
-struct Value index(struct Value index, struct Value v);
+struct Value array_index(struct Value index, struct Value v);
 
 #endif

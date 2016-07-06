@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "structures/structures.h"
+#include <execinfo.h>
 #include "config.h"
 
 #define WARN_ONCE(...) _WARN_ONCE(warn_once_##__COUNTER__, __VA_ARGS__)
@@ -20,6 +21,13 @@
 /* Macro because it makes printf errors easier to detect at compile time */
 #define ERROR(...) ERROR_AT(__FILE__, __func__, __LINE__, __VA_ARGS__)
 #define ERROR_AT(FILE, FUNC, LINE, ...) do {\
+    void * buffer[5];\
+    char ** strings;\
+    backtrace(buffer, 5);\
+    strings = backtrace_symbols(buffer, 5);\
+    for (int i = 0; i < 5; i++){\
+        printf ("%s\n", strings[i]);\
+    }\
     fprintf(stderr, "Error at %s:%s:%i: ", FILE, FUNC, LINE);\
     fprintf(stderr, __VA_ARGS__);\
     fprintf(stderr, "\n");\

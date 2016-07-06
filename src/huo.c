@@ -11,11 +11,13 @@
 #include "parser.h"
 #include "structures/structures.h"
 #include "execution_functions/read_file.h"
+#include "build_array.h"
 #include "execute.h"
 #include "store_defs.h"
 #include "base_util.h"
 #include "huo.h"
 #include "config.h"
+#include "core_functions.h"
 
 #if defined(_POSIX_VERSION) || defined(__linux__) || defined(__APPLE__)
 
@@ -170,6 +172,14 @@ int main(int argc, char const *argv[]) {
 "-h, --help print this help message and exit\n");
         return error_flag ? 1 : 0; // Redundant for now, but reminder to maybe return a different error code later
     }
+    struct Tokens fn_tokens = {
+        .tokens = NULL,
+        .length = 0,
+        .counter = 0
+    };
+
+    tokenize(function_names, &fn_tokens);
+    struct Value_array * function_names = build_array(&fn_tokens);
 
     struct Tokens t = {
         .tokens = NULL,
@@ -178,9 +188,9 @@ int main(int argc, char const *argv[]) {
     };
 
     struct Tokens * tokens = tokenize(to_execute, &t);
-    //for(int i = 0; i < tokens->length; i++){
+    // for(int i = 0; i < tokens->length; i++){
     //     printf("%c", tokens->tokens[i].type);
-    //}
+    // }
 
     struct Tree root;
     root.type = 'r';
@@ -202,7 +212,7 @@ int main(int argc, char const *argv[]) {
 
     int num_defs = store_defs(&root, defined);
     for(int i = num_defs; i < root.size; i++){
-        execute(root.children[i], defined, scopes, RECURSE_MAX);
+        execute(root.children[i], defined, scopes, function_names, RECURSE_MAX);
     }
     return 0;
 }

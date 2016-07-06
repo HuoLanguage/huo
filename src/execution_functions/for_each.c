@@ -7,7 +7,7 @@
 #include "for_each.h"
 #include "../config.h"
 
-struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * scopes, int max_depth){
+struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * scopes, struct Value_array * function_names, int max_depth){
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
@@ -22,9 +22,9 @@ struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * s
     } else {
         ERROR("Wrong number of arguments for for_each: %i != [3,4]\n", ast->size);
     }
-    struct Value array = execute(ast->children[0], defined, scopes, max_depth - 1);
+    struct Value array = execute(ast->children[0], defined, scopes, function_names, max_depth - 1);
     if(array.type == STRING){
-        return for_each_string(value_as_string(&array), ast, defined, scopes, max_depth);
+        return for_each_string(value_as_string(&array), ast, defined, scopes, function_names, max_depth);
     } else if (array.type == ARRAY) {
         for(int i = 0; i < array.data.array->size; i++){
             struct Value *item = value_copy_heap(array.data.array->values[i]);
@@ -34,7 +34,7 @@ struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * s
                 struct Value index = value_from_long(i);
                 store_let_value(&ast->children[2]->content, &index, scopes);
             }
-            execute(function, defined, scopes, max_depth - 1);
+            execute(function, defined, scopes, function_names, max_depth - 1);
         }
         return array;
     } else {
@@ -42,7 +42,7 @@ struct Value for_each(struct Tree * ast, hash_table * defined, struct Scopes * s
     }
 }
 
-struct Value for_each_string(struct String string, struct Tree * ast, hash_table * defined, struct Scopes * scopes, int max_depth){
+struct Value for_each_string(struct String string, struct Tree * ast, hash_table * defined, struct Scopes * scopes, struct Value_array * function_names, int max_depth){
     bool use_index;
     int func_index;
     if (ast->size == 4) {
@@ -63,7 +63,7 @@ struct Value for_each_string(struct String string, struct Tree * ast, hash_table
             struct Value index = value_from_long(i);
             store_let_value(&ast->children[2]->content, &index, scopes);
         }
-        execute(function, defined, scopes, max_depth - 1);
+        execute(function, defined, scopes, function_names, max_depth - 1);
     }
     return value_from_string(string);
 }
