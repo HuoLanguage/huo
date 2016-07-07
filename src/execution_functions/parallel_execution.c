@@ -46,6 +46,7 @@ void parallel_execution(struct Tree * ast, hash_table *defined, struct Scopes * 
             .ast=ast->children[i],
             .defined=defined,
             .scopes=scopes,
+            .function_names=function_names,
             .max_depth = max_depth - 1
         };
         parallel_routine(&bundle);

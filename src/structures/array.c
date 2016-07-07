@@ -65,7 +65,7 @@ bool array_matches(struct Value_array *base, struct Value_array *compare){
 
 bool array_contains(struct Value *item, struct Value_array *array){
     enum Value_type t = item->type;
-    for(int i = 0; i < array->size; i++){
+    for(size_t i = 0; i < array->size; i++){
         if(array->values[i]->type == t){
             if(array->values[i]->type == KEYWORD && t == KEYWORD){
                 if(string_matches_heap(&array->values[i]->data.str, &item->data.str)){

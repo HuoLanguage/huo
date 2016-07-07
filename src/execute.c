@@ -27,7 +27,7 @@ struct Value execute (struct Tree *ast, hash_table *defined, struct Scopes *scop
         if(!ast->size){
             // ast with no children is either a value or a variable
             result = value_copy_stack(&ast->content);
-            sub_vars(&result, scopes, function_names, max_depth - 1);
+            sub_vars(&result, scopes, max_depth - 1);
         }
         else if(ast->content.type == KEYWORD && (func = get_defined_func(defined, ast->content.data.str)) != NULL){
             make_args_map(ast, defined, scopes, function_names, func, max_depth-1);

@@ -192,12 +192,12 @@ int main(int argc, char const *argv[]) {
     //     printf("%c", tokens->tokens[i].type);
     // }
 
-    struct Tree root;
-    root.type = 'r';
-    root.size = 0;
-    root.children = NULL;
+    struct Tree *root = malloc_or_die(sizeof(struct Tree));
+    root->type = 'r';
+    root->size = 0;
+    root->children = NULL;
 
-    parse(&root, tokens, true);
+    parse(root, tokens, true);
     // this prints the AST for reference
     // printTree(&root);
     // printf("\n");
@@ -210,9 +210,9 @@ int main(int argc, char const *argv[]) {
 
     scopes->scopes[0] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
 
-    size_t num_defs = store_defs(&root, defined);
-    for(size_t i = num_defs; i < root.size; i++){
-        execute(root.children[i], defined, scopes, function_names, RECURSE_MAX);
+    size_t num_defs = store_defs(root, defined);
+    for(size_t i = num_defs; i < root->size; i++){
+        execute(root->children[i], defined, scopes, function_names, RECURSE_MAX);
     }
     return 0;
 }
