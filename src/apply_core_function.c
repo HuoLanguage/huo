@@ -1,3 +1,4 @@
+#include "apply_core_function.h"
 #include "constants.h"
 #include "structures/structures.h"
 #include "core_functions.h"
@@ -24,9 +25,9 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
         struct Value_array *a_arr = value_as_array(&a);
         struct Value_array *b_arr = value_as_array(&b);
         if(a_arr->size != b_arr->size){
-            ERROR("Tried to map over arrays of different sizes: %i != %i", a_arr->size, b_arr->size);
+            ERROR("Tried to map over arrays of different sizes: %zu != %zu", a_arr->size, b_arr->size);
         }
-        for(long i = 0; i < a_arr->size; i++){
+        for(size_t i = 0; i < a_arr->size; i++){
             struct Value result = apply_core_function(ast, *a_arr->values[i], *b_arr->values[i]);
             value_copy_to(a_arr->values[i], &result);
         }

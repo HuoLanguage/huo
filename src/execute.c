@@ -13,7 +13,7 @@
 #include "apply_execution_function.h"
 #include "config.h"
 
-struct Value execute (struct Tree *ast, hash_table *defined, struct Scopes *scopes, struct Value_array *function_names, int max_depth){
+struct Value execute (struct Tree *ast, hash_table *defined, struct Scopes *scopes, struct Value_array *function_names, huo_depth_t max_depth){
     struct Value result;
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
@@ -27,7 +27,7 @@ struct Value execute (struct Tree *ast, hash_table *defined, struct Scopes *scop
         if(!ast->size){
             // ast with no children is either a value or a variable
             result = value_copy_stack(&ast->content);
-            sub_vars(&result, scopes, max_depth - 1);
+            sub_vars(&result, scopes, function_names, max_depth - 1);
         }
         else if(ast->content.type == KEYWORD && (func = get_defined_func(defined, ast->content.data.str)) != NULL){
             make_args_map(ast, defined, scopes, function_names, func, max_depth-1);

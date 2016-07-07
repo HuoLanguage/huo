@@ -17,7 +17,7 @@ void *hash_table_get(hash_table *table, void *key);
 void *hash_table_remove(hash_table *table, void *key);
 
 bool hash_table_contains(hash_table *table, void *key);
-unsigned long hash_table_size(hash_table *table);
+size_t hash_table_size(hash_table *table);
 
 hash_table_iter *hash_table_iter_new(hash_table *table);
 void *hash_table_iter_key(hash_table_iter *iter);

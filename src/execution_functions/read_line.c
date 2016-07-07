@@ -8,6 +8,8 @@
 #include "../config.h"
 
 struct String read_line(struct Value * string){
+    //TODO: make robust if line is >= size_t characters.
+
     // read line takes a string to display as prompt
     // but displays it without quotes
     string->type = KEYWORD;

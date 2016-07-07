@@ -60,7 +60,7 @@ void string_concat_to(struct String *to, struct String *from) {
     int len = to->length;
     to->length += from->length;
     RESIZE(to->body, to->length + 1);
-    for(int l = 0; l < from->length; l++){
+    for(size_t l = 0; l < from->length; l++){
         to->body[l+len] = from->body[l];
     }
     to->body[to->length] = 0;
@@ -68,17 +68,17 @@ void string_concat_to(struct String *to, struct String *from) {
     assert(string_is_sane(to));
 }
 
-int string_contains(char ch, struct String* string){
+bool string_contains(char ch, struct String* string){
     assert(string_is_sane(string));
-    if(!string->length){ return 0; }
-    for(int i = 0; i < string->length; i++){
+    if(!string->length){ return false; }
+    for(size_t i = 0; i < string->length; i++){
         if(ch == string->body[i]){
             assert(string_is_sane(string));
-            return 1;
+            return true;
         }
     }
     assert(string_is_sane(string));
-    return 0;
+    return false;
 }
 
 struct String string_copy_stack(struct String *from) {
@@ -129,7 +129,7 @@ bool string_matches_heap(struct String *base, struct String *compare){
     if(base->length != compare->length){
         return false;
     }
-    int counter = 0;
+    size_t counter = 0;
     while(counter < base->length){
         if(base->body[counter] != compare->body[counter]){
             return false;
@@ -146,17 +146,14 @@ char *string_to_chars(struct String *s) {
     }
     return s->body;
 }
-long string_length(struct String *s) {
+size_t string_length(struct String *s) {
     assert(string_is_sane(s));
     return s->length;
 }
-char string_index(struct String *s, long i) {
+char string_index(struct String *s, size_t i) {
     assert(string_is_sane(s));
-    if (i < 0) {
-        ERROR("Negative index");
-    }
     if (i >= s->length) {
-        ERROR("Index out of range: %li >= %i", i, s->length);
+        ERROR("Index out of range: %zu >= %zu", i, s->length);
     }
     return s->body[i];
 }

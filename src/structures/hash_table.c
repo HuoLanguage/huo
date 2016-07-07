@@ -6,10 +6,10 @@
 #include "../config.h"
 
 void *hash_table_put_int(hash_table *table, void *key, void *val, unsigned long hash_code);
-unsigned long get_distance(hash_table *table, unsigned long cur_pos);
+size_t get_distance(hash_table *table, size_t cur_pos);
 void print_table(hash_table *table);
 bool hash_table_needs_resize(hash_table *table);
-void hash_table_resize(hash_table *table, unsigned long new_size);
+void hash_table_resize(hash_table *table, size_t new_size);
 bool hash_table_is_sane(hash_table *table);
 
 
@@ -71,15 +71,15 @@ struct hash_table_entry_t {
 
 struct hash_table_t {
     struct hash_table_entry_t *table;
-    unsigned long table_size;
-    unsigned long table_alloc_size;
+    size_t table_size;
+    size_t table_alloc_size;
     hash_code_func *hash_gen;
     equals_func *equality_test;
 };
 
 struct hash_table_iter_t {
     hash_table *table;
-    unsigned long pos;
+    size_t pos;
 };
 
 hash_table *hash_table_new(hash_code_func *hash_gen, equals_func *equality_test) {
@@ -108,16 +108,16 @@ bool hash_table_is_sane(hash_table *table) {
     assert (table->table_alloc_size >= HASH_TABLE_MIN_SIZE);
     if (table->table_alloc_size > 0)
         assert(table->table != NULL);
-    unsigned long num_ele = 0;
-    for (unsigned long l = 0; l < table->table_alloc_size; l++) {
+    size_t num_ele = 0;
+    for (size_t l = 0; l < table->table_alloc_size; l++) {
         struct hash_table_entry_t *e = &table->table[l];
         if (hash_table_slot_is_free(e))
             continue;
         assert(get_distance(table, l) <= table->table_alloc_size);
         assert(e->hash_code == table->hash_gen(e->key));
         num_ele += 1;
-        unsigned long pos = l;
-        unsigned long pref_pos = (e->hash_code) % table->table_alloc_size;
+        size_t pos = l;
+        size_t pref_pos = (e->hash_code) % table->table_alloc_size;
         while (true) {
             if (pos == pref_pos)
                 break;
@@ -131,14 +131,14 @@ bool hash_table_is_sane(hash_table *table) {
 }
 
 bool hash_table_too_empty(hash_table *table) {
-    unsigned int s = table->table_size;
-    unsigned int a = table->table_alloc_size;
+    size_t s = table->table_size;
+    size_t a = table->table_alloc_size;
     return s > HASH_TABLE_MIN_SIZE && s * HASH_TABLE_MIN_LOAD_DENOM < a * HASH_TABLE_MIN_LOAD_NUM;
 }
 
 bool hash_table_too_full(hash_table *table) {
-    unsigned int s = table->table_size;
-    unsigned int a = table->table_alloc_size;
+    size_t s = table->table_size;
+    size_t a = table->table_alloc_size;
     return s * HASH_TABLE_MAX_LOAD_DENOM > a * HASH_TABLE_MAX_LOAD_NUM;
 }
 
@@ -146,21 +146,21 @@ bool hash_table_needs_resize(hash_table *table) {
     return hash_table_too_empty(table) || hash_table_too_full(table);
 }
 
-void hash_table_resize(hash_table *table, unsigned long new_size) {
+void hash_table_resize(hash_table *table, size_t new_size) {
     //assert(hash_table_is_sane(table));
     // Called by constructor, and as such may have too few elements
     assert (new_size >= table->table_size);
     assert (new_size >= HASH_TABLE_MIN_SIZE);
-    unsigned long old_alloc_size = table->table_alloc_size;
+    size_t old_alloc_size = table->table_alloc_size;
     struct hash_table_entry_t *old_table = table->table;
 
-    unsigned long num_ele = table->table_size;
+    size_t num_ele = table->table_size;
     table->table_size = 0;
     table->table_alloc_size = new_size;
     table->table = ARR_MALLOC(new_size, struct hash_table_entry_t);
 
     // Set elements to uninitialized
-    for (unsigned long i = 0; i < new_size; i++) {
+    for (size_t i = 0; i < new_size; i++) {
         struct hash_table_entry_t entry = {
             .hash_code = 0,
             .key = NO_ELEMENT,
@@ -170,7 +170,7 @@ void hash_table_resize(hash_table *table, unsigned long new_size) {
     }
 
     // Reinsert  old elements where necessary.
-    for (unsigned long i = 0; i < old_alloc_size; i++) {
+    for (size_t i = 0; i < old_alloc_size; i++) {
         struct hash_table_entry_t *entry = &old_table[i];
         if (!hash_table_slot_is_free(entry)) {
             hash_table_put_int(table, entry->key, entry->val, entry->hash_code);
@@ -182,8 +182,8 @@ void hash_table_resize(hash_table *table, unsigned long new_size) {
 }
 
 void hash_table_maybe_resize(hash_table *table) {
-    unsigned long size = table->table_alloc_size;
-    unsigned long new_size;
+    size_t size = table->table_alloc_size;
+    size_t new_size;
     if (hash_table_too_full(table)) {
         new_size = size * HASH_TABLE_EXPAND_NUM / HASH_TABLE_EXPAND_DENOM;
         if (new_size <= size)
@@ -201,12 +201,12 @@ void hash_table_maybe_resize(hash_table *table) {
     assert (!hash_table_needs_resize(table));
 }
 
-unsigned long get_distance(hash_table *table, unsigned long cur_pos) {
+size_t get_distance(hash_table *table, size_t cur_pos) {
     //assert (cur_pos >= 0);
     assert (cur_pos < table->table_alloc_size);
     struct hash_table_entry_t *entry = &table->table[cur_pos];
     assert (!hash_table_slot_is_free(entry));
-    unsigned long init_pos = table->table[cur_pos].hash_code % table->table_alloc_size;
+    size_t init_pos = table->table[cur_pos].hash_code % table->table_alloc_size;
     if (init_pos <= cur_pos)
         return cur_pos - init_pos;
     else
@@ -217,9 +217,9 @@ void *hash_table_put_int(hash_table *table, void *key, void *val, unsigned long 
     unsigned long init_hash_code = hash_code;
     assert(hash_table_is_sane(table));
     while (true) {
-        unsigned long probe_current = 0;
-        for (unsigned long i = 0; i < table->table_alloc_size; i++) {
-            unsigned long table_pos = (init_hash_code + i) % table->table_alloc_size;
+        size_t probe_current = 0;
+        for (size_t i = 0; i < table->table_alloc_size; i++) {
+            size_t table_pos = (init_hash_code + i) % table->table_alloc_size;
             struct hash_table_entry_t *entry = &table->table[table_pos];
             bool was_free = hash_table_slot_is_free(entry);
             if (was_free || (entry->hash_code == hash_code && table->equality_test(entry->key, key))) {
@@ -236,7 +236,7 @@ void *hash_table_put_int(hash_table *table, void *key, void *val, unsigned long 
                 return old_val;
             }
 
-            unsigned long probe_distance = get_distance(table, table_pos);
+            size_t probe_distance = get_distance(table, table_pos);
 
             if (probe_current > probe_distance){
                 // swap current entry with entry to insert
@@ -267,8 +267,8 @@ void *hash_table_get(hash_table *table, void *key) {
     assert(hash_table_is_sane(table));
     unsigned long hash_code = table->hash_gen(key);
 
-    for (unsigned long i = 0; i < table->table_alloc_size; i++) {
-        unsigned long table_pos = (hash_code + i) % table->table_alloc_size;
+    for (size_t i = 0; i < table->table_alloc_size; i++) {
+        size_t table_pos = (hash_code + i) % table->table_alloc_size;
         struct hash_table_entry_t *entry = &table->table[table_pos];
         if (hash_table_slot_is_free(entry) || i > get_distance(table, table_pos)) {
             break;
@@ -282,8 +282,8 @@ void *hash_table_get(hash_table *table, void *key) {
 void *hash_table_remove(hash_table *table, void *key) {
     assert(hash_table_is_sane(table));
     unsigned long hash_code = table->hash_gen(key);
-    for (unsigned long i = 0; i < table->table_alloc_size; i++) {
-        unsigned long table_pos = (hash_code + i) % table->table_alloc_size;
+    for (size_t i = 0; i < table->table_alloc_size; i++) {
+        size_t table_pos = (hash_code + i) % table->table_alloc_size;
         struct hash_table_entry_t *entry = &table->table[table_pos];
         if (hash_table_slot_is_free(entry) || i > get_distance(table, table_pos)) {
             assert(hash_table_is_sane(table));
@@ -292,9 +292,9 @@ void *hash_table_remove(hash_table *table, void *key) {
             entry->key = NO_ELEMENT;
             table->table_size -= 1;
             void *old_val = entry->val;
-            unsigned long prev_pos = table_pos;
-            for (unsigned long j = 1; j < table->table_alloc_size; j++) {
-                unsigned long cur_pos = (table_pos + j) % table->table_alloc_size;
+            size_t prev_pos = table_pos;
+            for (size_t j = 1; j < table->table_alloc_size; j++) {
+                size_t cur_pos = (table_pos + j) % table->table_alloc_size;
                 if (hash_table_slot_is_free(&table->table[cur_pos]) ||get_distance(table, cur_pos) == 0) {
                     table->table[prev_pos].key = NO_ELEMENT;
                     break;
@@ -316,8 +316,8 @@ void *hash_table_remove(hash_table *table, void *key) {
 bool hash_table_contains(hash_table *table, void *key) {
     assert(hash_table_is_sane(table));
     unsigned long hash_code = table->hash_gen(key);
-    for (unsigned long i = 0; i < table->table_alloc_size; i++) {
-        unsigned long table_pos = (hash_code + i) % table->table_alloc_size;
+    for (size_t i = 0; i < table->table_alloc_size; i++) {
+        size_t table_pos = (hash_code + i) % table->table_alloc_size;
         struct hash_table_entry_t *entry = &table->table[table_pos];
         if (hash_table_slot_is_free(entry)) {
             return false;
@@ -328,7 +328,7 @@ bool hash_table_contains(hash_table *table, void *key) {
     return false;
 }
 
-unsigned long hash_table_size(hash_table *table) {
+size_t hash_table_size(hash_table *table) {
     assert(hash_table_is_sane(table));
     return table->table_size;
 }
@@ -374,7 +374,7 @@ bool hash_table_iter_next(hash_table_iter *iter) {
 
 void print_table(hash_table *table) {
     printf("[");
-    for (unsigned long j = 0; j < table->table_alloc_size; j++) {
+    for (size_t j = 0; j < table->table_alloc_size; j++) {
         if (hash_table_slot_is_free(&table->table[j]))
             printf("null");
         else
@@ -395,10 +395,10 @@ bool equal_int(void *a, void *b) {
     return *((unsigned long *) a) == *((unsigned long *) b);
 }
 
-void do_iter_test(hash_table *table, unsigned long *keys,  unsigned long *vals, unsigned long num_elems) {
+void do_iter_test(hash_table *table, unsigned long *keys,  unsigned long *vals, size_t num_elems) {
     unsigned long *so_far_keys = NULL;
     unsigned long *so_far_vals = NULL;
-    unsigned long num_steps = 0;
+    size_t num_steps = 0;
     for (hash_table_iter *iter = hash_table_iter_new(table); hash_table_iter_has_cur(iter); hash_table_iter_next(iter)) {
         so_far_vals = realloc(so_far_vals, (num_steps + 1) * sizeof(unsigned long));
         assert (so_far_vals != NULL);
@@ -412,10 +412,10 @@ void do_iter_test(hash_table *table, unsigned long *keys,  unsigned long *vals, 
     }
     printf("%lu %lu\n", num_steps, num_elems);
     assert (num_steps == num_elems);
-    for (unsigned long i = 0; i < num_steps; i++) {
+    for (size_t i = 0; i < num_steps; i++) {
         bool so_far_in_kv = false;
         bool kv_in_so_far = false;
-        for (unsigned long j = 0; j < num_steps; j++) {
+        for (size_t j = 0; j < num_steps; j++) {
             if (keys[i] == so_far_keys[j] && vals[i] == so_far_vals[j])
                 kv_in_so_far = true;
             if (keys[j] == so_far_keys[i] && vals[j] == so_far_vals[i])
@@ -430,7 +430,7 @@ int main() {
     hash_table *table = hash_table_new(*hash_code_int, *equal_int);
     unsigned long *keys = NULL;
     unsigned long *vals = NULL;
-    unsigned long num_elems = 0;
+    size_t num_elems = 0;
     char c;
     unsigned long *k;
     unsigned long *v;
@@ -451,7 +451,7 @@ int main() {
                 printf("Adding %lu == %lu\n", *k, *v);
                 hash_table_put(table, k, v);
                 flag = false;
-                for (unsigned long i = 0; i < num_elems; i++) {
+                for (size_t i = 0; i < num_elems; i++) {
                     if (keys[i] == *k) {
                         vals[i] = *v;
                         flag = true;
@@ -475,7 +475,7 @@ int main() {
                 printf("Getting %lu\n", *k);
                 v = (unsigned long *) hash_table_get(table, k);
                 flag = false;
-                for (unsigned long i = 0; i < num_elems; i++) {
+                for (size_t i = 0; i < num_elems; i++) {
                     if (keys[i] == *k) {
                         assert (*v == vals[i]);
                         flag = true;
@@ -500,7 +500,7 @@ int main() {
                 printf("Removing %lu\n", *k);
                 v = (unsigned long *) hash_table_remove(table, k);
                 flag = false;
-                for (unsigned long i = 0; i < num_elems; i++) {
+                for (size_t i = 0; i < num_elems; i++) {
                     if (keys[i] == *k) {
                         assert (*v == vals[i]);
                         vals[i] = vals[num_elems - 1];
@@ -524,7 +524,7 @@ int main() {
                 if (scanf("%lu", k) <= 0)
                     return 0;
                 printf("Getting size...\n");
-                unsigned long size = hash_table_size(table);
+                size_t size = hash_table_size(table);
                 assert (size == num_elems);
                 printf("Size: %lu\n", size);
                 break;

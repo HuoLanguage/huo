@@ -5,8 +5,8 @@
 #include "structures/string.h"
 #include "base_util.h"
 
-extern const int RECURSE_MAX;
-extern const int LOOP_MAX;
+extern const huo_depth_t RECURSE_MAX;
+extern const huo_int_t LOOP_MAX;
 
 extern struct String functions;
 extern struct String numbers;
@@ -46,14 +46,14 @@ extern const char bracket_const;
 extern const char end_bracket_const;
 extern const char dot_const;
 
-int is_a_open_parens(char ch);
-int is_a_close_parens(char ch);
-int is_a_root_type(char ch);
-int is_a_quote(char ch);
-int is_a_letter(char ch);
-int is_a_number(char ch);
-int is_a_function(char ch);
-int is_a_bracket(char ch);
-int is_a_end_bracket(char ch);
+bool is_a_open_parens(char ch);
+bool is_a_close_parens(char ch);
+bool is_a_root_type(char ch);
+bool is_a_quote(char ch);
+bool is_a_letter(char ch);
+bool is_a_number(char ch);
+bool is_a_function(char ch);
+bool is_a_bracket(char ch);
+bool is_a_end_bracket(char ch);
 
 #endif

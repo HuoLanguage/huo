@@ -70,7 +70,7 @@ char *get_exe_path(const char *called_name) {
 char *get_path_dir(char *path) {
     // Bleh
     char *temp = strdup(path);
-    int len = strlen(temp);
+    size_t len = strlen(temp);
     do {
         temp[len] = 0;
         if (len <= 1) {
@@ -188,7 +188,7 @@ int main(int argc, char const *argv[]) {
     };
 
     struct Tokens * tokens = tokenize(to_execute, &t);
-    // for(int i = 0; i < tokens->length; i++){
+    //for(size_t i = 0; i < tokens->length; i++){
     //     printf("%c", tokens->tokens[i].type);
     // }
 
@@ -210,8 +210,8 @@ int main(int argc, char const *argv[]) {
 
     scopes->scopes[0] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
 
-    int num_defs = store_defs(&root, defined);
-    for(int i = num_defs; i < root.size; i++){
+    size_t num_defs = store_defs(&root, defined);
+    for(size_t i = num_defs; i < root.size; i++){
         execute(root.children[i], defined, scopes, function_names, RECURSE_MAX);
     }
     return 0;

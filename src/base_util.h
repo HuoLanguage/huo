@@ -52,10 +52,9 @@
 void *malloc_or_die(size_t size);
 size_t arr_malloc_size(size_t num, size_t size);
 char *strdup(const char *str);
-int string_contains(char ch, struct String* string);
 void printTree(struct Tree *tree);
 struct Tree * duplicate_tree(struct Tree * a);
 void make_scope(struct Scopes * scopes);
-void sub_vars(struct Value *v, struct Scopes *scopes, int max_depth);
+void sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth);
 
 #endif

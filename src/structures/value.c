@@ -91,7 +91,7 @@ bool value_as_bool(struct Value *v) {
     CHECK_TYPE(v, BOOL);
     return v->data.bl;
 }
-long value_as_long(struct Value *v) {
+huo_int_t value_as_long(struct Value *v) {
     CHECK_TYPE(v, LONG);
     return v->data.ln;
 }
@@ -117,7 +117,7 @@ struct String value_as_keyword(struct Value *v) {
     return v->data.str;
 }
 
-long length(struct Value a);
+size_t length(struct Value a);
 
 struct Value value_from_float(float f) {
     struct Value v = {
@@ -135,7 +135,7 @@ struct Value value_from_bool(bool b) {
     return v;
 }
 
-struct Value value_from_long(long l) {
+struct Value value_from_long(huo_int_t l) {
     struct Value v = {
           .type = LONG,
           .data.ln = l
@@ -173,11 +173,11 @@ struct Value value_from_undef() {
     return v;
 }
 
-long length(struct Value a) {
+size_t length(struct Value a) {
     if (a.type == STRING) {
         return string_length(&a.data.str);
     } else if (a.type == ARRAY) {
-        return (long) a.data.array->size;
+        return a.data.array->size;
     } else {
         ERROR("Type error: value of type '%c' has no length property", a.type);
     }

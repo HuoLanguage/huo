@@ -4,7 +4,7 @@
 // _STRING_H already exists!
 
 struct String {
-    int length;
+    size_t length;
     char *body;
 };
 
@@ -28,8 +28,9 @@ void string_concat_to(struct String *to, struct String *from);
 bool string_matches_heap(struct String *base, struct String *compare);
 bool string_matches_stack(struct String base, struct String compare);
 char *string_to_chars(struct String *s);
-long string_length(struct String *s);
-char string_index(struct String *s, long i);
+size_t string_length(struct String *s);
+char string_index(struct String *s, size_t i);
+bool string_contains(char ch, struct String* string);
 
 unsigned long string_hash_code(struct String *s);
 unsigned long string_hash_code_vv(void *s);

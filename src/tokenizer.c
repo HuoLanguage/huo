@@ -6,7 +6,7 @@
 
 struct Tokens * tokenize(struct String file, struct Tokens *content){
     assert(string_is_sane(&file));
-    int counter = 0;
+    size_t counter = 0;
     while (counter < file.length){
         char c = file.body[counter];
         if(c != ' ' && c != '\n'){

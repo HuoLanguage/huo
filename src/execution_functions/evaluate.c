@@ -7,7 +7,7 @@
 #include "../core_functions.h"
 #include "../config.h"
 
-struct Value eval(struct Value * string, hash_table * defined, struct Scopes * scopes, struct Value_array * function_names, int max_depth){
+struct Value eval(struct Value * string, hash_table * defined, struct Scopes * scopes, struct Value_array * function_names, huo_depth_t max_depth){
     struct Value result;
     struct Tokens t = {
         .length = 0,
@@ -19,8 +19,8 @@ struct Value eval(struct Value * string, hash_table * defined, struct Scopes * s
     };
     struct Tokens * tokens = tokenize(value_as_string(string), &t);
     parse(&root, tokens, true);
-    int num_defs = store_defs(&root, defined);
-    for(int i = num_defs; i < root.size; i++){
+    size_t num_defs = store_defs(&root, defined);
+    for(size_t i = num_defs; i < root.size; i++){
         result = execute(root.children[i], defined, scopes, function_names, max_depth - 1);
     }
     return result;

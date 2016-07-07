@@ -10,9 +10,9 @@
 #include "structures/hash_table.h"
 #include "config.h"
 
-int store_defs(struct Tree * ast, hash_table * defined){
-    int num_defs = 0;
-    for(int i = 0; i < ast->size; i++){
+size_t store_defs(struct Tree * ast, hash_table * defined){
+    size_t num_defs = 0;
+    for(size_t i = 0; i < ast->size; i++){
         if (ast->children[i]->type != 'k') {
             continue;
         }

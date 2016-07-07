@@ -3,7 +3,7 @@
 
 #include "structures/structures.h"
 
-int store_defs(struct Tree * ast, hash_table * defined);
+size_t store_defs(struct Tree * ast, hash_table * defined);
 struct Tree * read_import(struct String file_name);
 
 #endif
