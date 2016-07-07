@@ -375,7 +375,7 @@ struct Value string_split(struct String sep, struct String what) {
 }
 
 
-struct Value array_index(struct Value index, struct Value list) {
+struct Value value_index(struct Value index, struct Value list) {
     long i = value_as_long(&index);
     if(list.type == ARRAY){
         struct Value_array *a = value_as_array(&list);

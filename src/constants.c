@@ -7,7 +7,7 @@ const int LOOP_MAX = -1;
 
 struct String functions = STR_NEW("*+-/!=<>");
 
-struct String numbers = STR_NEW("0123456789");
+struct String numbers = STR_NEW("-0123456789");
 
 struct String letters = STR_NEW("_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 

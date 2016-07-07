@@ -29,7 +29,7 @@ struct Value execute (struct Tree *ast, hash_table *defined, struct Scopes *scop
             result = value_copy_stack(&ast->content);
             sub_vars(&result, scopes, max_depth - 1);
         }
-        else if(ast->type == 'k' && ast->content.type == KEYWORD && (func = get_defined_func(defined, ast->content.data.str)) != NULL){
+        else if(ast->content.type == KEYWORD && (func = get_defined_func(defined, ast->content.data.str)) != NULL){
             make_args_map(ast, defined, scopes, function_names, func, max_depth-1);
             result = execute(duplicate_tree(get_defined_body(func)), defined, scopes, function_names, max_depth-1);
             scopes->current--;

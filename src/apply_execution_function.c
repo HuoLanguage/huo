@@ -22,51 +22,48 @@ struct Value apply_execution_function(struct Tree * ast, hash_table * defined, s
     struct Value undefined = {
         .type = UNDEF
     };
-    if(string_matches_heap(&ast->content.data.str, &if_const)){
+    if(ast->content.type == KEYWORD && string_matches_heap(&ast->content.data.str, &if_const)){
         return if_block(ast, defined, scopes, function_names, max_depth-1);
     }
-    else if(string_matches_heap(&let_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&let_const, &ast->content.data.str)){
         if (ast->size < 2) {
             ERROR("Not enough arguments for store_let_binding: %i < 2\n", ast->size);
         }
         store_let_binding(ast->children[0],ast->children[1], defined, scopes, function_names, max_depth-1);
         return undefined;
     }
-    else if(string_matches_heap(&each_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&each_const, &ast->content.data.str)){
         for_each(ast, defined, scopes, function_names, max_depth-1);
         return undefined;
     }
-    else if(string_matches_heap(&map_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&map_const, &ast->content.data.str)){
         return map_array(ast, defined, scopes, function_names, max_depth-1);
     }
-    else if(string_matches_heap(&while_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&while_const, &ast->content.data.str)){
         while_loop(ast, defined, scopes, function_names, max_depth - 1);
         return undefined;
     }
-    else if(string_matches_heap(&reduce_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&reduce_const, &ast->content.data.str)){
         return reduce_array(ast, defined, scopes, function_names, max_depth - 1);
     }
-    else if(string_matches_heap(&set_const, &ast->content.data.str)) {
+    else if(ast->content.type == KEYWORD && string_matches_heap(&set_const, &ast->content.data.str)) {
         if (ast->size < 3) {
             ERROR("Not enough arguments for set: %i < 3", ast->size);
         }
         struct Value index = execute(ast->children[0], defined, scopes, function_names, max_depth-1);
         struct Value item = execute(ast->children[1], defined, scopes, function_names, max_depth-1);
         struct Value array = execute(ast->children[2], defined, scopes, function_names, max_depth-1);
-        if(array.type == STRING){
-            return set(index, item, array);
-        }
-        else if(array.type == ARRAY){
-            return set(index, item, array);
-        } else {
-            ERROR("Error using set with wrong type ('%c' !== ['a'|'s'])", array.type);
-        }
+
+        return set(index, item, array);
     }
-    else if(string_matches_heap(&for_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&for_const, &ast->content.data.str)){
         for_loop(ast, defined, scopes, function_names, max_depth - 1);
         return undefined;
     }
-    else if(string_matches_heap(&do_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&do_const, &ast->content.data.str)){
+        if (!ast->size) {
+            ERROR("Not enough arguments for do: %i < 1", ast->size);
+        }
         for(int i = 0; i < ast->size; i++){
             if(i == ast->size-1){
                 return execute(ast->children[i], defined, scopes, function_names, max_depth-1);
@@ -75,7 +72,7 @@ struct Value apply_execution_function(struct Tree * ast, hash_table * defined, s
             }
         }
     }
-    else if(string_matches_heap(&read_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&read_const, &ast->content.data.str)){
         if (ast->size < 1) {
             ERROR("Not enough arguments for read: %i < 1", ast->size);
         }
@@ -85,24 +82,20 @@ struct Value apply_execution_function(struct Tree * ast, hash_table * defined, s
         }
         return value_from_string(read_file(ast->children[0]->content.data.str));
     }
-    else if(string_matches_heap(&substring_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&substring_const, &ast->content.data.str)){
         if (ast->size < 3) {
             ERROR("Not enough arguments for substring: %i < 3", ast->size);
         }
         struct Value string = execute(ast->children[2], defined, scopes, function_names, max_depth-1);
         struct Value start = execute(ast->children[0], defined, scopes, function_names, max_depth-1);
         struct Value end = execute(ast->children[1], defined, scopes, function_names, max_depth-1);
-        if(string.type != STRING){
-            ERROR("Non-string value passed into substring: %c.", string.type);
-            return undefined;
-        } else {
-            return substring(start, end, string);
-        }
+        
+        return substring(start, end, string);
     }
-    else if(string_matches_heap(&switch_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&switch_const, &ast->content.data.str)){
         return switch_case(ast, defined, scopes, function_names, max_depth-1);
     }
-    else if(string_matches_heap(&parallel_const, &ast->content.data.str)){
+    else if(ast->content.type == KEYWORD && string_matches_heap(&parallel_const, &ast->content.data.str)){
         parallel_execution(ast, defined, scopes, function_names, max_depth-1);
         return undefined;
     }
