@@ -61,7 +61,7 @@
 
 void *malloc_or_die(size_t size);
 size_t arr_malloc_size(size_t num, size_t size);
-char *strdup(const char *str);
+char *o_strdup(const char *str);
 void printTree(struct Tree *tree);
 struct Tree * duplicate_tree(struct Tree * a);
 void make_scope(struct Scopes * scopes);

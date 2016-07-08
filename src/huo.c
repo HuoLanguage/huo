@@ -35,7 +35,7 @@ char *get_path_dir(char *path) {
     if (temp == NULL) {
         ERROR("Error splitting directory: %s", path);
     }
-    char *dup = strdup(temp); // dirname strings should not be freed
+    char *dup = o_strdup(temp); // dirname strings should not be freed
     if (dup == NULL) {
         ERROR("Malloc failure");
     }
@@ -67,7 +67,7 @@ char *get_exe_path(const char *called_name) {
 
 char *get_path_dir(char *path) {
     // Bleh
-    char *temp = strdup(path);
+    char *temp = o_strdup(path);
     size_t len = strlen(temp);
     do {
         temp[len] = 0;
