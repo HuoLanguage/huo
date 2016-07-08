@@ -3,7 +3,7 @@
 #include "base_util.h"
 #include "config.h"
 
-const huo_depth_t RECURSE_MAX = 250;
+const huo_depth_t RECURSE_MAX = 50000;
 const huo_int_t LOOP_MAX = -1;
 
 struct String functions = STR_NEW("*+-/!=<>");

@@ -3,6 +3,6 @@
 
 #include "../structures/structures.h"
 
-struct Value eval(struct Value * string, hash_table * defined, struct Scopes * scopes, struct Value_array * function_names, huo_depth_t max_depth);
+struct Value eval(struct Value * string, struct Execution_bundle * exec_bundle);
 
 #endif

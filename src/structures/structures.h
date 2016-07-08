@@ -6,7 +6,7 @@
 #include "string.h"
 #include "value.h"
 #include "hash_table.h"
-typedef uint_fast8_t huo_depth_t;
+typedef uint_fast16_t huo_depth_t;
 
 struct Token {
     char type;
@@ -34,10 +34,10 @@ struct Tree {
 };
 
 struct Execution_bundle {
-    struct Tree * ast;
+    struct Tree *ast;
     hash_table *defined;
-    struct Scopes * scopes;
-    struct Value_array * function_names;
+    struct Scopes *scopes;
+    struct Value_array *function_names;
     huo_depth_t max_depth;
 };
 

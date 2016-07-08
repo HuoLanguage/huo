@@ -3,19 +3,23 @@
 #include "../base_util.h"
 #include "../config.h"
 
-struct Value if_block(struct Tree * ast, hash_table *defined, struct Scopes * scopes, struct Value_array * function_names, huo_depth_t max_depth){
-    if (max_depth <= 0) {
+struct Value if_block(struct Execution_bundle * exec_bundle){
+    struct Tree * ast = exec_bundle->ast;
+    if (exec_bundle->max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
     if (ast->size != 2 && ast->size != 3) {
         ERROR("Wrong number of arguments for if_block: %zu != [2,3]\n", ast->size);
     }
-    struct Value result = execute(ast->children[0], defined, scopes, function_names, max_depth - 1);
+    exec_bundle->ast = ast->children[0];
+    struct Value result = execute(exec_bundle);
     if(value_as_bool(&result)){ // result is boolean true
-        result = execute(ast->children[1], defined, scopes, function_names, max_depth - 1);
+        exec_bundle->ast = ast->children[1];
+        result = execute(exec_bundle);
     }
     else if (ast->size == 3) { // result is boolean false
-        result = execute(ast->children[2], defined, scopes, function_names, max_depth - 1);
+        exec_bundle->ast = ast->children[2];
+        result = execute(exec_bundle);
     } else {
         result = value_from_undef();
     }

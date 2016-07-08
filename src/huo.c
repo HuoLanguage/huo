@@ -201,6 +201,8 @@ int main(int argc, char const *argv[]) {
     // this prints the AST for reference
     // printTree(&root);
     // printf("\n");
+    struct Execution_bundle * exec_bundle = malloc_or_die(sizeof(struct Execution_bundle));
+
     hash_table *defined = hash_table_new(&string_hash_code_vv, &string_matches_vv);
     struct Scopes * scopes = malloc_or_die(sizeof(struct Scopes));
     scopes->scopes = NULL;
@@ -209,10 +211,15 @@ int main(int argc, char const *argv[]) {
     scopes->current = 0;
 
     scopes->scopes[0] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
-
     size_t num_defs = store_defs(root, defined);
+
+    exec_bundle->defined = defined;
+    exec_bundle->scopes = scopes;
+    exec_bundle->function_names = function_names;
+    exec_bundle->max_depth = RECURSE_MAX;
     for(size_t i = num_defs; i < root->size; i++){
-        execute(root->children[i], defined, scopes, function_names, RECURSE_MAX);
+        exec_bundle->ast = root->children[i];
+        execute(exec_bundle);
     }
     return 0;
 }

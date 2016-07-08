@@ -5,8 +5,9 @@
 #include "../base_util.h"
 #include "../config.h"
 
-void while_loop(struct Tree * ast, hash_table *defined, struct Scopes * scopes, struct Value_array * function_names, huo_depth_t max_depth){
-    if(ast->size != 2){
+void while_loop(struct Execution_bundle * exec_bundle){
+    struct Tree * ast = exec_bundle->ast;
+    if(exec_bundle->ast->size != 2){
         ERROR("Not enough arguments for while: %zu < 2\n", ast->size);
     }
     huo_int_t i = 0;
@@ -16,9 +17,11 @@ void while_loop(struct Tree * ast, hash_table *defined, struct Scopes * scopes, 
                 break;
             }
         }
-        struct Value condition = execute(ast->children[0], defined, scopes, function_names, max_depth - 1);
+        exec_bundle->ast = ast->children[0];
+        struct Value condition = execute(exec_bundle);
         if(value_as_bool(&condition)){
-            execute(ast->children[1], defined, scopes, function_names, max_depth - 1);
+            exec_bundle->ast = ast->children[1];
+            execute(exec_bundle);
         } else {
             return;
         }

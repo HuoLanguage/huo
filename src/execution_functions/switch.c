@@ -5,23 +5,27 @@
 #include "../core_functions.h"
 #include "../config.h"
 
-struct Value switch_case(struct Tree * ast, hash_table *defined, struct Scopes * scopes, struct Value_array * function_names, huo_depth_t max_depth){
-    if (max_depth <= 0) {
+struct Value switch_case(struct Execution_bundle * exec_bundle){
+    struct Tree * ast = exec_bundle->ast;
+    if (exec_bundle->max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
     for(size_t i = 1; i < ast->size; i++){
         struct Tree * routine = ast->children[i];
         if(routine->type == 'k' && string_matches_heap(&default_const, &routine->content.data.str)){
-            return execute(routine->children[0], defined, scopes, function_names, max_depth - 1);
+            exec_bundle->ast = routine->children[0];
+            return execute(exec_bundle);
         }
         if (routine->size != 2) {
             ERROR("Invalid syntax for switch_case: %zu != 2", routine->size);
         }
         routine->children[1] = ast->children[0];
-        struct Value result = execute(routine, defined, scopes, function_names, max_depth - 1);
+        exec_bundle->ast = routine;
+        struct Value result = execute(exec_bundle);
         if(value_as_bool(&result)){
             struct Tree * return_value = routine->children[1];
-            return execute(return_value, defined, scopes, function_names, max_depth - 1);
+            exec_bundle->ast = return_value;
+            return execute(exec_bundle);
         }
     }
     struct Value result;

@@ -3,9 +3,10 @@
     (let x (+ x x))
 )
 (print x)
-(let y [ ])
+(let y [ 1 ])
 (for 0 25
     (do
+        (print 1)
         (set (length y) (length y) y)
     )
 )

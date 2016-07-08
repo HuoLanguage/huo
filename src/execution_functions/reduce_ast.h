@@ -3,6 +3,6 @@
 
 #include "../structures/structures.h"
 
-struct Value reduce_ast(struct Tree * ast, hash_table *defined, struct Scopes * scopes, struct Value_array * function_names, huo_depth_t max_depth);
+struct Value reduce_ast(struct Execution_bundle * exec_bundle);
 
 #endif
