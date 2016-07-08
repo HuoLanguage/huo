@@ -30,16 +30,17 @@ struct Value execute (struct Execution_bundle * exec_bundle){
     } else {
         // no special execution types found, check for more basic conditions
         struct Tree *func;
-        if(!ast->size){
-            // ast with no children is either a value or a variable
-            result = value_copy_stack(&ast->content);
-            sub_vars(&result, scopes, max_depth - 1);
-        }
-        else if(ast->content.type == KEYWORD && (func = get_defined_func(defined, ast->content.data.str)) != NULL){
+        if(ast->content.type == KEYWORD && (func = get_defined_func(defined, ast->content.data.str)) != NULL){
             make_args_map(exec_bundle, func);
             exec_bundle->ast = duplicate_tree(get_defined_body(func));
             result = execute(exec_bundle);
             scopes->current--;
+        }
+        else if(!ast->size){
+            // functions are all checked above, if we are not a function, then
+            // an ast with no children is either a value or a variable
+            result = value_copy_stack(&ast->content);
+            sub_vars(&result, scopes, max_depth - 1);
         }
         else if(ast->size == 1){
             exec_bundle->ast = ast->children[0];
@@ -68,8 +69,10 @@ struct Value execute (struct Execution_bundle * exec_bundle){
         else if(ast->size == 2) {
             exec_bundle->ast = ast->children[0];
             struct Value a = execute(exec_bundle);
+
             exec_bundle->ast = ast->children[1];
             struct Value b = execute(exec_bundle);
+
             result = apply_core_function(ast, a, b);
         } else {
             result = reduce_ast(exec_bundle);
