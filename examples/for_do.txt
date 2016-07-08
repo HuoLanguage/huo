@@ -6,7 +6,7 @@
 (let y [ 1 ])
 (for 0 25
     (do
-        (print (length y))
+        (print 1)
         (set (length y) (length y) y)
     )
 )

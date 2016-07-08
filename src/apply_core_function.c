@@ -12,7 +12,7 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
             return concat(a, b);
         }
         else if(string_matches_heap(&index_const, kwd)){
-            return index(a, b);
+            return value_index(a, b);
         }
         else if(string_matches_heap(&push_const, kwd)){
             return push(a, b);

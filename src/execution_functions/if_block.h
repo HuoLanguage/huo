@@ -3,6 +3,6 @@
 
 #include "../structures/structures.h"
 
-struct Value if_block(struct Tree * ast, hash_table *defined, struct Scopes * scopes, huo_depth_t max_depth);
+struct Value if_block(struct Execution_bundle * exec_bundle);
 
 #endif

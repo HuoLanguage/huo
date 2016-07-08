@@ -9,7 +9,8 @@
 #include "structures/hash_table.h"
 #include "config.h"
 
-void make_args_map(struct Tree * ast, hash_table *defined, struct Scopes * scopes, struct Tree *function, huo_depth_t max_depth) {
+void make_args_map(struct Execution_bundle * exec_bundle, struct Tree * function) {
+    struct Tree * ast = exec_bundle->ast;
     // we want to evaluate the values passed into the function
     // but store the result in the next scope, not the current one
     if (function->size != ast->size + 2) {
@@ -17,15 +18,16 @@ void make_args_map(struct Tree * ast, hash_table *defined, struct Scopes * scope
     }
     struct Value vals[ast->size];
     for(size_t i = 0; i < ast->size; i++){
-        vals[i] = execute(ast->children[i], defined, scopes, max_depth - 1);
+        exec_bundle->ast = ast->children[i];
+        vals[i] = execute(exec_bundle);
     }
-    make_scope(scopes);
+    make_scope(exec_bundle->scopes);
     for(size_t l = 0; l < ast->size; l++){
         char t = function->children[l+1]->content.type;
         if (t != KEYWORD) {
             ERROR("Invalid type for argument: '%c' != KEYWORD", t);
         }
-        store_let_value(&function->children[l+1]->content, &vals[l], scopes);
+        store_let_value(&function->children[l+1]->content, &vals[l], exec_bundle->scopes);
     }
 }
 

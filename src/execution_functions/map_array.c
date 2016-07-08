@@ -4,8 +4,9 @@
 #include "let_binding.h"
 #include "../config.h"
 
-struct Value map_array(struct Tree * ast, hash_table *defined, struct Scopes * scopes, huo_depth_t max_depth){
-    if (max_depth <= 0) {
+struct Value map_array(struct Execution_bundle * exec_bundle){
+    struct Tree * ast = exec_bundle->ast;
+    if (exec_bundle->max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
     bool use_index;
@@ -19,19 +20,21 @@ struct Value map_array(struct Tree * ast, hash_table *defined, struct Scopes * s
     } else {
         ERROR("Wrong number of arguments for map__array: %zu != [3,4]\n", ast->size);
     }
-    struct Value array = execute(ast->children[0], defined, scopes, max_depth - 1);
+    exec_bundle->ast = ast->children[0];
+    struct Value array = execute(exec_bundle);
     if (array.type != ARRAY) {
         ERROR("Wrong type for map: '%c' != ARRAY", array.type);
     }
     for(size_t i = 0; i < array.data.array->size; i++){
         struct Value *item = value_copy_heap(array.data.array->values[i]);
         struct Tree * function = duplicate_tree(ast->children[func_index]);
-        store_let_value(&ast->children[1]->content, item, scopes);
+        store_let_value(&ast->children[1]->content, item, exec_bundle->scopes);
         if (use_index) {
             struct Value index = value_from_long(i);
-            store_let_value(&ast->children[2]->content, &index, scopes);
+            store_let_value(&ast->children[2]->content, &index, exec_bundle->scopes);
         }
-        struct Value result = execute(function, defined, scopes, max_depth - 1);
+        exec_bundle->ast = function;
+        struct Value result = execute(exec_bundle);
         array.data.array->values[i] = value_copy_heap(&result);
     }
     return array;

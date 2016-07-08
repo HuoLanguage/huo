@@ -38,6 +38,7 @@ objs = \
   src/execution_functions/while_loop.o\
   src/execution_functions/evaluate.o\
   src/execution_functions/read_line.o\
+  src/apply_execution_function.o\
   src/build_array.o \
   src/tokenizer.o \
   src/process_defs.o \

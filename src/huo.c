@@ -11,11 +11,13 @@
 #include "parser.h"
 #include "structures/structures.h"
 #include "execution_functions/read_file.h"
+#include "build_array.h"
 #include "execute.h"
 #include "store_defs.h"
 #include "base_util.h"
 #include "huo.h"
 #include "config.h"
+#include "core_functions.h"
 
 #if defined(_POSIX_VERSION) || defined(__linux__) || defined(__APPLE__)
 
@@ -170,6 +172,14 @@ int main(int argc, char const *argv[]) {
 "-h, --help print this help message and exit\n");
         return error_flag ? 1 : 0; // Redundant for now, but reminder to maybe return a different error code later
     }
+    struct Tokens fn_tokens = {
+        .tokens = NULL,
+        .length = 0,
+        .counter = 0
+    };
+
+    tokenize(function_names, &fn_tokens);
+    struct Value_array * function_names = build_array(&fn_tokens);
 
     struct Tokens t = {
         .tokens = NULL,
@@ -180,17 +190,19 @@ int main(int argc, char const *argv[]) {
     struct Tokens * tokens = tokenize(to_execute, &t);
     //for(size_t i = 0; i < tokens->length; i++){
     //     printf("%c", tokens->tokens[i].type);
-    //}
+    // }
 
-    struct Tree root;
-    root.type = 'r';
-    root.size = 0;
-    root.children = NULL;
+    struct Tree *root = malloc_or_die(sizeof(struct Tree));
+    root->type = 'r';
+    root->size = 0;
+    root->children = NULL;
 
-    parse(&root, tokens, true);
+    parse(root, tokens, true);
     // this prints the AST for reference
     // printTree(&root);
     // printf("\n");
+    struct Execution_bundle * exec_bundle = malloc_or_die(sizeof(struct Execution_bundle));
+
     hash_table *defined = hash_table_new(&string_hash_code_vv, &string_matches_vv);
     struct Scopes * scopes = malloc_or_die(sizeof(struct Scopes));
     scopes->scopes = NULL;
@@ -199,10 +211,15 @@ int main(int argc, char const *argv[]) {
     scopes->current = 0;
 
     scopes->scopes[0] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
+    size_t num_defs = store_defs(root, defined);
 
-    size_t num_defs = store_defs(&root, defined);
-    for(size_t i = num_defs; i < root.size; i++){
-        execute(root.children[i], defined, scopes, RECURSE_MAX);
+    exec_bundle->defined = defined;
+    exec_bundle->scopes = scopes;
+    exec_bundle->function_names = function_names;
+    exec_bundle->max_depth = RECURSE_MAX;
+    for(size_t i = num_defs; i < root->size; i++){
+        exec_bundle->ast = root->children[i];
+        execute(exec_bundle);
     }
     return 0;
 }

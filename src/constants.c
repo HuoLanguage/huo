@@ -3,12 +3,12 @@
 #include "base_util.h"
 #include "config.h"
 
-const huo_depth_t RECURSE_MAX = 250;
+const huo_depth_t RECURSE_MAX = 50000;
 const huo_int_t LOOP_MAX = -1;
 
 struct String functions = STR_NEW("*+-/!=<>");
 
-struct String numbers = STR_NEW("0123456789");
+struct String numbers = STR_NEW("-0123456789");
 
 struct String letters = STR_NEW("_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
@@ -61,6 +61,8 @@ struct String while_const = STR_NEW("while");
 struct String eval_const = STR_NEW("eval");
 
 struct String read_line_const = STR_NEW("readline");
+
+struct String function_names = STR_NEW("[if, read, let, set, each, for, do, switch, parallel, import, map, reduce, substring, while]");
 
 const char open_parens_const = '(';
 const char close_parens_const = ')';

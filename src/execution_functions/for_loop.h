@@ -3,6 +3,6 @@
 
 #include "../structures/structures.h"
 
-void for_loop(struct Tree * ast, hash_table *defined, struct Scopes * scopes, huo_depth_t max_depth);
+void for_loop(struct Execution_bundle * exec_bundle);
 
 #endif

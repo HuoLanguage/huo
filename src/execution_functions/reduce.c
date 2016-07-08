@@ -5,8 +5,9 @@
 #include "../core_functions.h"
 #include "../config.h"
 
-struct Value reduce_array(struct Tree * ast, hash_table *defined, struct Scopes * scopes, huo_depth_t max_depth){
-    if (max_depth <= 0) {
+struct Value reduce_array(struct Execution_bundle * exec_bundle){
+    struct Tree * ast = exec_bundle->ast;
+    if (exec_bundle->max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
     if (ast->size != 4 && ast->size != 5) {
@@ -20,7 +21,8 @@ struct Value reduce_array(struct Tree * ast, hash_table *defined, struct Scopes 
     }
     size_t start;
     struct Value result;
-    struct Value array = execute(ast->children[0], defined, scopes, max_depth - 1);
+    exec_bundle->ast = ast->children[0];
+    struct Value array = execute(exec_bundle);
     if (array.type != ARRAY) {
         ERROR("Invalid type for reduce_array: '%c' != ARRAY\n", array.type);
     }
@@ -28,7 +30,8 @@ struct Value reduce_array(struct Tree * ast, hash_table *defined, struct Scopes 
         return value_copy_stack(&array);
     }
     if(ast->size == 5){
-        result = execute(ast->children[4], defined, scopes, max_depth - 1);
+        exec_bundle->ast = ast->children[4];
+        result = execute(exec_bundle);
         start = 0;
     } else {
         result = *array.data.array->values[0];
@@ -37,9 +40,10 @@ struct Value reduce_array(struct Tree * ast, hash_table *defined, struct Scopes 
     for(size_t i = start; i < array.data.array->size; i++){
         struct Value * item = array.data.array->values[i];
         struct Tree * function = duplicate_tree(ast->children[3]);
-        store_let_value(&ast->children[1]->content, &result, scopes);
-        store_let_value(&ast->children[2]->content, item, scopes);
-        result = execute(function, defined, scopes, max_depth - 1);
+        store_let_value(&ast->children[1]->content, &result, exec_bundle->scopes);
+        store_let_value(&ast->children[2]->content, item, exec_bundle->scopes);
+        exec_bundle->ast = function;
+        result = execute(exec_bundle);
     }
     return result;
 }
