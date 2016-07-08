@@ -56,7 +56,7 @@ size_t arr_malloc_size(size_t num, size_t size) {
     return res;
 }
 
-char *strdup(const char *str) {
+char *o_strdup(const char *str) {
     size_t len = strlen(str);
     char *dup = ARR_MALLOC(len + 1, char);
     strcpy(dup, str);

@@ -7,7 +7,10 @@
 #include "structures/structures.h"
 #include "config.h"
 
-#define WARN_ONCE(...) _WARN_ONCE(warn_once_##__COUNTER__, __VA_ARGS__)
+#define PASTE_HELPER(a,b) a ## b
+#define PASTE(a,b) PASTE_HELPER(a,b)
+
+#define WARN_ONCE(...) _WARN_ONCE(PASTE(warn_once_, __COUNTER__), __VA_ARGS__)
 #define _WARN_ONCE(UNIQ, ...) do {\
     static bool UNIQ = false;\
     if (!UNIQ) {\
@@ -16,6 +19,21 @@
         fprintf(stderr, "\n");\
     }\
 } while (0)
+
+#define ASSERT_NOREC(...) _ASSERT_NOREC(PASTE(warn_once_, __COUNTER__), __VA_ARGS__)
+
+#if defined(NDEBUG)
+#define _ASSERT_NOREC(UNIQ, ...)
+#else
+#define _ASSERT_NOREC(UNIQ, ...) do {\
+    static bool UNIQ = false;\
+    if (!UNIQ) {\
+        UNIQ = true;\
+        assert (__VA_ARGS__);\
+        UNIQ = false;\
+    }\
+} while (0)
+#endif
 
 /* Macro because it makes printf errors easier to detect at compile time */
 #define ERROR(...) ERROR_AT(__FILE__, __func__, __LINE__, __VA_ARGS__)
