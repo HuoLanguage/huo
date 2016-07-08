@@ -8,7 +8,7 @@
 #include "../config.h"
 
 
-bool string_is_sane(struct String *s) {
+bool string_is_sane(const struct String *const s) {
     assert (s != NULL);
     assert(s->length == 0 || s->body != NULL);
     assert(s->length == 0 || s->body[s->length] == 0);
@@ -139,7 +139,7 @@ bool string_matches_heap(struct String *base, struct String *compare){
     return true;
 }
 
-char *string_to_chars(struct String *s) {
+char *string_to_chars(const struct String *s) {
     assert(string_is_sane(s));
     if (s->length == 0) {
         return "";
@@ -177,4 +177,12 @@ unsigned long string_hash_code_vv(void *s) {
 
 bool string_matches_vv(void *base, void *compare) {
     return string_matches_heap((struct String *) base, (struct String *) compare);
+}
+
+void string_free(struct String *const s) {
+    if (s->body != NULL) {
+        free(s->body);
+        s->body = NULL;
+    }
+    s->length = 0;
 }
