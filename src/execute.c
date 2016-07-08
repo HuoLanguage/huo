@@ -15,11 +15,13 @@
 
 struct Value execute (struct Execution_bundle * exec_bundle){
     exec_bundle->max_depth -= 1;
+
     struct Tree * ast = exec_bundle->ast;
     struct Scopes * scopes = exec_bundle->scopes;
     hash_table * defined = exec_bundle->defined;
     huo_depth_t max_depth = exec_bundle->max_depth;
     struct Value_array * function_names = exec_bundle->function_names;
+
     struct Value result;
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
@@ -78,5 +80,7 @@ struct Value execute (struct Execution_bundle * exec_bundle){
             result = reduce_ast(exec_bundle);
         }
     }
+    
+    exec_bundle->max_depth += 1;
     return result;
 }

@@ -6,7 +6,7 @@
 #include "string.h"
 #include "value.h"
 #include "hash_table.h"
-typedef uint_fast16_t huo_depth_t;
+typedef uint_fast8_t huo_depth_t;
 
 struct Token {
     char type;
