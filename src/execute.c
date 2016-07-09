@@ -46,10 +46,9 @@ struct Value execute (struct Execution_bundle * exec_bundle){
                     result = value_from_bool(false);
                 } else if(string_matches_heap(&ast->content.data.str, &true_const)){
                     result = value_from_bool(true);
-                } else {
-                    sub_vars(&result, scopes, max_depth - 1);
                 }
             }
+            sub_vars(&result, scopes, max_depth - 1);
         }
         else if(ast->size == 1){
             if(ast->type == 'k' && ast->content.type == KEYWORD){
