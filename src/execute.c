@@ -7,10 +7,9 @@
 #include "constants.h"
 #include "execute.h"
 #include "execution_functions/reduce_ast.h"
-#include "execution_functions/read_line.h"
-#include "execution_functions/evaluate.h"
 #include "apply_core_function.h"
 #include "apply_execution_function.h"
+#include "apply_single_value_func.h"
 #include "config.h"
 
 struct Value execute (struct Execution_bundle * exec_bundle){
@@ -42,30 +41,19 @@ struct Value execute (struct Execution_bundle * exec_bundle){
             // functions are all checked above, if we are not a function, then
             // an ast with no children is either a value or a variable
             result = value_copy_stack(&ast->content);
-            sub_vars(&result, scopes, max_depth - 1);
+            if(ast->type == 'k' && ast->content.type == KEYWORD){
+                if(string_matches_heap(&ast->content.data.str, &false_const)){
+                    result = value_from_bool(false);
+                } else if(string_matches_heap(&ast->content.data.str, &true_const)){
+                    result = value_from_bool(true);
+                } else {
+                    sub_vars(&result, scopes, max_depth - 1);
+                }
+            }
         }
         else if(ast->size == 1){
-            exec_bundle->ast = ast->children[0];
-            struct Value a = execute(exec_bundle);
-
             if(ast->type == 'k' && ast->content.type == KEYWORD){
-                if(string_matches_heap(&ast->content.data.str, &print_const)){
-                    print(a);
-                    printf("\n");
-                    result.type = UNDEF;
-                }
-                else if(string_matches_heap(&ast->content.data.str, &length_const)){
-                    result = value_from_long(length(a));
-                }
-                else if(string_matches_heap(&ast->content.data.str, &return_const)){
-                    result = a;
-                }
-                else if(string_matches_heap(&ast->content.data.str, &eval_const)){
-                    result = eval(&a, exec_bundle);
-                }
-                else if(string_matches_heap(&ast->content.data.str, &read_line_const)){
-                    result = value_from_string(read_line(&a));
-                }
+                result = apply_single_value_func(exec_bundle);
             }
         }
         else if(ast->size == 2) {
@@ -80,7 +68,7 @@ struct Value execute (struct Execution_bundle * exec_bundle){
             result = reduce_ast(exec_bundle);
         }
     }
-    
+
     exec_bundle->max_depth += 1;
     return result;
 }

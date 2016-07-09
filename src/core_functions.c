@@ -181,6 +181,22 @@ struct Value not(struct Value a, struct Value b){
     }
 }
 
+struct Value and(struct Value a, struct Value b){
+    if(a.type == BOOL && b.type == BOOL){
+        return value_from_bool(value_as_bool(&a) && value_as_bool(&b));
+    } else {
+        ERROR("& operator only takes boolean values: %d | %d != 1", a.type, b.type);
+    }
+}
+
+struct Value or(struct Value a, struct Value b){
+    if(a.type == BOOL && b.type == BOOL){
+        return value_from_bool(value_as_bool(&a) || value_as_bool(&b));
+    } else {
+        ERROR("| operator only takes boolean values: %d | %d != 1", a.type, b.type);
+    }
+}
+
 struct Value equals(struct Value a, struct Value b){
     if(a.type == BOOL && b.type == BOOL){
         return value_from_bool(value_as_bool(&a) == value_as_bool(&b));
