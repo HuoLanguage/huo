@@ -62,9 +62,9 @@ struct String eval_const = STR_NEW("eval");
 
 struct String read_line_const = STR_NEW("readline");
 
-struct String false_const = STR_NEW("False");
+struct String false_const = STR_NEW("false");
 
-struct String true_const = STR_NEW("True");
+struct String true_const = STR_NEW("true");
 
 struct String function_names = STR_NEW("[if, read, let, set, each, for, do, switch, parallel, import, map, reduce, substring, while]");
 
