@@ -36,6 +36,8 @@ extern struct String while_const;
 extern struct String eval_const;
 extern struct String read_line_const;
 extern struct String function_names;
+extern struct String false_const;
+extern struct String true_const;
 
 extern const char open_parens_const;
 extern const char close_parens_const;

@@ -216,8 +216,8 @@ int main(int argc, char const *argv[]) {
     exec_bundle->defined = defined;
     exec_bundle->scopes = scopes;
     exec_bundle->function_names = function_names;
-    exec_bundle->max_depth = RECURSE_MAX;
     for(size_t i = num_defs; i < root->size; i++){
+        exec_bundle->max_depth = RECURSE_MAX;
         exec_bundle->ast = root->children[i];
         execute(exec_bundle);
     }

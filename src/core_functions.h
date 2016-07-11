@@ -21,8 +21,9 @@ struct Value array_concat(struct Value_array *a, struct Value_array *b);
 struct Value string_concat(struct String a, struct String b);
 
 struct Value not(struct Value a, struct Value b);
-
 struct Value equals(struct Value a, struct Value b);
+struct Value and(struct Value a, struct Value b);
+struct Value or(struct Value a, struct Value b);
 
 struct Value set(struct Value index, struct Value item, struct Value to_set);
 struct Value_array *array_set(size_t index, struct Value item, struct Value_array *array);

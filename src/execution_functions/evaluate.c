@@ -21,7 +21,7 @@ struct Value eval(struct Value * string, struct Execution_bundle * exec_bundle){
     parse(&root, tokens, true);
     size_t num_defs = store_defs(&root, exec_bundle->defined);
     for(size_t i = num_defs; i < root.size; i++){
-        exec_bundle->ast = root.children[1];
+        exec_bundle->ast = root.children[i];
         result = execute(exec_bundle);
     }
     return result;

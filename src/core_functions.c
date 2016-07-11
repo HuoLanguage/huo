@@ -181,6 +181,22 @@ struct Value not(struct Value a, struct Value b){
     }
 }
 
+struct Value and(struct Value a, struct Value b){
+    if(a.type == BOOL && b.type == BOOL){
+        return value_from_bool(value_as_bool(&a) && value_as_bool(&b));
+    } else {
+        ERROR("& operator only takes boolean values: %d | %d != 1", a.type, b.type);
+    }
+}
+
+struct Value or(struct Value a, struct Value b){
+    if(a.type == BOOL && b.type == BOOL){
+        return value_from_bool(value_as_bool(&a) || value_as_bool(&b));
+    } else {
+        ERROR("| operator only takes boolean values: %d | %d != 1", a.type, b.type);
+    }
+}
+
 struct Value equals(struct Value a, struct Value b){
     if(a.type == BOOL && b.type == BOOL){
         return value_from_bool(value_as_bool(&a) == value_as_bool(&b));
@@ -224,7 +240,7 @@ bool can_cast_to_size_t(huo_int_t i) {
 struct Value set(struct Value index_val, struct Value item, struct Value to_set) {
     huo_int_t index = value_as_long(&index_val);
     if (!can_cast_to_size_t(index)) {
-        ERROR("Index out of range for set: should be 0 <= %" PRIhi " < %zu", index, SIZE_MAX);
+        ERROR("Index out of range for set: should be 0 <= %" PRIhi " < %llu", index, SIZE_MAX);
     }
     if (to_set.type == ARRAY) {
         return value_from_array(array_set((size_t) index, item, value_as_array(&to_set)));

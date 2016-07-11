@@ -57,5 +57,11 @@ struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value
     else if(ast->type == '<'){
         return greater_than(b, a);
     }
+    else if(ast->type == '&'){
+        return and(a, b);
+    }
+    else if(ast->type == '|'){
+        return or(a, b);
+    }
     return a;
 }

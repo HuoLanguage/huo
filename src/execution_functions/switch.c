@@ -19,11 +19,12 @@ struct Value switch_case(struct Execution_bundle * exec_bundle){
         if (routine->size != 2) {
             ERROR("Invalid syntax for switch_case: %zu != 2", routine->size);
         }
+
+        struct Tree * return_value = routine->children[1];
         routine->children[1] = ast->children[0];
         exec_bundle->ast = routine;
         struct Value result = execute(exec_bundle);
         if(value_as_bool(&result)){
-            struct Tree * return_value = routine->children[1];
             exec_bundle->ast = return_value;
             return execute(exec_bundle);
         }
