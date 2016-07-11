@@ -63,24 +63,21 @@ char *o_strdup(const char *str) {
     return dup;
 }
 
-struct Tree * duplicate_tree(struct Tree * a){
-    struct Tree * root = malloc_or_die(sizeof(struct Tree));
-    root->type = a->type;
-    root->content = value_copy_stack(&a->content);
-    root->children = NULL;
-    root->size = a->size;
-    RESIZE(root->children, root->size);
-    for(size_t i = 0; i < a->size; i++){
-        root->children[i] = duplicate_tree(a->children[i]);
-    }
-    return root;
-}
-
-void make_scope(struct Scopes * scopes){
+hash_table *push_scope(struct Scopes * scopes){
     RESIZE(scopes->scopes, scopes->size + 1);
-    scopes->scopes[scopes->size] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
+    hash_table *h = hash_table_new(value_keyword_hash_code, value_keyword_equality);
+    scopes->scopes[scopes->size] = h;
     scopes->size++;
     scopes->current++;
+    return h;
+}
+
+void pop_scope(struct Scopes * scopes){
+    assert (scopes->size > 0);
+    scopes->size -= 1;
+    scopes->current -= 1;
+    //hash_table_free(scopes->scopes[scopes->size]);
+    RESIZE(scopes->scopes, scopes->size);
 }
 
 void sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth) {
@@ -99,37 +96,5 @@ void sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth) {
             struct String kwd = value_as_keyword(v);
             ERROR("Undefined variable: %s", string_to_chars(&kwd));
         }
-    }
-}
-
-void printTree(struct Tree *tree){
-    if(!tree->size){
-      if(tree->type == 'k'){
-          printf("{ type: \'%c\', size: %zu, keyword: %s }", tree->type, tree->size, tree->content.data.str.body);
-      }
-      else if(tree->type == 'n'){
-          printf("{ type: \'%c\', size: %zu, value: %" PRIhi " }", tree->type, tree->size, tree->content.data.ln);
-      }
-      else {
-          printf("{ type: \'%c\', size: %zu }", tree->type, tree->size);
-      }
-    } else {
-      if(tree->type == 'k'){
-          printf("{ type: \'%c\', size: %zu, keyword: %s ", tree->type, tree->size, tree->content.data.str.body);
-      }
-      else if(tree->type == 'n'){
-          printf("{ type: \'%c\', size: %zu, value: %" PRIhi " }", tree->type, tree->size, tree->content.data.ln);
-      } else {
-          printf("{ type: \'%c\', size: %zu, ", tree->type, tree->size);
-      }
-      if(tree->size && tree->size < 100){
-        printf("children: [");
-        size_t counter = 0;
-        while(counter < tree->size){
-          printTree(tree->children[counter]);
-          counter++;
-        }
-      }
-      printf("]}");
     }
 }

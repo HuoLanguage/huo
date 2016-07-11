@@ -5,12 +5,11 @@
 #include "structures/string.h"
 #include "base_util.h"
 
+
 extern const huo_depth_t RECURSE_MAX;
 extern const huo_int_t LOOP_MAX;
 
 extern struct String functions;
-extern struct String numbers;
-extern struct String letters;
 extern struct String print_const;
 extern struct String concat_const;
 extern struct String if_const;
@@ -25,7 +24,7 @@ extern struct String reduce_const;
 extern struct String set_const;
 extern struct String for_const;
 extern struct String do_const;
-extern struct String read_const;
+extern struct String read_file_const;
 extern struct String import_const;
 extern struct String substring_const;
 extern struct String split_const;
@@ -50,8 +49,6 @@ bool is_a_open_parens(char ch);
 bool is_a_close_parens(char ch);
 bool is_a_root_type(char ch);
 bool is_a_quote(char ch);
-bool is_a_letter(char ch);
-bool is_a_number(char ch);
 bool is_a_function(char ch);
 bool is_a_bracket(char ch);
 bool is_a_end_bracket(char ch);

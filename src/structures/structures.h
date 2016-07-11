@@ -2,35 +2,18 @@
 #define _STRUCTURES_H
 
 #include <stdint.h>
-#include "array.h"
+
 #include "string.h"
 #include "value.h"
+#include "huo_ast.h"
+#include "array.h"
 #include "hash_table.h"
-typedef uint_fast16_t huo_depth_t;
-
-struct Token {
-    char type;
-    struct String data;
-};
-
-struct Tokens {
-    struct Token *tokens;
-    size_t length;
-    size_t counter;
-};
+#include "token.h"
 
 struct Scopes {
     hash_table ** scopes;
     size_t size;
     size_t current;
-};
-
-struct Tree {
-    char type; // [o]pen, [f]unction [k]eyword [c]lose [s]tring [n]umber [b]racket [e]nd bracket
-    size_t size;
-    struct Value content;
-    struct Tree ** children;
-    struct Tree * parent;
 };
 
 struct Execution_bundle {

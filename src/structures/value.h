@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 #include "structures.h"
+#include "string.h"
 
 enum Value_type {
     FLOAT,
@@ -13,12 +14,6 @@ enum Value_type {
     KEYWORD,
     UNDEF
 };
-
-#define PRIhi PRId64
-#define PRIuhi PRIu64
-
-typedef int64_t huo_int_t;
-typedef uint64_t huo_uint_t;
 
 union Data {
     bool bl;
@@ -59,5 +54,8 @@ unsigned long value_keyword_hash_code(void *value);
 bool value_keyword_equality(void *a, void *b);
 
 bool value_equals_shallow(struct Value *a, struct Value *b);
+void value_negate(struct Value *v);
+void value_free(struct Value *v);
+void value_free_stack(struct Value v);
 
 #endif
