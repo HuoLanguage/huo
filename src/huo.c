@@ -1,6 +1,7 @@
+#define _DEFAULT_SOURCE 1
+#include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
 #include <errno.h>
 #include <string.h>

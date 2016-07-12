@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include "structures/structures.h"
 #include <execinfo.h>
+#include <assert.h>
 #include "config.h"
 
 #define PASTE_HELPER(a,b) a ## b
@@ -49,6 +50,7 @@
     fprintf(stderr, "Error at %s:%s:%i: ", FILE, FUNC, LINE);\
     fprintf(stderr, __VA_ARGS__);\
     fprintf(stderr, "\n");\
+    /*assert(false);*/\
     exit(1);\
 } while (0);
 
