@@ -6,22 +6,25 @@
 #include "../config.h"
 
 struct Value switch_case(struct Execution_bundle * exec_bundle){
-    struct Tree * ast = exec_bundle->ast;
+    huo_ast * ast = exec_bundle->ast;
     if (exec_bundle->max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    for(size_t i = 1; i < ast->size; i++){
-        struct Tree * routine = ast->children[i];
-        if(routine->type == 'k' && string_matches_heap(&default_const, &routine->content.data.str)){
-            exec_bundle->ast = routine->children[0];
+    for(size_t i = 2; i < ast_size(ast); i++){
+        huo_ast * routine = ast_child(ast, i);
+        if(ast_value(ast_child(routine, 0))->type == KEYWORD && string_matches_heap(&default_const, &ast_value(ast_child(routine, 0))->data.str)) {
+            if (i != ast_size(ast) - 1) {
+                ERROR("Default not last case!");
+            }
+            exec_bundle->ast = ast_child(routine, 1);
             return execute(exec_bundle);
         }
-        if (routine->size != 2) {
-            ERROR("Invalid syntax for switch_case: %zu != 2", routine->size);
+        if (ast_size(routine) != 3) {
+            ERROR("Invalid syntax for switch_case: %zu != 3", ast_size(routine));
         }
 
-        struct Tree * return_value = routine->children[1];
-        routine->children[1] = ast->children[0];
+        huo_ast * return_value = ast_child(routine, 1);
+        ast_set_child(routine, 1, ast_child(ast, 1));
         exec_bundle->ast = routine;
         struct Value result = execute(exec_bundle);
         if(value_as_bool(&result)){

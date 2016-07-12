@@ -8,7 +8,7 @@
 #include "base_util.h"
 #include "core_functions.h"
 #include "config.h"
-#include "config.h"
+#include "process_defs.h"
 
 bool __size_t_mul_overflow(size_t a, size_t b, size_t *res) {
 #if defined(MUL_OVERFLOW)
@@ -65,7 +65,7 @@ char *o_strdup(const char *str) {
 
 hash_table *push_scope(struct Scopes * scopes){
     RESIZE(scopes->scopes, scopes->size + 1);
-    hash_table *h = hash_table_new(value_keyword_hash_code, value_keyword_equality);
+    hash_table *h = hash_table_new(&string_hash_code_vv, &string_matches_vv);
     scopes->scopes[scopes->size] = h;
     scopes->size++;
     scopes->current++;
@@ -80,21 +80,22 @@ void pop_scope(struct Scopes * scopes){
     RESIZE(scopes->scopes, scopes->size);
 }
 
-void sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth) {
+struct Value sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth) {
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
     if (v->type == ARRAY) {
         for (size_t i = 0; i < v->data.array->size; i++) {
-            sub_vars(v->data.array->values[i], scopes, max_depth);
+            *(v->data.array->values[i]) = sub_vars(v->data.array->values[i], scopes, max_depth);
         }
     } else if (v->type == KEYWORD) {
-        hash_table *current_scope = scopes->scopes[scopes->current];
-        if (hash_table_contains(current_scope, v)) {
-            *v = * (struct Value *) hash_table_get(current_scope, v);
+        struct Value *w = NULL;
+        struct String kwd = value_as_keyword(v);
+        if ((w = get_letted_value(scopes, kwd)) != NULL) {
+            *v = *w;
         } else {
-            struct String kwd = value_as_keyword(v);
             ERROR("Undefined variable: %s", string_to_chars(&kwd));
         }
     }
+    return *v;
 }

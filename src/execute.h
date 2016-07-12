@@ -3,8 +3,7 @@
 
 #include "structures/structures.h"
 
-struct Value reduce(struct Tree * ast, hash_table *defined, struct Scopes * scopes);
-struct Value execute (struct Execution_bundle * exec_bundle);
-struct Value apply_core_function(struct Tree * ast, struct Value a, struct Value b);
+struct Value reduce(huo_ast * ast, hash_table *defined, struct Scopes * scopes);
+struct Value execute(struct Execution_bundle * exec_bundle);
 
 #endif

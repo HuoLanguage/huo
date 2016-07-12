@@ -9,41 +9,89 @@
 #include "structures/hash_table.h"
 #include "config.h"
 
-void make_args_map(struct Execution_bundle * exec_bundle, struct Tree * function) {
-    struct Tree * ast = exec_bundle->ast;
+void make_args_map(struct Execution_bundle * exec_bundle, huo_ast * function) {
+    huo_ast * ast = exec_bundle->ast;
     // we want to evaluate the values passed into the function
     // but store the result in the next scope, not the current one
-    if (function->size != ast->size + 2) {
-        ERROR("Wrong number of arguments!: %zu != %zu", function->size - 2, ast->size);
+    if (ast_size(function) != ast_size(ast) + 2) {
+        ERROR("Wrong number of arguments!: %zu != %zu", ast_size(function) < 2 ? 0 : ast_size(function) - 2, ast_size(ast));
     }
-    struct Value vals[ast->size];
-    for(size_t i = 0; i < ast->size; i++){
-        exec_bundle->ast = ast->children[i];
+    struct Value vals[ast_size(ast)];
+    for(size_t i = 0; i + 1 < ast_size(ast); i++){
+        exec_bundle->ast = ast_child(ast, i+1);
         vals[i] = execute(exec_bundle);
     }
-    make_scope(exec_bundle->scopes);
-    for(size_t l = 0; l < ast->size; l++){
-        char t = function->children[l+1]->content.type;
+    push_scope(exec_bundle->scopes);
+    for(size_t i = 0; i + 1 < ast_size(ast); i++){
+        char t = ast_value(ast_child(function, i + 2))->type;
         if (t != KEYWORD) {
             ERROR("Invalid type for argument: '%c' != KEYWORD", t);
         }
-        store_let_value(&function->children[l+1]->content, &vals[l], exec_bundle->scopes);
+        store_let_value(ast_value(ast_child(function, i + 2)), &vals[i], exec_bundle->scopes);
     }
 }
 
-struct Tree * get_defined_body(struct Tree * function){
+huo_ast * get_defined_body(huo_ast * function){
     // just pulls the function body out of a (def...)
-    if (function->size <= 1) {
+    if (ast_size(function) <= 1) {
         ERROR("No function body!");
     }
-    size_t index = function->size - 1;
-    if (function->children[index]->size == 0) {
+    size_t index = ast_size(function) - 1;
+    huo_ast *child = ast_child(function, index);
+    if (ast_size(child) == 0) {
         ERROR("No function body!");
     }
-    return function->children[index];
+    return ast_copy(child);
 }
 
-struct Tree *get_defined_func(hash_table *defined, struct String key) {
+struct definition *get_defined(struct Scopes *scopes, struct String key) {
+    //printf("DEFINED:\n");
+//    for (size_t i = 0; i <= scopes->current; i++) {
+//        for (hash_table_iter *t = hash_table_iter_new(scopes->scopes[i]); hash_table_iter_has_cur(t); hash_table_iter_next(t)) {
+//            struct String *k = hash_table_iter_key(t);
+//            struct definition *v = hash_table_iter_val(t);
+//             if (v->is_func) {
+//                 printf("%s -> func\n", string_to_chars(k));
+//             } else {
+//                 printf("%s -> '", string_to_chars(k));
+//                 print(*(v->val.val));
+//                 printf("'\n");
+//             }
+//        }
+//    }
+    //printf("'%s'\n", string_to_chars(&key));
     assert(string_is_sane(&key));
-    return (struct Tree *) hash_table_get(defined, &key);
+    for (size_t ipo = scopes->current + 1; ipo > 0; ipo--) {
+        size_t i = ipo - 1;
+        hash_table *current_scope = scopes->scopes[i];
+        struct definition *def = (struct definition *) hash_table_get(current_scope, &key);
+        if (def != NULL) {
+            return def;
+        }
+    }
+    return NULL;
+}
+
+huo_ast *get_defined_func(struct Scopes *defined, struct String key) {
+//     printf("DEF '%s'\n", string_to_chars(&key));
+    struct definition *def = get_defined(defined, key);
+    if(def == NULL || !def->is_func) {
+//         printf("FALSE\n");
+        return NULL;
+    } else {
+//         printf("TRUE\n");
+        return def->val.ast;
+    }
+}
+
+struct Value *get_letted_value(struct Scopes *defined, struct String key) {
+//     printf("LET '%s'\n", string_to_chars(&key));
+    struct definition *def = get_defined(defined, key);
+    if(def == NULL || def->is_func) {
+//         printf("FALSE\n");
+        return NULL;
+    } else {
+//         printf("TRUE\n");
+        return def->val.val;
+    }
 }

@@ -21,31 +21,31 @@ bool char_is_word(char c) {
 
 bool can_be_extended(struct String so_far, char cur, enum token_type_t type) {
     switch (type) {
-        case PLUS:
-        case MINUS:
-        case MUL:
-        case DIV:
-        case EX_MARK:
-        case EQ:
-        case LEFT_ANGLE:
-        case RIGHT_ANGLE:
-        case DOT:
-        case COMMA:
-        case OPEN_BRACKET:
-        case CLOSE_BRACKET:
-        case OPEN_SQUARE:
-        case CLOSE_SQUARE:
+        case TOK_PLUS:
+        case TOK_MINUS:
+        case TOK_MUL:
+        case TOK_DIV:
+        case TOK_EX_MARK:
+        case TOK_EQ:
+        case TOK_LEFT_ANGLE:
+        case TOK_RIGHT_ANGLE:
+        case TOK_DOT:
+        case TOK_COMMA:
+        case TOK_OPEN_BRACKET:
+        case TOK_CLOSE_BRACKET:
+        case TOK_OPEN_SQUARE:
+        case TOK_CLOSE_SQUARE:
             return false;
-        case WHITESPACE:
-        case NEWLINE:
-        case NUMBER:
-        case WORD:
+        case TOK_WHITESPACE:
+        case TOK_NEWLINE:
+        case TOK_NUMBER:
+        case TOK_WORD:
             return can_be_of_type(cur, type);
-        case QUOTE:
+        case TOK_QUOTE:
             // I.e. "not a newline" and "prev char, if not the starting quote, not a quote"
-            return (so_far.length <= 1 || !can_be_of_type(so_far.body[so_far.length - 1], QUOTE)) && !can_be_of_type(cur, NEWLINE);
-        case COMMENT:
-            return !can_be_of_type(cur, NEWLINE);
+            return (so_far.length <= 1 || !can_be_of_type(so_far.body[so_far.length - 1], TOK_QUOTE)) && !can_be_of_type(cur, TOK_NEWLINE);
+        case TOK_COMMENT:
+            return !can_be_of_type(cur, TOK_NEWLINE);
         default:
             ERROR("Unknown type: '%d'", type);
     }
@@ -53,48 +53,48 @@ bool can_be_extended(struct String so_far, char cur, enum token_type_t type) {
 
 bool can_be_of_type(char c, enum token_type_t type) {
     if (c == 0) {
-        return type == T_EOF;
+        return type == TOK_EOF;
     }
     switch (type) {
-        case WHITESPACE:
+        case TOK_WHITESPACE:
             return c == ' ' || c == '\t';
-        case NEWLINE:
+        case TOK_NEWLINE:
             return c == '\n';
-        case PLUS:
+        case TOK_PLUS:
             return c == '+';
-        case MINUS:
+        case TOK_MINUS:
             return c == '-';
-        case MUL:
+        case TOK_MUL:
             return c == '*';
-        case DIV:
+        case TOK_DIV:
             return c == '/';
-        case EX_MARK:
+        case TOK_EX_MARK:
             return c == '!';
-        case EQ:
+        case TOK_EQ:
             return c == '=';
-        case LEFT_ANGLE:
+        case TOK_LEFT_ANGLE:
             return c == '<';
-        case RIGHT_ANGLE:
+        case TOK_RIGHT_ANGLE:
             return c == '>';
-        case NUMBER:
+        case TOK_NUMBER:
             return char_is_digit(c);
-        case DOT:
+        case TOK_DOT:
             return c == '.';
-        case COMMA:
+        case TOK_COMMA:
             return c == ',';
-        case WORD:
+        case TOK_WORD:
             return char_is_word(c);
-        case OPEN_BRACKET:
+        case TOK_OPEN_BRACKET:
             return c == '(';
-        case CLOSE_BRACKET:
+        case TOK_CLOSE_BRACKET:
             return c == ')';
-        case OPEN_SQUARE:
+        case TOK_OPEN_SQUARE:
             return c == '[';
-        case CLOSE_SQUARE:
+        case TOK_CLOSE_SQUARE:
             return c == ']';
-        case QUOTE:
+        case TOK_QUOTE:
             return c == '"';
-        case COMMENT:
+        case TOK_COMMENT:
             return c == ';';
         default:
             ERROR("Unknown type: '%d'", type);

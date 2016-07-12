@@ -17,11 +17,17 @@ struct Scopes {
 };
 
 struct Execution_bundle {
-    struct Tree *ast;
-    hash_table *defined;
+    huo_ast *ast;
     struct Scopes *scopes;
-    struct Value_array *function_names;
     huo_depth_t max_depth;
+};
+
+struct definition {
+    bool is_func;
+    union {
+        struct Value *val;
+        huo_ast *ast;
+    } val;
 };
 
 #endif /* _STRUCTURES_H */

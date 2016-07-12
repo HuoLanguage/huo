@@ -5,22 +5,27 @@
 #include "../config.h"
 
 void store_let_value(struct Value * key, struct Value * value, struct Scopes * scopes){
+
     hash_table *let_store = scopes->scopes[scopes->current];
-    if (key->type != KEYWORD) {
-        ERROR("Invalid type for let keyword: '%c'", key->type);
-    }
-    if (hash_table_put(let_store, value_copy_heap(key), value_copy_heap(value))) {
+    struct definition *def = malloc_or_die(sizeof(struct definition));
+    def->is_func = false;
+    def->val.val = value_copy_heap(value);
+    struct String val = value_as_keyword(key);
+    if (hash_table_put(let_store, string_copy_heap(&val), def)) {
         // Overriding
     } else {
         // New addition
     }
 }
-
-void store_let_binding(struct Tree * key, struct Tree * value, struct Execution_bundle * exec_bundle){
-    if (exec_bundle->max_depth <= 0) {
-        ERROR("Max depth exceeded in computation");
+void store_def_func(struct Value * key, huo_ast *func, struct Scopes * scopes){
+    hash_table *let_store = scopes->scopes[scopes->current];
+    struct definition *def = malloc_or_die(sizeof(struct definition));
+    def->is_func = true;
+    def->val.ast = func;
+    struct String val = value_as_keyword(key);
+    if (hash_table_put(let_store, string_copy_heap(&val), def)) {
+        // Overriding
+    } else {
+        // New addition
     }
-    exec_bundle->ast = value;
-    struct Value val = execute(exec_bundle);
-    store_let_value(&key->content, &val, exec_bundle->scopes);
 }

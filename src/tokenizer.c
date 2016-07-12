@@ -45,7 +45,7 @@ struct Tokens * tokenize(struct String file, struct Tokens *content){
     }
 
     cur_token = null_token;
-    cur_token.type = T_EOF;
+    cur_token.type = TOK_EOF;
 
     RESIZE(content->tokens, content->length + 1);
     content->tokens[content->length] = cur_token;

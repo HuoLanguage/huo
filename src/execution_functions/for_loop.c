@@ -4,16 +4,17 @@
 #include "../config.h"
 
 void for_loop(struct Execution_bundle *exec_bundle){
-    struct Tree * ast = exec_bundle->ast;
+    huo_ast * ast = exec_bundle->ast;
     if (exec_bundle->max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    if (ast->size != 3) {
-        ERROR("Wrong number of arguments for for_loop: %zu != 3\n", ast->size);
+    if (ast_size(ast) != 4) {
+        ERROR("Wrong number of arguments for for_loop: %zu != 4\n", ast_size(ast));
     }
-    exec_bundle->ast = ast->children[0];
+    exec_bundle->ast = ast_child(ast, 1);
     struct Value start = execute(exec_bundle);
-    exec_bundle->ast = ast->children[1];
+
+    exec_bundle->ast = ast_child(ast, 2);
     struct Value end = execute(exec_bundle);
 
     huo_int_t start_i = value_as_long(&start);
@@ -22,13 +23,13 @@ void for_loop(struct Execution_bundle *exec_bundle){
     if(start_i > end_i){
         for(huo_int_t i = start_i; i > end_i; i--){
 
-            exec_bundle->ast = ast->children[2];
+            exec_bundle->ast = ast_copy(ast_child(ast, 3));
             execute(exec_bundle);
         }
     } else {
         for(huo_int_t i = start_i; i < end_i; i++){
 
-            exec_bundle->ast = ast->children[2];
+            exec_bundle->ast = ast_copy(ast_child(ast, 3));
             execute(exec_bundle);
         }
     }

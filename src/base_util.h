@@ -74,6 +74,6 @@ size_t arr_malloc_size(size_t num, size_t size);
 char *o_strdup(const char *str);
 hash_table *push_scope(struct Scopes * scopes);
 void pop_scope(struct Scopes * scopes);
-void sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth);
+struct Value sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth);
 
 #endif

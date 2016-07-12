@@ -6,9 +6,9 @@
 #include "../config.h"
 
 void while_loop(struct Execution_bundle * exec_bundle){
-    struct Tree * ast = exec_bundle->ast;
-    if(exec_bundle->ast->size != 2){
-        ERROR("Not enough arguments for while: %zu < 2\n", ast->size);
+    huo_ast * ast = exec_bundle->ast;
+    if(ast_size(ast) != 3){
+        ERROR("Not enough arguments for while: %zu < 3\n", ast_size(ast));
     }
     huo_int_t i = 0;
     while (true) {
@@ -17,10 +17,10 @@ void while_loop(struct Execution_bundle * exec_bundle){
                 break;
             }
         }
-        exec_bundle->ast = ast->children[0];
+        exec_bundle->ast = ast_child(ast, 1);
         struct Value condition = execute(exec_bundle);
         if(value_as_bool(&condition)){
-            exec_bundle->ast = ast->children[1];
+            exec_bundle->ast = ast_child(ast, 2);
             execute(exec_bundle);
         } else {
             return;
