@@ -15,6 +15,8 @@ CPPFLAGS += -MD -MF $(patsubst src/execution_functions/%.o,.%.mk,$@) -MP
 CPPFLAGS += -MD -MF $(patsubst src/structures/%.o,.%.mk,$@) -MP
 -include $(patsubst %.o,.%.mk,$(obj))
 
+LDFLAGS += -rdynamic
+
 
 objs = \
   src/structures/array.o \
