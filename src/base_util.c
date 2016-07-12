@@ -8,7 +8,8 @@
 #include "base_util.h"
 #include "core_functions.h"
 #include "config.h"
-#include "config.h"
+#include "process_defs.h"
+#include "constants.h"
 
 bool __size_t_mul_overflow(size_t a, size_t b, size_t *res) {
 #if defined(MUL_OVERFLOW)
@@ -63,73 +64,43 @@ char *o_strdup(const char *str) {
     return dup;
 }
 
-struct Tree * duplicate_tree(struct Tree * a){
-    struct Tree * root = malloc_or_die(sizeof(struct Tree));
-    root->type = a->type;
-    root->content = value_copy_stack(&a->content);
-    root->children = NULL;
-    root->size = a->size;
-    RESIZE(root->children, root->size);
-    for(size_t i = 0; i < a->size; i++){
-        root->children[i] = duplicate_tree(a->children[i]);
-    }
-    return root;
-}
-
-void make_scope(struct Scopes * scopes){
+hash_table *push_scope(struct Scopes * scopes){
     RESIZE(scopes->scopes, scopes->size + 1);
-    scopes->scopes[scopes->size] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
+    hash_table *h = hash_table_new(&string_hash_code_vv, &string_matches_vv);
+    scopes->scopes[scopes->size] = h;
     scopes->size++;
     scopes->current++;
+    return h;
 }
 
-void sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth) {
+void pop_scope(struct Scopes * scopes){
+    assert (scopes->size > 0);
+    scopes->size -= 1;
+    scopes->current -= 1;
+    //hash_table_free(scopes->scopes[scopes->size]);
+    RESIZE(scopes->scopes, scopes->size);
+}
+
+struct Value sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth) {
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
     if (v->type == ARRAY) {
         for (size_t i = 0; i < v->data.array->size; i++) {
-            sub_vars(v->data.array->values[i], scopes, max_depth);
+            *(v->data.array->values[i]) = sub_vars(v->data.array->values[i], scopes, max_depth);
         }
     } else if (v->type == KEYWORD) {
-        hash_table *current_scope = scopes->scopes[scopes->current];
-        if (hash_table_contains(current_scope, v)) {
-            *v = * (struct Value *) hash_table_get(current_scope, v);
+        struct Value *w = NULL;
+        struct String kwd = value_as_keyword(v);
+        if ((w = get_letted_value(scopes, kwd)) != NULL) {
+            v = w;
+        } else if (string_matches_heap(&kwd, &true_const)) {
+            return value_from_bool(true);
+        } else if (string_matches_heap(&kwd, &false_const)) {
+            return value_from_bool(false);
         } else {
-            struct String kwd = value_as_keyword(v);
             ERROR("Undefined variable: %s", string_to_chars(&kwd));
         }
     }
-}
-
-void printTree(struct Tree *tree){
-    if(!tree->size){
-      if(tree->type == 'k'){
-          printf("{ type: \'%c\', size: %zu, keyword: %s }", tree->type, tree->size, tree->content.data.str.body);
-      }
-      else if(tree->type == 'n'){
-          printf("{ type: \'%c\', size: %zu, value: %" PRIhi " }", tree->type, tree->size, tree->content.data.ln);
-      }
-      else {
-          printf("{ type: \'%c\', size: %zu }", tree->type, tree->size);
-      }
-    } else {
-      if(tree->type == 'k'){
-          printf("{ type: \'%c\', size: %zu, keyword: %s ", tree->type, tree->size, tree->content.data.str.body);
-      }
-      else if(tree->type == 'n'){
-          printf("{ type: \'%c\', size: %zu, value: %" PRIhi " }", tree->type, tree->size, tree->content.data.ln);
-      } else {
-          printf("{ type: \'%c\', size: %zu, ", tree->type, tree->size);
-      }
-      if(tree->size && tree->size < 100){
-        printf("children: [");
-        size_t counter = 0;
-        while(counter < tree->size){
-          printTree(tree->children[counter]);
-          counter++;
-        }
-      }
-      printf("]}");
-    }
+    return *v;
 }

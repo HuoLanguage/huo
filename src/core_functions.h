@@ -25,7 +25,7 @@ struct Value equals(struct Value a, struct Value b);
 struct Value and(struct Value a, struct Value b);
 struct Value or(struct Value a, struct Value b);
 
-struct Value set(struct Value index, struct Value item, struct Value to_set);
+struct Value set(struct Value index, struct Value item, struct Value *to_set);
 struct Value_array *array_set(size_t index, struct Value item, struct Value_array *array);
 struct String string_set(size_t index, struct String item, struct String string);
 

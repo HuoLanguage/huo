@@ -17,4 +17,6 @@ void array_concat_to(struct Value_array *to, struct Value_array *from);
 bool array_matches(struct Value_array *base, struct Value_array *compare);
 bool array_contains(struct Value *item, struct Value_array *array);
 
+void array_free(struct Value_array *array);
+
 #endif

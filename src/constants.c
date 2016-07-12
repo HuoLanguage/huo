@@ -40,7 +40,7 @@ struct String for_const = STR_NEW("for");
 
 struct String do_const = STR_NEW("do");
 
-struct String read_const = STR_NEW("read");
+struct String read_file_const = STR_NEW("read");
 
 struct String import_const = STR_NEW("import");
 
@@ -82,14 +82,6 @@ bool is_a_root_type(char ch){ return ch == root_type_const; }
 bool is_a_quote(char ch){ return ch == quote_const; }
 bool is_a_bracket(char ch){ return ch == bracket_const; }
 bool is_a_end_bracket(char ch){ return ch == end_bracket_const; }
-
-bool is_a_letter(char ch){
-    return string_contains(ch, &letters);
-}
-
-bool is_a_number(char ch){
-    return string_contains(ch, &numbers);
-}
 
 bool is_a_function(char ch){
   return string_contains(ch, &functions);

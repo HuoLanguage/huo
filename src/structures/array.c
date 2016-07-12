@@ -81,3 +81,19 @@ bool array_contains(struct Value *item, struct Value_array *array){
     }
     return false;
 }
+
+void array_free_content(struct Value_array *array) {
+    for(size_t i = 0; i < array->size; i++){
+        value_free(array->values[i]);
+    }
+    if (array->values != NULL) {
+        free(array->values);
+    }
+}
+
+void array_free(struct Value_array *array) {
+    if (array != NULL) {
+        array_free_content(array);
+        free(array);
+    }
+}

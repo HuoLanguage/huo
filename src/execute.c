@@ -12,57 +12,75 @@
 #include "apply_single_value_func.h"
 #include "config.h"
 
-struct Value execute (struct Execution_bundle * exec_bundle){
+struct Value execute(struct Execution_bundle * exec_bundle){
     exec_bundle->max_depth -= 1;
 
-    struct Tree * ast = exec_bundle->ast;
+    huo_ast * ast = exec_bundle->ast;
+    //printf("EXE: %s\n", string_to_chars(ast_to_string(ast)));
     struct Scopes * scopes = exec_bundle->scopes;
-    hash_table * defined = exec_bundle->defined;
     huo_depth_t max_depth = exec_bundle->max_depth;
-    struct Value_array * function_names = exec_bundle->function_names;
 
     struct Value result;
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    // first check for special kinds of execution
-    if(ast->content.type == KEYWORD && array_contains(&ast->content, function_names)){
-        result = apply_execution_function(exec_bundle);
+    if(ast_type(ast) == AST_ARRAY) {
+        struct Value_array *arr = malloc_or_die(sizeof(struct Value_array));
+        arr->size = ast_size(ast);
+        arr->values = ARR_MALLOC(arr->size, struct Value *);
+        for (size_t i = 0; i < arr->size; i++) {
+
+            exec_bundle->ast = ast_child(ast, i);
+            struct Value v = execute(exec_bundle);
+            exec_bundle->ast = ast;
+            arr->values[i] = value_copy_heap(&v);
+        }
+        result = value_from_array(arr);
+    }else if(!ast_size(ast)) {
+        result = sub_vars(ast_value(ast), scopes, max_depth - 1);
     } else {
-        // no special execution types found, check for more basic conditions
-        struct Tree *func;
-        if(ast->content.type == KEYWORD && (func = get_defined_func(defined, ast->content.data.str)) != NULL){
+        huo_ast *func;
+        struct Value *kwd = ast_value(ast_child(ast, 0));
+        bool is_unbound_kwd = (kwd->type == KEYWORD);
+        if(is_unbound_kwd && apply_execution_function(kwd, &result, exec_bundle)){
+        // pass
+        }
+        else if(is_unbound_kwd && (func = get_defined_func(scopes, value_as_keyword(kwd))) != NULL) {
             make_args_map(exec_bundle, func);
-            exec_bundle->ast = duplicate_tree(get_defined_body(func));
+
+            exec_bundle->ast = ast_copy(get_defined_body(func));
+            exec_bundle->ast = ast;
             result = execute(exec_bundle);
             scopes->current--;
         }
-        else if(!ast->size){
-            // functions are all checked above, if we are not a function, then
-            // an ast with no children is either a value or a variable
-            result = value_copy_stack(&ast->content);
-            if(ast->type == 'k' && ast->content.type == KEYWORD){
-                if(string_matches_heap(&ast->content.data.str, &false_const)){
-                    result = value_from_bool(false);
-                } else if(string_matches_heap(&ast->content.data.str, &true_const)){
-                    result = value_from_bool(true);
-                }
-            }
-            sub_vars(&result, scopes, max_depth - 1);
+        else if(ast_size(ast) == 1){
+
+            exec_bundle->ast = ast_child(ast, 0);
+            result = execute(exec_bundle);
+            exec_bundle->ast = ast;
         }
-        else if(ast->size == 1){
-            if(ast->type == 'k' && ast->content.type == KEYWORD){
-                result = apply_single_value_func(exec_bundle);
-            }
-        }
-        else if(ast->size == 2) {
-            exec_bundle->ast = ast->children[0];
+        else if(is_unbound_kwd && ast_size(ast) == 2) {
+
+            exec_bundle->ast = ast_child(ast, 1);
+            //printf("'%s' = '", string_to_chars(ast_to_string(exec_bundle->ast)));
             struct Value a = execute(exec_bundle);
 
-            exec_bundle->ast = ast->children[1];
+            exec_bundle->ast = ast;
+            //print(a);
+            //printf("'\n");
+            result = apply_single_value_func(kwd, exec_bundle, &a);
+        }
+        else if (is_unbound_kwd && ast_size(ast) == 3) {
+
+            exec_bundle->ast = ast_child(ast, 1);
+            struct Value a = execute(exec_bundle);
+
+            exec_bundle->ast = ast_child(ast, 2);
             struct Value b = execute(exec_bundle);
 
-            result = apply_core_function(ast, a, b);
+            exec_bundle->ast = ast;
+
+            result = apply_core_function(kwd, exec_bundle, &a, &b);
         } else {
             result = reduce_ast(exec_bundle);
         }

@@ -3,8 +3,9 @@
 
 #include "structures/structures.h"
 
-void make_args_map(struct Execution_bundle * exec_bundle, struct Tree * function);
-struct Tree *get_defined_body(struct Tree * function);
-struct Tree *get_defined_func(hash_table *defined, struct String key);
+void make_args_map(struct Execution_bundle * exec_bundle, huo_ast * function);
+huo_ast *get_defined_body(huo_ast * function);
+huo_ast *get_defined_func(struct Scopes *defined, struct String key);
+struct Value *get_letted_value(struct Scopes *defined, struct String key);
 
 #endif

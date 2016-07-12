@@ -237,18 +237,18 @@ bool can_cast_to_size_t(huo_int_t i) {
     return i >= 0 && (huo_uint_t) i <= SIZE_MAX;
 }
 
-struct Value set(struct Value index_val, struct Value item, struct Value to_set) {
+struct Value set(struct Value index_val, struct Value item, struct Value *to_set) {
     huo_int_t index = value_as_long(&index_val);
     if (!can_cast_to_size_t(index)) {
-        ERROR("Index out of range for set: should be 0 <= %" PRIhi " < %llu", index, SIZE_MAX);
+        ERROR("Index out of range for set: should be 0 <= %" PRIhi " < %"PRIuMAX, index, SIZE_MAX);
     }
-    if (to_set.type == ARRAY) {
-        return value_from_array(array_set((size_t) index, item, value_as_array(&to_set)));
-    } else if (to_set.type == STRING) {
-        struct String set = string_set((size_t) index, value_as_string(&item), value_as_string(&to_set));
+    if (to_set->type == ARRAY) {
+        return value_from_array(array_set((size_t) index, item, value_as_array(to_set)));
+    } else if (to_set->type == STRING) {
+        struct String set = string_set((size_t) index, value_as_string(&item), value_as_string(to_set));
         return value_from_string(string_copy_stack(&set));
     } else {
-        ERROR("Set type invalid:  ('%c' != [ARRAY, STRING])", to_set.type);
+        ERROR("Set type invalid:  ('%c' != [ARRAY, STRING])", to_set->type);
     }
 }
 

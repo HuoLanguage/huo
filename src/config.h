@@ -2,6 +2,17 @@
 #define HUO_CONFIG_H 1
 
 #include <stddef.h>
+#include <stdint.h>
+
+#define PRIhi PRId64
+#define PRIuhi PRIu64
+
+#define SCNhi SCNd64
+#define SCNuhi SCNu64
+
+typedef int64_t huo_int_t;
+typedef uint64_t huo_uint_t;
+typedef uint_fast16_t huo_depth_t;
 
 #if 0
 #define malloc(x) _check_malloc(x)

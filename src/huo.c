@@ -1,6 +1,7 @@
+#define _DEFAULT_SOURCE 1
+#include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
 #include <errno.h>
 #include <string.h>
@@ -11,7 +12,6 @@
 #include "parser.h"
 #include "structures/structures.h"
 #include "execution_functions/read_file.h"
-#include "build_array.h"
 #include "execute.h"
 #include "store_defs.h"
 #include "base_util.h"
@@ -20,7 +20,6 @@
 #include "core_functions.h"
 
 #if defined(_POSIX_VERSION) || defined(__linux__) || defined(__APPLE__)
-
 #include <libgen.h>
 char *get_exe_path(const char *called_name) {
     char *path_to_exe = realpath(called_name, NULL);
@@ -172,14 +171,6 @@ int main(int argc, char const *argv[]) {
 "-h, --help print this help message and exit\n");
         return error_flag ? 1 : 0; // Redundant for now, but reminder to maybe return a different error code later
     }
-    struct Tokens fn_tokens = {
-        .tokens = NULL,
-        .length = 0,
-        .counter = 0
-    };
-
-    tokenize(function_names, &fn_tokens);
-    struct Value_array * function_names = build_array(&fn_tokens);
 
     struct Tokens t = {
         .tokens = NULL,
@@ -192,33 +183,26 @@ int main(int argc, char const *argv[]) {
     //     printf("%c", tokens->tokens[i].type);
     // }
 
-    struct Tree *root = malloc_or_die(sizeof(struct Tree));
-    root->type = 'r';
-    root->size = 0;
-    root->children = NULL;
 
-    parse(root, tokens, true);
+    huo_ast *root = parse(tokens);
+
     // this prints the AST for reference
-    // printTree(&root);
-    // printf("\n");
+    //printf("%s\n", string_to_chars(ast_to_string(root)));
+
     struct Execution_bundle * exec_bundle = malloc_or_die(sizeof(struct Execution_bundle));
 
-    hash_table *defined = hash_table_new(&string_hash_code_vv, &string_matches_vv);
     struct Scopes * scopes = malloc_or_die(sizeof(struct Scopes));
     scopes->scopes = NULL;
     RESIZE(scopes->scopes, 1);
     scopes->size = 1;
     scopes->current = 0;
 
-    scopes->scopes[0] = hash_table_new(value_keyword_hash_code, value_keyword_equality);
-    size_t num_defs = store_defs(root, defined);
+    scopes->scopes[0] = hash_table_new(&string_hash_code_vv, &string_matches_vv);
 
-    exec_bundle->defined = defined;
     exec_bundle->scopes = scopes;
-    exec_bundle->function_names = function_names;
-    for(size_t i = num_defs; i < root->size; i++){
+    for(size_t i = 0; i < ast_size(root); i++){
         exec_bundle->max_depth = RECURSE_MAX;
-        exec_bundle->ast = root->children[i];
+        exec_bundle->ast = ast_child(root, i);
         execute(exec_bundle);
     }
     return 0;

@@ -19,11 +19,11 @@ void parallel_execution(struct Execution_bundle * exec_bundle){
     if (exec_bundle->max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    size_t num_children = ast->size;
+    size_t num_children = ast_size(ast);
     pthread_t *tid = ARR_MALLOC(num_children, pthread_t);
     struct Execution_bundle * bundle = ARR_MALLOC(num_children, struct Execution_bundle);
     for(size_t i = 0; i < num_children; i++){
-        bundle[i].ast=exec_bundle->ast->children[i];
+        bundle[i].ast=exec_bundle->ast_child(ast, i);
         bundle[i].defined=exec_bundle->defined; // BUG: defined is NOT threadsafe. Needs to be copied.
         bundle[i].scopes=exec_bundle->scopes; // BUG: scopes is NOT threadsafe. Needs to be copied.
         bundle[i].function_names=exec_bundle->function_names;
@@ -41,10 +41,11 @@ void parallel_execution(struct Execution_bundle * exec_bundle){
     if (exec_bundle->max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    struct Tree * ast = exec_bundle->ast;
-    for(size_t i = 0; i < ast->size; i++){
-        exec_bundle->ast = ast->children[1];
+    huo_ast * ast = exec_bundle->ast;
+    for(size_t i = 1; i < ast_size(ast); i++){
+        exec_bundle->ast = ast_child(ast, i);
         parallel_routine(exec_bundle);
     }
+    exec_bundle->ast = ast;
 }
 #endif

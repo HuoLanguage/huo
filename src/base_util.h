@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include "structures/structures.h"
 #include <execinfo.h>
+#include <assert.h>
 #include "config.h"
 
 #define PASTE_HELPER(a,b) a ## b
@@ -49,6 +50,7 @@
     fprintf(stderr, "Error at %s:%s:%i: ", FILE, FUNC, LINE);\
     fprintf(stderr, __VA_ARGS__);\
     fprintf(stderr, "\n");\
+    /*assert(false);*/\
     exit(1);\
 } while (0);
 
@@ -70,9 +72,8 @@
 void *malloc_or_die(size_t size);
 size_t arr_malloc_size(size_t num, size_t size);
 char *o_strdup(const char *str);
-void printTree(struct Tree *tree);
-struct Tree * duplicate_tree(struct Tree * a);
-void make_scope(struct Scopes * scopes);
-void sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth);
+hash_table *push_scope(struct Scopes * scopes);
+void pop_scope(struct Scopes * scopes);
+struct Value sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_depth);
 
 #endif

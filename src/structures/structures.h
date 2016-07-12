@@ -2,22 +2,13 @@
 #define _STRUCTURES_H
 
 #include <stdint.h>
-#include "array.h"
+
 #include "string.h"
 #include "value.h"
+#include "huo_ast.h"
+#include "array.h"
 #include "hash_table.h"
-typedef uint_fast8_t huo_depth_t;
-
-struct Token {
-    char type;
-    struct String data;
-};
-
-struct Tokens {
-    struct Token *tokens;
-    size_t length;
-    size_t counter;
-};
+#include "token.h"
 
 struct Scopes {
     hash_table ** scopes;
@@ -25,20 +16,18 @@ struct Scopes {
     size_t current;
 };
 
-struct Tree {
-    char type; // [o]pen, [f]unction [k]eyword [c]lose [s]tring [n]umber [b]racket [e]nd bracket
-    size_t size;
-    struct Value content;
-    struct Tree ** children;
-    struct Tree * parent;
+struct Execution_bundle {
+    huo_ast *ast;
+    struct Scopes *scopes;
+    huo_depth_t max_depth;
 };
 
-struct Execution_bundle {
-    struct Tree *ast;
-    hash_table *defined;
-    struct Scopes *scopes;
-    struct Value_array *function_names;
-    huo_depth_t max_depth;
+struct definition {
+    bool is_func;
+    union {
+        struct Value *val;
+        huo_ast *ast;
+    } val;
 };
 
 #endif /* _STRUCTURES_H */
