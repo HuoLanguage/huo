@@ -23,14 +23,7 @@ bool can_be_extended(struct String so_far, char cur, enum token_type_t type) {
     switch (type) {
         case TOK_PLUS:
         case TOK_MINUS:
-        case TOK_AND:
-        case TOK_OR:
-        case TOK_MUL:
-        case TOK_DIV:
-        case TOK_EX_MARK:
-        case TOK_EQ:
-        case TOK_LEFT_ANGLE:
-        case TOK_RIGHT_ANGLE:
+        case TOK_BUILTIN:
         case TOK_DOT:
         case TOK_COMMA:
         case TOK_OPEN_BRACKET:
@@ -66,22 +59,8 @@ bool can_be_of_type(char c, enum token_type_t type) {
             return c == '+';
         case TOK_MINUS:
             return c == '-';
-        case TOK_AND:
-            return c == '&';
-        case TOK_OR:
-            return c == '|';
-        case TOK_MUL:
-            return c == '*';
-        case TOK_DIV:
-            return c == '/';
-        case TOK_EX_MARK:
-            return c == '!';
-        case TOK_EQ:
-            return c == '=';
-        case TOK_LEFT_ANGLE:
-            return c == '<';
-        case TOK_RIGHT_ANGLE:
-            return c == '>';
+        case TOK_BUILTIN:
+            return c == '&' || c == '|' || c == '*' || c == '/' || c == '!' || c == '=' || c == '<' || c == '>';
         case TOK_NUMBER:
             return char_is_digit(c);
         case TOK_DOT:
