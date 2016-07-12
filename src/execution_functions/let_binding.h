@@ -3,7 +3,7 @@
 
 #include "../structures/structures.h"
 
-void store_let_binding(struct Tree * key, struct Tree * value, struct Execution_bundle * exec_bundle);
 void store_let_value(struct Value * key, struct Value * value, struct Scopes * scopes);
+void store_def_func(struct Value * key, huo_ast *func, struct Scopes * scopes);
 
 #endif

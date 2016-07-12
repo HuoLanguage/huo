@@ -214,3 +214,40 @@ bool value_equals_shallow(struct Value *a, struct Value *b) {
             ERROR("Unknown type %i", a->type);
     }
 }
+
+void value_negate(struct Value *v) {
+    if(v->type == FLOAT){
+        v->data.fl = -value_as_float(v);
+    } else if(v->type == LONG){
+        v->data.ln = -value_as_long(v);
+    } else {
+        ERROR("Type error: value of type '%c' cannot be negated", v->type);
+    }
+}
+
+void value_free_stack(struct Value v) {
+    switch (v.type) {
+        case ARRAY:
+            array_free(v.data.array);
+            break;
+        case STRING:
+        case KEYWORD:
+            string_free_stack(v.data.str);
+            break;
+        case LONG:
+        case FLOAT:
+        case BOOL:
+        case UNDEF:
+            break;
+        default:
+            ERROR("Unknown type %i", v.type);
+    }
+    v.type = UNDEF;
+}
+
+void value_free(struct Value *v) {
+    if (v != NULL) {
+        value_free_stack(*v);
+        free(v);
+    }
+}

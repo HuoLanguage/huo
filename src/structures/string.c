@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include "string.h"
 #include "../config.h"
+#include "value.h"
 
 
 bool string_is_sane(const struct String *const s) {
@@ -68,7 +69,47 @@ void string_concat_to(struct String *to, struct String *from) {
     assert(string_is_sane(to));
 }
 
-bool string_contains(char ch, struct String* string){
+void string_concat_to_consume(struct String *to, struct String s) {
+    string_concat_to(to, &s);
+    string_free(&s);
+}
+
+void string_concat_to_chars(struct String *to, char *from) {
+    assert(string_is_sane(to));
+    int len = to->length;
+    size_t from_length = strlen(from);
+    to->length += from_length;
+    RESIZE(to->body, to->length + 1);
+    for(size_t l = 0; l < from_length; l++){
+        to->body[l+len] = from[l];
+    }
+    to->body[to->length] = 0;
+    assert(string_is_sane(to));
+}
+void string_concat_to_long(struct String *to, huo_int_t from) {
+    assert(string_is_sane(to));
+
+    size_t int_size = snprintf(NULL, 0, "%"PRIhi, from);
+
+    int len = to->length;
+    to->length += int_size;
+    RESIZE(to->body, to->length + 1);
+    sprintf(&to->body[len], "%"PRIhi, from);
+    assert(string_is_sane(to));
+}
+void string_concat_to_float(struct String *to, float from) {
+    assert(string_is_sane(to));
+
+    size_t int_size = snprintf(NULL, 0, "%f", from);
+
+    int len = to->length;
+    to->length += int_size;
+    RESIZE(to->body, to->length + 1);
+    sprintf(&to->body[len], "%f", from);
+    assert(string_is_sane(to));
+}
+
+bool string_contains(char ch, const struct String* string){
     assert(string_is_sane(string));
     if(!string->length){ return false; }
     for(size_t i = 0; i < string->length; i++){
@@ -138,6 +179,10 @@ bool string_matches_heap(struct String *base, struct String *compare){
     }
     return true;
 }
+bool string_matches_char(struct String *base, char c) {
+    assert(string_is_sane(base));
+    return (base->length == 1 && base->body[0] == c);
+}
 
 char *string_to_chars(const struct String *s) {
     assert(string_is_sane(s));
@@ -179,10 +224,17 @@ bool string_matches_vv(void *base, void *compare) {
     return string_matches_heap((struct String *) base, (struct String *) compare);
 }
 
-void string_free(struct String *const s) {
-    if (s->body != NULL) {
-        free(s->body);
-        s->body = NULL;
+void string_free_stack(struct String s) {
+    if (s.body != NULL) {
+        free(s.body);
+        s.body = NULL;
     }
-    s->length = 0;
+    s.length = 0;
+}
+
+void string_free(struct String *const s) {
+    if (s != NULL) {
+        string_free_stack(*s);
+        free(s);
+    }
 }
