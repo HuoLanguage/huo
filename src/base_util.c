@@ -9,6 +9,7 @@
 #include "core_functions.h"
 #include "config.h"
 #include "process_defs.h"
+#include "constants.h"
 
 bool __size_t_mul_overflow(size_t a, size_t b, size_t *res) {
 #if defined(MUL_OVERFLOW)
@@ -93,6 +94,10 @@ struct Value sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_de
         struct String kwd = value_as_keyword(v);
         if ((w = get_letted_value(scopes, kwd)) != NULL) {
             v = w;
+        } else if (string_matches_heap(&kwd, &true_const)) {
+            return value_from_bool(true);
+        } else if (string_matches_heap(&kwd, &false_const)) {
+            return value_from_bool(false);
         } else {
             ERROR("Undefined variable: %s", string_to_chars(&kwd));
         }
