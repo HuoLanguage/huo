@@ -23,5 +23,6 @@ struct Value if_block(struct Execution_bundle * exec_bundle){
     } else {
         result = value_from_undef();
     }
+    exec_bundle->ast = ast;
     return result;
 }

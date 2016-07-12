@@ -11,6 +11,9 @@ void store_let_value(struct Value * key, struct Value * value, struct Scopes * s
     def->is_func = false;
     def->val.val = value_copy_heap(value);
     struct String val = value_as_keyword(key);
+    //printf("val=%s --> ", string_to_chars(&val));
+    //print(*value);
+    //printf("\n");
     if (hash_table_put(let_store, string_copy_heap(&val), def)) {
         // Overriding
     } else {

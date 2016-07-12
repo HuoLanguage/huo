@@ -17,7 +17,9 @@ struct Value switch_case(struct Execution_bundle * exec_bundle){
                 ERROR("Default not last case!");
             }
             exec_bundle->ast = ast_child(routine, 1);
-            return execute(exec_bundle);
+            struct Value ret = execute(exec_bundle);
+            exec_bundle->ast = ast;
+            return ret;
         }
         if (ast_size(routine) != 3) {
             ERROR("Invalid syntax for switch_case: %zu != 3", ast_size(routine));
@@ -29,9 +31,12 @@ struct Value switch_case(struct Execution_bundle * exec_bundle){
         struct Value result = execute(exec_bundle);
         if(value_as_bool(&result)){
             exec_bundle->ast = return_value;
-            return execute(exec_bundle);
+            struct Value ret = execute(exec_bundle);
+            exec_bundle->ast = ast;
+            return ret;
         }
     }
+    exec_bundle->ast = ast;
     struct Value result;
     result.type = UNDEF;
     return result;

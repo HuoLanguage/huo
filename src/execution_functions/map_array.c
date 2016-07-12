@@ -37,5 +37,6 @@ struct Value map_array(struct Execution_bundle * exec_bundle){
         struct Value result = execute(exec_bundle);
         array.data.array->values[i] = value_copy_heap(&result);
     }
+    exec_bundle->ast = ast;
     return array;
 }

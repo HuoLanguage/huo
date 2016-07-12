@@ -29,8 +29,10 @@ struct Value execute(struct Execution_bundle * exec_bundle){
         arr->size = ast_size(ast);
         arr->values = ARR_MALLOC(arr->size, struct Value *);
         for (size_t i = 0; i < arr->size; i++) {
+
             exec_bundle->ast = ast_child(ast, i);
             struct Value v = execute(exec_bundle);
+            exec_bundle->ast = ast;
             arr->values[i] = value_copy_heap(&v);
         }
         result = value_from_array(arr);
@@ -45,28 +47,38 @@ struct Value execute(struct Execution_bundle * exec_bundle){
         }
         else if(is_unbound_kwd && (func = get_defined_func(scopes, value_as_keyword(kwd))) != NULL) {
             make_args_map(exec_bundle, func);
+
             exec_bundle->ast = ast_copy(get_defined_body(func));
+            exec_bundle->ast = ast;
             result = execute(exec_bundle);
             scopes->current--;
         }
         else if(ast_size(ast) == 1){
+
             exec_bundle->ast = ast_child(ast, 0);
             result = execute(exec_bundle);
+            exec_bundle->ast = ast;
         }
         else if(is_unbound_kwd && ast_size(ast) == 2) {
+
             exec_bundle->ast = ast_child(ast, 1);
             //printf("'%s' = '", string_to_chars(ast_to_string(exec_bundle->ast)));
             struct Value a = execute(exec_bundle);
+
+            exec_bundle->ast = ast;
             //print(a);
             //printf("'\n");
             result = apply_single_value_func(kwd, exec_bundle, &a);
         }
         else if (is_unbound_kwd && ast_size(ast) == 3) {
+
             exec_bundle->ast = ast_child(ast, 1);
             struct Value a = execute(exec_bundle);
 
             exec_bundle->ast = ast_child(ast, 2);
             struct Value b = execute(exec_bundle);
+
+            exec_bundle->ast = ast;
 
             result = apply_core_function(kwd, exec_bundle, &a, &b);
         } else {

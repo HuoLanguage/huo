@@ -64,6 +64,8 @@ bool apply_execution_function(struct Value *kwd_val, struct Value *result, struc
         exec_bundle->ast = ast_child(ast, 3);
         struct Value array = execute(exec_bundle);
 
+        exec_bundle->ast = ast;
+
         set(index, item, &array);
         *result = array;
         return true;
@@ -81,18 +83,22 @@ bool apply_execution_function(struct Value *kwd_val, struct Value *result, struc
             exec_bundle->ast = ast_child(ast, i);
             *result = execute(exec_bundle);
         }
+        exec_bundle->ast = ast;
         return true;
     }
     else if(string_matches_heap(&kwd, &substring_const)){
         if (ast_size(ast) != 4) {
             ERROR("Not enough arguments for substring: %zu < 4", ast_size(ast));
         }
+
         exec_bundle->ast = ast_child(ast, 1);
         struct Value start = execute(exec_bundle);
         exec_bundle->ast = ast_child(ast, 2);
         struct Value end = execute(exec_bundle);
         exec_bundle->ast = ast_child(ast, 3);
         struct Value string = execute(exec_bundle);
+
+        exec_bundle->ast = ast;
 
         *result = substring(start, end, string);
         return true;
@@ -109,13 +115,10 @@ bool apply_execution_function(struct Value *kwd_val, struct Value *result, struc
     else if(string_matches_heap(&kwd, &let_const)){
         struct Value *name = ast_value(ast_child(ast, 1));
 
-        exec_bundle->ast = ast_child(ast, 2);
+        exec_bundle->ast = ast_copy(ast_child(ast, 2));
         struct Value val = execute(exec_bundle);
 
-        //print(*name);
-        //printf(" --> ");
-        //print(val);
-        //printf("\n");
+        exec_bundle->ast = ast;
 
         store_let_value(name, &val, exec_bundle->scopes);
 

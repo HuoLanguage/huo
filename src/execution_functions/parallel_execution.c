@@ -46,5 +46,6 @@ void parallel_execution(struct Execution_bundle * exec_bundle){
         exec_bundle->ast = ast_child(ast, i);
         parallel_routine(exec_bundle);
     }
+    exec_bundle->ast = ast;
 }
 #endif

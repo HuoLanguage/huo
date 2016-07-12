@@ -23,6 +23,7 @@ void while_loop(struct Execution_bundle * exec_bundle){
             exec_bundle->ast = ast_child(ast, 2);
             execute(exec_bundle);
         } else {
+            exec_bundle->ast = ast;
             return;
         }
     }

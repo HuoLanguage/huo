@@ -33,4 +33,5 @@ void for_loop(struct Execution_bundle *exec_bundle){
             execute(exec_bundle);
         }
     }
+    exec_bundle->ast = ast;
 }

@@ -25,10 +25,12 @@ struct Value for_each(struct Execution_bundle * exec_bundle) {
     } else {
         ERROR("Wrong number of arguments for for_each: %zu != [5,4]\n", ast_size(ast));
     }
+
     exec_bundle->ast = ast_child(ast, 1);
     struct Value array = execute(exec_bundle);
+
+    exec_bundle->ast = ast;
     if(array.type == STRING){
-        exec_bundle->ast = ast;
         return for_each_string(value_as_string(&array), exec_bundle);
     } else if (array.type == ARRAY) {
         for(size_t i = 0; i < array.data.array->size; i++){
@@ -42,6 +44,7 @@ struct Value for_each(struct Execution_bundle * exec_bundle) {
             exec_bundle->ast = function;
             execute(exec_bundle);
         }
+        exec_bundle->ast = ast;
         return array;
     } else {
         ERROR("Invalid type for for_each iterable: '%c' != ARRAY", array.type);
@@ -76,5 +79,6 @@ struct Value for_each_string(struct String string, struct Execution_bundle * exe
         exec_bundle->ast = function;
         execute(exec_bundle);
     }
+    exec_bundle->ast = ast;
     return value_from_string(string);
 }

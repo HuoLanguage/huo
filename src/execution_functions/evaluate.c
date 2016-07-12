@@ -16,9 +16,11 @@ struct Value eval(struct Value *string, struct Execution_bundle * exec_bundle) {
     };
     struct Tokens * tokens = tokenize(value_as_string(string), &t);
     huo_ast *root = parse(tokens);
-    for(size_t i = 0; i < ast_size(root); i++){
+    huo_ast *ast = exec_bundle->ast;
+    for(size_t i = 0; i < ast_size(root); i++) {
         exec_bundle->ast = ast_child(root, i);
         result = execute(exec_bundle);
     }
+    exec_bundle->ast = ast;
     return result;
 }

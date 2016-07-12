@@ -21,6 +21,7 @@ void make_args_map(struct Execution_bundle * exec_bundle, huo_ast * function) {
         exec_bundle->ast = ast_child(ast, i+1);
         vals[i] = execute(exec_bundle);
     }
+    exec_bundle->ast = ast;
     push_scope(exec_bundle->scopes);
     for(size_t i = 0; i + 1 < ast_size(ast); i++){
         char t = ast_value(ast_child(function, i + 2))->type;

@@ -17,5 +17,6 @@ struct Value reduce_ast(struct Execution_bundle * exec_bundle){
         exec_bundle->ast = ast_child(ast, i);
         result = execute(exec_bundle);
     }
+    exec_bundle->ast = ast;
     return result;
 }

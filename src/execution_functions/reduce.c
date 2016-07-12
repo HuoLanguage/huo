@@ -45,5 +45,6 @@ struct Value reduce_array(struct Execution_bundle * exec_bundle){
         exec_bundle->ast = function;
         result = execute(exec_bundle);
     }
+    exec_bundle->ast = ast;
     return result;
 }
