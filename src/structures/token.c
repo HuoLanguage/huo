@@ -23,6 +23,8 @@ bool can_be_extended(struct String so_far, char cur, enum token_type_t type) {
     switch (type) {
         case TOK_PLUS:
         case TOK_MINUS:
+        case TOK_AND:
+        case TOK_OR:
         case TOK_MUL:
         case TOK_DIV:
         case TOK_EX_MARK:
@@ -64,6 +66,10 @@ bool can_be_of_type(char c, enum token_type_t type) {
             return c == '+';
         case TOK_MINUS:
             return c == '-';
+        case TOK_AND:
+            return c == '&';
+        case TOK_OR:
+            return c == '|';
         case TOK_MUL:
             return c == '*';
         case TOK_DIV:

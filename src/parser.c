@@ -284,6 +284,8 @@ huo_ast *parse_word(size_t *pos, struct Tokens *tokens) {
     switch (t.type) {
         case TOK_PLUS:
         case TOK_MINUS:
+        case TOK_AND:
+        case TOK_OR:
         case TOK_MUL:
         case TOK_DIV:
         case TOK_EX_MARK:
