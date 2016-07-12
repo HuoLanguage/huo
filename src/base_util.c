@@ -92,7 +92,7 @@ struct Value sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_de
         struct Value *w = NULL;
         struct String kwd = value_as_keyword(v);
         if ((w = get_letted_value(scopes, kwd)) != NULL) {
-            *v = *w;
+            v = w;
         } else {
             ERROR("Undefined variable: %s", string_to_chars(&kwd));
         }
