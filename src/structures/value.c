@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "structures.h"
+#include "../constants.h"
 #include "value.h"
 
 #include "../base_util.h"
@@ -222,6 +223,32 @@ void value_negate(struct Value *v) {
         v->data.ln = -value_as_long(v);
     } else {
         ERROR("Type error: value of type '%c' cannot be negated", v->type);
+    }
+}
+
+struct String type_to_string(enum Value_type type){
+    switch (type) {
+        case STRING:
+            return string_copy_stack(&string_const);
+            break;
+        case FLOAT:
+        case LONG:
+            return string_copy_stack(&number_const);
+            break;
+        case ARRAY:
+            return string_copy_stack(&array_const);
+            break;
+        case BOOL:
+            return string_copy_stack(&boolean_const);
+            break;
+        case KEYWORD:
+            return string_copy_stack(&keyword_const);
+            break;
+        case UNDEF:
+            return string_copy_stack(&undefined_const);
+            break;
+        default:
+            ERROR("Type error: unrecognized type: '%c'.", type)
     }
 }
 

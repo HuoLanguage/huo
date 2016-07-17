@@ -53,6 +53,7 @@ size_t length(struct Value a);
 unsigned long value_keyword_hash_code(void *value);
 bool value_keyword_equality(void *a, void *b);
 
+struct String type_to_string(enum Value_type type);
 bool value_equals_shallow(struct Value *a, struct Value *b);
 void value_negate(struct Value *v);
 void value_free(struct Value *v);

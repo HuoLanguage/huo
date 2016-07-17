@@ -66,7 +66,16 @@ struct String false_const = STR_NEW("false");
 
 struct String true_const = STR_NEW("true");
 
+struct String typeof_const = STR_NEW("typeof");
+
 struct String function_names = STR_NEW("[if, read, let, set, each, for, do, switch, parallel, import, map, reduce, substring, while]");
+
+struct String keyword_const = STR_NEW("keyword");
+struct String number_const = STR_NEW("number");
+struct String string_const = STR_NEW("string");
+struct String boolean_const = STR_NEW("boolean");
+struct String array_const = STR_NEW("array");
+struct String undefined_const = STR_NEW("undefined");
 
 const char open_parens_const = '(';
 const char close_parens_const = ')';
