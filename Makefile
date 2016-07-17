@@ -50,6 +50,7 @@ objs = \
   src/parser.o \
   src/execute.o \
   src/config.o \
+  src/path_utils.o \
   src/huo.o
 
 all: huo
