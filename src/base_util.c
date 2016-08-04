@@ -29,7 +29,7 @@ bool __size_t_mul_overflow(size_t a, size_t b, size_t *res) {
         return false;
     } else {
         WARN_ONCE("size_t is HOW long?");
-        WARN_ONCE("Using slow but portable overflow test")
+        WARN_ONCE("Using slow but portable overflow test");
     }
 #else
 #pragma message ("Using slow but portable overflow test")

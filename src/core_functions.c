@@ -213,6 +213,12 @@ struct Value equals(struct Value a, struct Value b){
     else if(a.type == ARRAY && b.type == ARRAY){
         return value_from_bool(array_matches(value_as_array(&a), value_as_array(&b)));
     }
+    else if(a.type == FLOAT && b.type == LONG){
+        return value_from_bool(value_as_float(&a) == (float)value_as_long(&b));
+    }
+    else if(a.type == LONG && b.type == FLOAT){
+        return value_from_bool((float)value_as_long(&a) == value_as_float(&b));
+    }
     else {
         ERROR("Mismatched types: %d != %d", a.type, b.type);
     }

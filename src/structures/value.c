@@ -85,16 +85,24 @@ void value_copy_to(struct Value * a, struct Value * b){
 }
 
 float value_as_float(struct Value *v) {
-    CHECK_TYPE(v, FLOAT);
-    return v->data.fl;
+    if(v->type == LONG){
+        return (float)v->data.ln;
+    } else {
+        CHECK_TYPE(v, FLOAT);
+        return v->data.fl;
+    }
 }
 bool value_as_bool(struct Value *v) {
     CHECK_TYPE(v, BOOL);
     return v->data.bl;
 }
 huo_int_t value_as_long(struct Value *v) {
-    CHECK_TYPE(v, LONG);
-    return v->data.ln;
+    if(v->type == FLOAT){
+        return (long)v->data.fl;
+    } else {
+        CHECK_TYPE(v, LONG);
+        return v->data.ln;
+    }
 }
 struct String value_as_string_or_kwd(struct Value *v) {
     if (v->type == STRING) {

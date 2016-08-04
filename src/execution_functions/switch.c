@@ -25,7 +25,7 @@ struct Value switch_case(struct Execution_bundle * exec_bundle){
             ERROR("Invalid syntax for switch_case: %zu != 3", ast_size(routine));
         }
 
-        huo_ast * return_value = ast_child(routine, 1);
+        huo_ast * return_value = ast_child(routine, 2);
         ast_set_child(routine, 1, ast_child(ast, 1));
         exec_bundle->ast = routine;
         struct Value result = execute(exec_bundle);

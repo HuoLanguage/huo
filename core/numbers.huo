@@ -62,15 +62,18 @@
         (< 1 (do
             (let result x)
             (for 1 n (do
-                (let result (* result x)))
+                (let result (* result x))
                 )
+            )
             (return result)
-            ))
+            )
+        )
         (> 0 (do
             (let result 1)
             (for 0 n (let result (/ result x)))
             (return result)
-            ))
+            )
+        )
     )
 )
 

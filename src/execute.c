@@ -36,7 +36,7 @@ struct Value execute(struct Execution_bundle * exec_bundle){
             arr->values[i] = value_copy_heap(&v);
         }
         result = value_from_array(arr);
-    }else if(!ast_size(ast)) {
+    } else if(!ast_size(ast)) {
         result = sub_vars(ast_value(ast), scopes, max_depth - 1);
     } else {
         huo_ast *func;
@@ -49,7 +49,6 @@ struct Value execute(struct Execution_bundle * exec_bundle){
             make_args_map(exec_bundle, func);
 
             exec_bundle->ast = ast_copy(get_defined_body(func));
-            exec_bundle->ast = ast;
             result = execute(exec_bundle);
             scopes->current--;
         }
