@@ -1,0 +1,19 @@
+(def msg_first msg fnc
+  (do
+    (print msg)
+    (print (run fnc msg))
+  )
+)
+
+(def mapper arr fnc
+  (do
+    (each arr item i
+    (set i (run fnc item) arr)
+    )
+    (return arr)
+  )
+)
+
+(msg_first "Hello" (ast (cat x " World")))
+
+(print (mapper [1, 2, 3] (ast (+ item 3))))

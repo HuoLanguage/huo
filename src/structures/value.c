@@ -2,16 +2,8 @@
 #include "structures.h"
 #include "../constants.h"
 #include "value.h"
-
 #include "../base_util.h"
 #include "../config.h"
-
-#define CHECK_TYPE(v, tp) do {\
-    /* assert((v)->type == (tp)); */ \
-    if ((v)->type != (tp))\
-        ERROR("Invalid type: '%i' != '%i'", (v)->type, (tp));\
-    } while (0)
-
 
 struct Value value_copy_stack(struct Value * b){
     struct Value a;
@@ -46,6 +38,8 @@ struct Value *value_copy_heap(struct Value * b){
         a->data.bl = value_as_bool(b);
     } else if (b->type == ARRAY){
         a->data.array = array_copy_heap(value_as_array(b));
+    } else if (b->type == AST){
+        a->data.ast = ast_copy(value_as_ast(b));
     } else if (b->type == UNDEF){
         a->type = UNDEF;
     } else {

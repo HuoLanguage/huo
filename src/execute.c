@@ -37,15 +37,18 @@ struct Value execute(struct Execution_bundle * exec_bundle){
         }
         result = value_from_array(arr);
     } else if(!ast_size(ast)) {
+        // ast has no children so must be a variable
         result = sub_vars(ast_value(ast), scopes, max_depth - 1);
     } else {
         huo_ast *func;
         struct Value *kwd = ast_value(ast_child(ast, 0));
         bool is_unbound_kwd = (kwd->type == KEYWORD);
+
         if(is_unbound_kwd && apply_execution_function(kwd, &result, exec_bundle)){
-        // pass
+        // if first item in ast node is a keyword and we can execute it we're done
         }
         else if(is_unbound_kwd && (func = get_defined_func(scopes, value_as_keyword(kwd))) != NULL) {
+          // here the keyword points to a user defined function
             make_args_map(exec_bundle, func);
 
             exec_bundle->ast = ast_copy(get_defined_body(func));
@@ -61,12 +64,12 @@ struct Value execute(struct Execution_bundle * exec_bundle){
         else if(is_unbound_kwd && ast_size(ast) == 2) {
 
             exec_bundle->ast = ast_child(ast, 1);
-            //printf("'%s' = '", string_to_chars(ast_to_string(exec_bundle->ast)));
+            // printf("'%s' = '", string_to_chars(ast_to_string(exec_bundle->ast)));
             struct Value a = execute(exec_bundle);
 
             exec_bundle->ast = ast;
-            //print(a);
-            //printf("'\n");
+            // print(a);
+            // printf("'\n");
             result = apply_single_value_func(kwd, exec_bundle, &a);
         }
         else if (is_unbound_kwd && ast_size(ast) == 3) {

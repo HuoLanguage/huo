@@ -12,8 +12,11 @@ enum Value_type {
     STRING,
     ARRAY,
     KEYWORD,
+    AST,
     UNDEF
 };
+
+typedef struct huo_ast_t huo_ast;
 
 union Data {
     bool bl;
@@ -21,12 +24,19 @@ union Data {
     float fl;
     struct String str;
     struct Value_array * array;
+    huo_ast * ast;
 };
 
 struct Value {
     enum Value_type type;
     union Data data;
 };
+
+#define CHECK_TYPE(v, tp) do {\
+    /* assert((v)->type == (tp)); */ \
+    if ((v)->type != (tp))\
+        ERROR("Invalid type: '%i' != '%i'", (v)->type, (tp));\
+    } while (0)
 
 float value_as_float(struct Value *v);
 bool value_as_bool(struct Value *v);

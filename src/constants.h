@@ -39,6 +39,8 @@ extern struct String function_names;
 extern struct String false_const;
 extern struct String true_const;
 extern struct String typeof_const;
+extern struct String run_const;
+extern struct String ast_const;
 
 extern struct String keyword_const;
 extern struct String number_const;

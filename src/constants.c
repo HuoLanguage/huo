@@ -16,6 +16,10 @@ struct String print_const = STR_NEW("print");
 
 struct String concat_const = STR_NEW("cat");
 
+struct String run_const = STR_NEW("run");
+
+struct String ast_const = STR_NEW("ast");
+
 struct String if_const = STR_NEW("if");
 
 struct String def_const = STR_NEW("def");
