@@ -4,7 +4,9 @@ Huo is an interpreted language which I started as a hobby project. The original 
 If you would like to contribute to Huo open an issue describing the work you would like to do. If the change is accepted then you can make a pull request with your changes and it will be merged in after review.
 
 ##compile
+```shell
 make   
+```
 
 ##run
 Create a file containing Huo code and run it with the interpreter:
