@@ -117,6 +117,21 @@ if you want to simply return a composition of values, use the return function
 (let x (pair 0 "start"))
 (print x) ; [ 0, "start" ]
 ```
+ast and run together allow you to pass functions as arguments
+the keywork ast returns its first argument as a value of type ast
+the keyword run will execute an ast value with whatever arguments you pass in
+```lisp
+(def mapper arr fnc
+  (do
+    (each arr item i
+    (set i (run fnc item) arr)
+    )
+    (return arr)
+  )
+)
+
+(msg_first "Hello" (ast (cat x " World")))
+```
 switch block
 ```lisp
 ; the switch block is convenient for matching a value against a large number
@@ -197,8 +212,8 @@ in order, returning the value from the last function inside it
 )
 ```
 a parallel block takes any number of functions and executes them
-in parallel. The parallel block returns undefined. Beware of passing
-the same variable to two different functions in a parallel block!
+in parallel. The parallel block returns undefined. This has not 
+been implemented yet.
 ```lisp
 (let x 0)
 (let y [])
