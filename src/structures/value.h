@@ -6,14 +6,14 @@
 #include "string.h"
 
 enum Value_type {
-    FLOAT,
-    BOOL,
-    LONG,
-    STRING,
-    ARRAY,
-    KEYWORD,
-    AST,
-    UNDEF
+    TYPE_FLOAT,
+    TYPE_BOOL,
+    TYPE_LONG,
+    TYPE_STRING,
+    TYPE_ARRAY,
+    TYPE_KEYWORD,
+    TYPE_AST,
+    TYPE_UNDEF
 };
 
 typedef struct huo_ast_t huo_ast;
