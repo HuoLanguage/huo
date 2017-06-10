@@ -40,7 +40,7 @@ char *path_merge(const char *dir, const char *rest) {
     strcat(path, rest);
     return path;
 }
-#elif  defined(_WIN16) || defined(_WIN32) || defined(_WIN64)
+#elif  defined(_WIN16) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 // UNTESTED!!
 #include <Windows.h>
 
