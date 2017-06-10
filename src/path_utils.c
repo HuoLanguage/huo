@@ -1,11 +1,11 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/param.h>
-#include "base_util.h"
 
 #if defined(_POSIX_VERSION) || defined(__linux__) || defined(__APPLE__)
-
 #include <libgen.h>
+#include "base_util.h"
+
 char *get_exe_path(const char *called_name) {
     char *path_to_exe = realpath(called_name, NULL);
 
@@ -43,6 +43,8 @@ char *path_merge(const char *dir, const char *rest) {
 #elif  defined(_WIN16) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 // UNTESTED!!
 #include <Windows.h>
+#include "base_util.h"
+
 
 char *get_exe_path(const char *called_name) {
     char *buffer = malloc_or_die(MAX_PATH);
