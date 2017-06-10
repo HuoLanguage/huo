@@ -62,7 +62,7 @@ char *get_path_dir(char *path) {
         if (len <= 1) {
             ERROR("Could not find directory of %s", path);
         }
-    } while (temp[--len] != '/');
+    } while (temp[--len] != '/' && temp[--len] != '\\');
     temp[len] = 0;
     return temp;
 }
