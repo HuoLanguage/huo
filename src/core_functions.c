@@ -246,7 +246,8 @@ bool can_cast_to_size_t(huo_int_t i) {
 struct Value set(struct Value index_val, struct Value item, struct Value *to_set) {
     huo_int_t index = value_as_long(&index_val);
     if (!can_cast_to_size_t(index)) {
-        ERROR("Index out of range for set: should be 0 <= %" PRIhi " < %llu", index, SIZE_MAX);
+		unsigned long long size_max = SIZE_MAX;
+        ERROR("Index out of range for set: should be 0 <= %" PRIhi " < %llu", index, size_max);
     }
     if (to_set->type == ARRAY) {
         return value_from_array(array_set((size_t) index, item, value_as_array(to_set)));
