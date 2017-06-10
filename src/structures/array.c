@@ -67,12 +67,12 @@ bool array_contains(struct Value *item, struct Value_array *array){
     enum Value_type t = item->type;
     for(size_t i = 0; i < array->size; i++){
         if(array->values[i]->type == t){
-            if(array->values[i]->type == KEYWORD && t == KEYWORD){
+            if(array->values[i]->type == TYPE_KEYWORD && t == TYPE_KEYWORD){
                 if(string_matches_heap(&array->values[i]->data.str, &item->data.str)){
                     return true;
                 }
             }
-            else if (t == FLOAT){
+            else if (t == TYPE_FLOAT){
                 if(array->values[i]->data.fl == item->data.fl){
                     return true;
                 }

@@ -23,8 +23,8 @@ struct Value reduce_array(struct Execution_bundle * exec_bundle){
     struct Value result;
     exec_bundle->ast = ast_child(ast, 1);
     struct Value array = execute(exec_bundle);
-    if (array.type != ARRAY) {
-        ERROR("Invalid type for reduce_array: '%c' != ARRAY\n", array.type);
+    if (array.type != TYPE_ARRAY) {
+        ERROR("Invalid type for reduce_array: '%c' != TYPE_ARRAY\n", array.type);
     }
     if (array.data.array->size <= 0) {
         return value_copy_stack(&array);

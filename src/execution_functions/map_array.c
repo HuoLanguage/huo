@@ -22,8 +22,8 @@ struct Value map_array(struct Execution_bundle * exec_bundle){
     }
     exec_bundle->ast = ast_child(ast, 1);
     struct Value array = execute(exec_bundle);
-    if (array.type != ARRAY) {
-        ERROR("Wrong type for map: '%c' != ARRAY", array.type);
+    if (array.type != TYPE_ARRAY) {
+        ERROR("Wrong type for map: '%c' != TYPE_ARRAY", array.type);
     }
     for(size_t i = 0; i < array.data.array->size; i++){
         struct Value *item = value_copy_heap(array.data.array->values[i]);

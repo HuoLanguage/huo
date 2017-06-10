@@ -85,11 +85,11 @@ struct Value sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_de
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    if (v->type == ARRAY) {
+    if (v->type == TYPE_ARRAY) {
         for (size_t i = 0; i < v->data.array->size; i++) {
             *(v->data.array->values[i]) = sub_vars(v->data.array->values[i], scopes, max_depth);
         }
-    } else if (v->type == KEYWORD) {
+    } else if (v->type == TYPE_KEYWORD) {
         struct Value *w = NULL;
         struct String kwd = value_as_keyword(v);
         if ((w = get_letted_value(scopes, kwd)) != NULL) {

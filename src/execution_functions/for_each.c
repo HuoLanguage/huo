@@ -30,9 +30,9 @@ struct Value for_each(struct Execution_bundle * exec_bundle) {
     struct Value array = execute(exec_bundle);
 
     exec_bundle->ast = ast;
-    if(array.type == STRING){
+    if(array.type == TYPE_STRING){
         return for_each_string(value_as_string(&array), exec_bundle);
-    } else if (array.type == ARRAY) {
+    } else if (array.type == TYPE_ARRAY) {
         for(size_t i = 0; i < array.data.array->size; i++){
             struct Value *item = array.data.array->values[i];
             huo_ast * function = ast_copy(ast_child(ast, func_index));
@@ -47,7 +47,7 @@ struct Value for_each(struct Execution_bundle * exec_bundle) {
         exec_bundle->ast = ast;
         return array;
     } else {
-        ERROR("Invalid type for for_each iterable: '%c' != ARRAY", array.type);
+        ERROR("Invalid type for for_each iterable: '%c' != TYPE_ARRAY", array.type);
     }
 }
 

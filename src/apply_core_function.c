@@ -20,7 +20,7 @@ struct Value apply_core_function(struct Value *kwd_val, struct Execution_bundle 
     }
     else if(string_matches_heap(&kwd, &split_const)){
         v = split(*a, *b);
-    } else if (a->type == ARRAY && b->type == ARRAY) {
+    } else if (a->type == TYPE_ARRAY && b->type == TYPE_ARRAY) {
         struct Value_array *a_arr = value_as_array(a);
         struct Value_array *b_arr = value_as_array(b);
         if(a_arr->size != b_arr->size){

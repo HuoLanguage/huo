@@ -179,13 +179,13 @@ void ast_free(huo_ast *ast) {
 }
 
 huo_ast * value_as_ast(struct Value *v) {
-    CHECK_TYPE(v, AST);
+    CHECK_TYPE(v, TYPE_AST);
     return v->data.ast;
 }
 
 struct Value value_from_ast(huo_ast *ast) {
     struct Value v = {
-      .type = AST,
+      .type = TYPE_AST,
       .data.ast = ast
     };
     return v;
