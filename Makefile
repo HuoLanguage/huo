@@ -58,7 +58,7 @@ all: huo
 huo: $(objs)
 	$(CC) $(LDFLAGS) -o huo $(objs) $(LIBS)
 
-clean: ; rm -f -- ./src/*.mk  ./src/*.o & rm -f ./src/execution_functions/*.o & rm -f ./src/structures/*.o
+clean: ; rm -f -- ./src/*.mk  ./src/*.o & rm -f ./src/execution_functions/*.o & rm -f ./src/structures/*.o & rm -f ./.*.mk
 
 .PHONY: all clean
 .DELETE_ON_ERROR:
