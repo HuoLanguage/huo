@@ -4,3 +4,4 @@ huo
 *~
 *.exe
 .vscode/
+*.exe.stackdump
