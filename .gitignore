@@ -3,3 +3,4 @@ huo
 *.mk
 *~
 *.exe
+.vscode/
