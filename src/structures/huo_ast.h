@@ -4,9 +4,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "value.h"
-
 typedef struct huo_ast_t huo_ast;
+
+#include "value.h"
 
 enum ast_type_e {
     AST_STATEMENT,

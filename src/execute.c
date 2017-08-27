@@ -42,7 +42,7 @@ struct Value execute(struct Execution_bundle * exec_bundle){
     } else {
         huo_ast *func;
         struct Value *kwd = ast_value(ast_child(ast, 0));
-        bool is_unbound_kwd = (kwd->type == KEYWORD);
+        bool is_unbound_kwd = (kwd->type == TYPE_KEYWORD);
 
         if(is_unbound_kwd && apply_execution_function(kwd, &result, exec_bundle)){
         // if first item in ast node is a keyword and we can execute it we're done

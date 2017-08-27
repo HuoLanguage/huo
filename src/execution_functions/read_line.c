@@ -12,9 +12,9 @@ struct String read_line(struct Value * string){
 
     // read line takes a string to display as prompt
     // but displays it without quotes
-    string->type = KEYWORD;
+    string->type = TYPE_KEYWORD;
     print(*string);
-    string->type = STRING;
+    string->type = TYPE_STRING;
 
     struct String input = {
         .length = 0,

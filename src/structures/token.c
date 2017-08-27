@@ -52,7 +52,7 @@ bool can_be_of_type(char c, enum token_type_t type) {
     }
     switch (type) {
         case TOK_WHITESPACE:
-            return c == ' ' || c == '\t';
+            return c == ' ' || c == '\t' || c == '\r';
         case TOK_NEWLINE:
             return c == '\n';
         case TOK_PLUS:
@@ -82,6 +82,7 @@ bool can_be_of_type(char c, enum token_type_t type) {
         case TOK_COMMENT:
             return c == ';';
         default:
+			printf("%i", c);
             ERROR("Unknown type: '%d'", type);
     }
 }

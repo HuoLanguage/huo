@@ -2,7 +2,7 @@ CFLAGS   += -g3
 LIBS = -lpthread
 
 # Be super strict about everything
-CFLAGS   += -std=c11 -Werror -Wall -Wextra -pedantic -O2
+CFLAGS   += -std=c11 -Wall -Wextra -pedantic -O2
 CPPFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
 
 # Automatically sort out header dependencies
@@ -58,7 +58,7 @@ all: huo
 huo: $(objs)
 	$(CC) $(LDFLAGS) -o huo $(objs) $(LIBS)
 
-clean: ; rm -f -- ./src/*.mk  ./src/*.o & rm -f ./src/execution_functions/*.o & rm -f ./src/structures/*.o
+clean: ; rm -f -- ./src/*.mk  ./src/*.o & rm -f ./src/execution_functions/*.o & rm -f ./src/structures/*.o & rm -f ./.*.mk
 
 .PHONY: all clean
 .DELETE_ON_ERROR:

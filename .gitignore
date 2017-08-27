@@ -2,3 +2,6 @@ huo
 *.o
 *.mk
 *~
+*.exe
+.vscode/
+*.exe.stackdump
