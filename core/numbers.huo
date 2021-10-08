@@ -54,3 +54,53 @@
         (return result)
     )
 )
+
+(def exponent x n
+    (switch n
+        (= 0 1)
+        (= 1 x)
+        (< 1 (do
+            (let result x)
+            (for 1 n (do
+                (let result (* result x))
+                )
+            )
+            (return result)
+            )
+        )
+        (> 0 (do
+            (let result 1)
+            (for 0 n (let result (/ result x)))
+            (return result)
+            )
+        )
+    )
+)
+
+(def cross_product x y
+    (do
+        (let result [])
+        (each x xitem xidx
+            (do
+                (set xidx [] result)
+                (each y yitem yidx
+                    (do
+                        (let sum 0)
+                        (each (index xidx x) kitem kidx
+                            (let sum
+                                (+ sum
+                                    (*
+                                        (index kidx (index xidx x))
+                                        (index yidx (index kidx y))
+                                    )
+                                )
+                            )
+                        )
+                        (set yidx sum (index xidx result))
+                    )
+                )
+            )
+        )
+        (return result)
+    )
+)

@@ -3,10 +3,12 @@ Huo is an interpreted language which I started as a hobby project. The original 
 
 If you would like to contribute to Huo open an issue describing the work you would like to do. If the change is accepted then you can make a pull request with your changes and it will be merged in after review.
 
-##compile
+## compile
+```shell
 make   
+```
 
-##run
+## run
 Create a file containing Huo code and run it with the interpreter:
 ```shell
 $ ./huo test.huo
@@ -18,7 +20,7 @@ Or you can run the included REPL which is written in Huo. To exit the REPL simpl
 "Hello, world!"
 ```
 
-##Functions
+## Functions
 
 basic math
 ```lisp
@@ -115,6 +117,21 @@ if you want to simply return a composition of values, use the return function
 (let x (pair 0 "start"))
 (print x) ; [ 0, "start" ]
 ```
+ast and run together allow you to pass functions as arguments
+the keywork ast returns its first argument as a value of type ast
+the keyword run will execute an ast value with whatever arguments you pass in
+```lisp
+(def mapper arr fnc
+  (do
+    (each arr item i
+    (set i (run fnc item) arr)
+    )
+    (return arr)
+  )
+)
+
+(msg_first "Hello" (ast (cat x " World")))
+```
 switch block
 ```lisp
 ; the switch block is convenient for matching a value against a large number
@@ -192,17 +209,6 @@ in order, returning the value from the last function inside it
         )
         (reduce z acc cur (* acc cur) 1)
     )
-)
-```
-a parallel block takes any number of functions and executes them
-in parallel. The parallel block returns undefined. Beware of passing
-the same variable to two different functions in a parallel block!
-```lisp
-(let x 0)
-(let y [])
-(parallel 
-    (for 0 100 (let x (+ x 1)))
-    (for 0 100 (set (length y) (length y) y))
 )
 ```
 reading a file is simple and returns a string

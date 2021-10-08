@@ -17,7 +17,7 @@ struct Value apply_single_value_func(struct Value *kwd_val, struct Execution_bun
     if(string_matches_heap(&kwd, &print_const)){
         print(*value);
         printf("\n");
-        value->type = UNDEF;
+        value->type = TYPE_UNDEF;
         value->data.bl = false;
     } else if(string_matches_heap(&kwd, &length_const)){
         *value = value_from_long(length(*value));
@@ -34,8 +34,10 @@ struct Value apply_single_value_func(struct Value *kwd_val, struct Execution_bun
         exec_bundle->ast = read_import(value_as_string(value));
         *value = execute(exec_bundle);
         exec_bundle->ast = old_ast;
+    } else if(string_concat_heap(&kwd, &typeof_const)){
+        *value = value_from_string(type_to_string(value->type));
     } else {
-        value->type = UNDEF;
+        value->type = TYPE_UNDEF;
         value->data.bl = false;
     }
     return *value;

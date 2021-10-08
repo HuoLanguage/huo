@@ -134,5 +134,25 @@ bool apply_execution_function(struct Value *kwd_val, struct Value *result, struc
         *result = value_from_undef();
         return true;
     }
+    else if(string_matches_heap(&kwd, &run_const)){
+      exec_bundle->ast = ast_child(ast, 1);
+      struct Value fn_value = execute(exec_bundle);
+      huo_ast *fn = value_as_ast(&fn_value);
+      size_t index = 1;
+      for(size_t i = 2; i < ast_size(ast); i++){
+        ast_set_child(fn, index, ast_child(ast, i));
+        index++;
+      }
+
+      exec_bundle->ast = fn;
+      *result = execute(exec_bundle);
+      exec_bundle->ast = ast;
+      return true;
+    }
+    else if(string_matches_heap(&kwd, &ast_const)){
+
+      *result = value_from_ast(ast_copy(ast_child(ast, 1)));
+      return true;
+    }
     return false;
 }

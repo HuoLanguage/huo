@@ -8,7 +8,6 @@
 
 #include "../base_util.h"
 
-
 struct huo_ast_t {
     enum ast_type_e type;
     size_t size;
@@ -177,4 +176,17 @@ void ast_free(huo_ast *ast) {
         }
         free(ast);
     }
+}
+
+huo_ast * value_as_ast(struct Value *v) {
+    CHECK_TYPE(v, TYPE_AST);
+    return v->data.ast;
+}
+
+struct Value value_from_ast(huo_ast *ast) {
+    struct Value v = {
+      .type = TYPE_AST,
+      .data.ast = ast
+    };
+    return v;
 }

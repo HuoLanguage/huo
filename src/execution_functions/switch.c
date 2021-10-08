@@ -12,7 +12,7 @@ struct Value switch_case(struct Execution_bundle * exec_bundle){
     }
     for(size_t i = 2; i < ast_size(ast); i++){
         huo_ast * routine = ast_child(ast, i);
-        if(ast_value(ast_child(routine, 0))->type == KEYWORD && string_matches_heap(&default_const, &ast_value(ast_child(routine, 0))->data.str)) {
+        if(ast_value(ast_child(routine, 0))->type == TYPE_KEYWORD && string_matches_heap(&default_const, &ast_value(ast_child(routine, 0))->data.str)) {
             if (i != ast_size(ast) - 1) {
                 ERROR("Default not last case!");
             }
@@ -24,9 +24,8 @@ struct Value switch_case(struct Execution_bundle * exec_bundle){
         if (ast_size(routine) != 3) {
             ERROR("Invalid syntax for switch_case: %zu != 3", ast_size(routine));
         }
-
-        huo_ast * return_value = ast_child(routine, 1);
-        ast_set_child(routine, 1, ast_child(ast, 1));
+        huo_ast * return_value = ast_child(routine, 2);
+        ast_set_child(routine, 2, ast_child(ast, 1));
         exec_bundle->ast = routine;
         struct Value result = execute(exec_bundle);
         if(value_as_bool(&result)){
@@ -38,6 +37,6 @@ struct Value switch_case(struct Execution_bundle * exec_bundle){
     }
     exec_bundle->ast = ast;
     struct Value result;
-    result.type = UNDEF;
+    result.type = TYPE_UNDEF;
     return result;
 }

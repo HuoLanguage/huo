@@ -29,7 +29,7 @@ bool __size_t_mul_overflow(size_t a, size_t b, size_t *res) {
         return false;
     } else {
         WARN_ONCE("size_t is HOW long?");
-        WARN_ONCE("Using slow but portable overflow test")
+        WARN_ONCE("Using slow but portable overflow test");
     }
 #else
 #pragma message ("Using slow but portable overflow test")
@@ -85,11 +85,11 @@ struct Value sub_vars(struct Value *v, struct Scopes *scopes, huo_depth_t max_de
     if (max_depth <= 0) {
         ERROR("Max depth exceeded in computation");
     }
-    if (v->type == ARRAY) {
+    if (v->type == TYPE_ARRAY) {
         for (size_t i = 0; i < v->data.array->size; i++) {
             *(v->data.array->values[i]) = sub_vars(v->data.array->values[i], scopes, max_depth);
         }
-    } else if (v->type == KEYWORD) {
+    } else if (v->type == TYPE_KEYWORD) {
         struct Value *w = NULL;
         struct String kwd = value_as_keyword(v);
         if ((w = get_letted_value(scopes, kwd)) != NULL) {

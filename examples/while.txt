@@ -1,7 +1,12 @@
 (let x [0])
+(let y 1)
 (while
-    (< (length x) 10000)
-    (push 0 x)
+    (< (length x) 100000)
+    (do
+      (let y (+ 1 y))
+      (push y x)
+    )
+
 )
 (print x)
 (print (length x))

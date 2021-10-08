@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "structures/structures.h"
+#if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32) && !defined(__CYGWIN__)
 #include <execinfo.h>
+#endif
 #include <assert.h>
 #include "config.h"
 
@@ -39,6 +41,7 @@
 
 /* Macro because it makes printf errors easier to detect at compile time */
 #define ERROR(...) ERROR_AT(__FILE__, __func__, __LINE__, __VA_ARGS__)
+#if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32) && !defined(__CYGWIN__)
 #define ERROR_AT(FILE, FUNC, LINE, ...) do {\
     void * buffer[5];\
     char ** strings;\
@@ -53,6 +56,15 @@
     /*assert(false);*/\
     exit(1);\
 } while (0);
+#else
+#define ERROR_AT(FILE, FUNC, LINE, ...) do {\
+    fprintf(stderr, "Error at %s:%s:%i: ", FILE, FUNC, LINE);\
+    fprintf(stderr, __VA_ARGS__);\
+    fprintf(stderr, "\n");\
+    /*assert(false);*/\
+    exit(1);\
+} while (0);
+#endif
 
 #define ARR_MALLOC(num_elem, elem_val) malloc_or_die(arr_malloc_size((num_elem), sizeof(elem_val)))
 

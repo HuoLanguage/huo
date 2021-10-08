@@ -6,14 +6,17 @@
 #include "string.h"
 
 enum Value_type {
-    FLOAT,
-    BOOL,
-    LONG,
-    STRING,
-    ARRAY,
-    KEYWORD,
-    UNDEF
+    TYPE_FLOAT,
+    TYPE_BOOL,
+    TYPE_LONG,
+    TYPE_STRING,
+    TYPE_ARRAY,
+    TYPE_KEYWORD,
+    TYPE_AST,
+    TYPE_UNDEF
 };
+
+typedef struct huo_ast_t huo_ast;
 
 union Data {
     bool bl;
@@ -21,12 +24,19 @@ union Data {
     float fl;
     struct String str;
     struct Value_array * array;
+    huo_ast * ast;
 };
 
 struct Value {
     enum Value_type type;
     union Data data;
 };
+
+#define CHECK_TYPE(v, tp) do {\
+    /* assert((v)->type == (tp)); */ \
+    if ((v)->type != (tp))\
+        ERROR("Invalid type: '%i' != '%i'", (v)->type, (tp));\
+    } while (0)
 
 float value_as_float(struct Value *v);
 bool value_as_bool(struct Value *v);
@@ -53,6 +63,7 @@ size_t length(struct Value a);
 unsigned long value_keyword_hash_code(void *value);
 bool value_keyword_equality(void *a, void *b);
 
+struct String type_to_string(enum Value_type type);
 bool value_equals_shallow(struct Value *a, struct Value *b);
 void value_negate(struct Value *v);
 void value_free(struct Value *v);

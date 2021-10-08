@@ -18,6 +18,8 @@ enum ast_type_e {
     AST_KEYWORD,
 };
 
+huo_ast * value_as_ast(struct Value *v);
+struct Value value_from_ast(huo_ast *ast);
 
 huo_ast *ast_new(enum ast_type_e type, struct Value v);
 enum ast_type_e ast_type(huo_ast *const tree);
